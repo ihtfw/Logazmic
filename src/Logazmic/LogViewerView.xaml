@@ -13,142 +13,18 @@
                       AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];"
                       WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024">
     <controls:MetroWindow.Resources>
-        <Style x:Key="DataGridCellStyle"
-           TargetType="{x:Type DataGridCell}">
-            <Setter Property="Background"
-                Value="Transparent" />
-            <Setter Property="BorderBrush"
-                Value="Transparent" />
-            <Setter Property="HorizontalContentAlignment"
-                Value="Stretch" />
-            <Setter Property="VerticalContentAlignment"
-                Value="Center" />
-            <Setter Property="SnapsToDevicePixels"
-                Value="True" />
-            <Setter Property="Padding"
-                Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridCell}">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                          Margin="{TemplateBinding Padding}"
-                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Self}}"
-                               Value="True" />
-                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                               Value="Cell" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Background"
-                        Value="{DynamicResource AccentColorBrush}" />
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Self}}"
-                               Value="True" />
-                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"
-                               Value="False" />
-                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                               Value="CellOrRowHeader" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Background"
-                        Value="{DynamicResource AccentColorBrush}" />
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}"
-                               Value="True" />
-                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                               Value="Cell" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Background"
-                        Value="{DynamicResource AccentColorBrush3}" />
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}"
-                               Value="True" />
-                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"
-                               Value="False" />
-                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                               Value="CellOrRowHeader" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Background"
-                        Value="{DynamicResource AccentColorBrush3}" />
-                </MultiDataTrigger>
-            </Style.Triggers>
+<!--        Styles to ovveride grid foreground-->
+
+        <Style TargetType="ListView" BasedOn="{StaticResource VirtualisedMetroListView}">
+            <Setter Property="VirtualizingStackPanel.ScrollUnit" Value="Pixel"/>
+            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Standard"/>
         </Style>
         
-        <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}">
+        <Style TargetType="ListViewItem" BasedOn="{StaticResource MetroListViewItem}">
             <Setter Property="Foreground" Value="{Binding LogLevel, Converter={StaticResource LogLevelToBrushConverter}}" />
-            <Setter Property="Margin"
-                Value="0,0,0,0" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected"
-                     Value="True">
-                    <Setter Property="Background"
-                        Value="{DynamicResource AccentColorBrush}" />
-                </Trigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsSelected"
-                               Value="True" />
-                        <Condition Property="Selector.IsSelectionActive"
-                               Value="True" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Background"
-                        Value="{DynamicResource AccentColorBrush2}" />
-                </MultiTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}"
-                               Value="True" />
-                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                               Value="FullRow" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Background"
-                        Value="{DynamicResource AccentColorBrush3}" />
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}"
-                               Value="True" />
-                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Self}}"
-                               Value="True" />
-                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                               Value="CellOrRowHeader" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Background"
-                        Value="{DynamicResource AccentColorBrush3}" />
-                </MultiDataTrigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsEnabled"
-                               Value="False" />
-                        <Condition Property="IsSelected"
-                               Value="True" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Background"
-                        Value="{DynamicResource GrayBrush7}" />
-                </MultiTrigger>
-            </Style.Triggers>
         </Style>
 
-        <Style x:Key="RectangleToolbar" TargetType="Rectangle">
+        <Style x:Key="RectangleToolbar" TargetType="Rectangle"> 
             <Setter Property="Height" Value="20" />
             <Setter Property="Width" Value="20" />
             <Setter Property="Fill" Value="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" />
@@ -214,18 +90,17 @@
                 <TabControl x:Name="Items">
                     <TabControl.ContentTemplate>
                         <DataTemplate DataType="viewModels:LogPaneViewModel">
-                            <DataGrid ItemsSource="{Binding Path=CollectionViewSource.View}" SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
-                                      CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False"  SelectionMode="Single"
-                                      RowStyle="{StaticResource DataGridRowStyle}" CellStyle="{StaticResource DataGridCellStyle}"
-                                      >
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn IsReadOnly="True" Header="Time" Binding="{Binding Path=TimeStamp}" />
-                                    <DataGridTextColumn IsReadOnly="True" Header="Level" Binding="{Binding Path=LogLevel}" />
-                                    <DataGridTextColumn IsReadOnly="True" Header="Logger" Binding="{Binding Path=LastLoggerName}" />
-                                    <DataGridTextColumn IsReadOnly="True" Header="Thread" Binding="{Binding Path=ThreadName}" />
-                                    <DataGridTextColumn IsReadOnly="True" Header="Message" Width="*" Binding="{Binding Path=MessageSingleLine}" />
-                                </DataGrid.Columns>
-                            </DataGrid>
+                            <ListView ItemsSource="{Binding Path=CollectionViewSource.View}" SelectedItem="{Binding Path=SelectedLogMessage}" Style="{StaticResource VirtualisedMetroListView}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Path=TimeStamp, Mode=OneTime}" />
+                                        <GridViewColumn Header="Level" DisplayMemberBinding="{Binding Path=LogLevel, Mode=OneTime}" />
+                                        <GridViewColumn Header="Logger" DisplayMemberBinding="{Binding Path=LastLoggerName, Mode=OneTime}" />
+                                        <GridViewColumn Header="Thread" DisplayMemberBinding="{Binding Path=ThreadName, Mode=OneTime}" />
+                                        <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Path=MessageSingleLine, Mode=OneTime}"  />
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </TabControl>
