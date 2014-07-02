@@ -1,0 +1,258 @@
+﻿    <controls:MetroWindow x:Class="Logazmic.LogViewerView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:cal="http://www.caliburnproject.org"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:logazmic="clr-namespace:Logazmic"
+                      xmlns:log="clr-namespace:Logazmic.Core.Log"
+                      xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
+                      d:DataContext="{d:DesignInstance logazmic:LogViewerViewModel}"
+                      mc:Ignorable="d"
+                      AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];"
+                      WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024">
+    <controls:MetroWindow.Resources>
+        <Style x:Key="DataGridCellStyle"
+           TargetType="{x:Type DataGridCell}">
+            <Setter Property="Background"
+                Value="Transparent" />
+            <Setter Property="BorderBrush"
+                Value="Transparent" />
+            <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+            <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+            <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+            <Setter Property="Padding"
+                Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                          Margin="{TemplateBinding Padding}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Self}}"
+                               Value="True" />
+                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                               Value="Cell" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background"
+                        Value="{DynamicResource AccentColorBrush}" />
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Self}}"
+                               Value="True" />
+                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"
+                               Value="False" />
+                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                               Value="CellOrRowHeader" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background"
+                        Value="{DynamicResource AccentColorBrush}" />
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}"
+                               Value="True" />
+                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                               Value="Cell" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background"
+                        Value="{DynamicResource AccentColorBrush3}" />
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}"
+                               Value="True" />
+                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"
+                               Value="False" />
+                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                               Value="CellOrRowHeader" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background"
+                        Value="{DynamicResource AccentColorBrush3}" />
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}">
+            <Setter Property="Foreground" Value="{Binding LogLevel, Converter={StaticResource LogLevelToBrushConverter}}" />
+            <Setter Property="Margin"
+                Value="0,0,0,0" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected"
+                     Value="True">
+                    <Setter Property="Background"
+                        Value="{DynamicResource AccentColorBrush}" />
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsSelected"
+                               Value="True" />
+                        <Condition Property="Selector.IsSelectionActive"
+                               Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background"
+                        Value="{DynamicResource AccentColorBrush2}" />
+                </MultiTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}"
+                               Value="True" />
+                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                               Value="FullRow" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background"
+                        Value="{DynamicResource AccentColorBrush3}" />
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}"
+                               Value="True" />
+                        <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Self}}"
+                               Value="True" />
+                        <Condition Binding="{Binding Path=SelectionUnit, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                               Value="CellOrRowHeader" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background"
+                        Value="{DynamicResource AccentColorBrush3}" />
+                </MultiDataTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsEnabled"
+                               Value="False" />
+                        <Condition Property="IsSelected"
+                               Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background"
+                        Value="{DynamicResource GrayBrush7}" />
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="RectangleToolbar" TargetType="Rectangle">
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Fill" Value="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" />
+        </Style>
+        <!---->
+        <Style TargetType="Button" x:Key="ToolBarButton" BasedOn="{StaticResource MetroCircleButtonStyle}">
+            <Setter Property="Height" Value="50" />
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Margin" Value="3,0,3,0" />
+        </Style>
+        <!---->
+        <Style x:Key="TextBoxAsTextBlockStyle" TargetType="TextBox">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </controls:MetroWindow.Resources>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Style="{StaticResource ToolBarButton}" cal:Message.Attach="Open">
+              <Rectangle Style="{StaticResource RectangleToolbar}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_folder_open}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+          
+            <Button Style="{StaticResource ToolBarButton}" cal:Message.Attach="Clear">
+              <Rectangle Style="{StaticResource RectangleToolbar}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_close}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+
+            <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120" VerticalAlignment="Center">
+                <log:LogLevel>Trace</log:LogLevel>
+                <log:LogLevel>Debug</log:LogLevel>
+                <log:LogLevel>Info</log:LogLevel>
+                <log:LogLevel>Warn</log:LogLevel>
+                <log:LogLevel>Error</log:LogLevel>
+                <log:LogLevel>Fatal</log:LogLevel>
+            </ComboBox>
+
+            <TextBox Text="{Binding Path=ActiveItem.SearchString, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"
+                         controls:TextboxHelper.Watermark="Search"
+                         Style="{DynamicResource SearchMetroTextBox}" VerticalAlignment="Center"/>
+        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid x:Name="Main">
+                <TabControl x:Name="Items">
+                    <TabControl.ContentTemplate>
+                        <DataTemplate DataType="viewModels:LogPaneViewModel">
+                            <DataGrid ItemsSource="{Binding Path=CollectionViewSource.View}" SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
+                                      CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False"  SelectionMode="Single"
+                                      RowStyle="{StaticResource DataGridRowStyle}" CellStyle="{StaticResource DataGridCellStyle}"
+                                      >
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn IsReadOnly="True" Header="Time" Binding="{Binding Path=TimeStamp}" />
+                                    <DataGridTextColumn IsReadOnly="True" Header="Level" Binding="{Binding Path=LogLevel}" />
+                                    <DataGridTextColumn IsReadOnly="True" Header="Logger" Binding="{Binding Path=LastLoggerName}" />
+                                    <DataGridTextColumn IsReadOnly="True" Header="Thread" Binding="{Binding Path=ThreadName}" />
+                                    <DataGridTextColumn IsReadOnly="True" Header="Message" Width="*" Binding="{Binding Path=MessageSingleLine}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </Grid>
+
+            <GridSplitter Grid.Row="0" Grid.Column="1" Width="3" ResizeDirection="Columns" HorizontalAlignment="Stretch" />
+
+            <Grid x:Name="Tree" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
+                <TreeView Margin="5" VerticalAlignment="Stretch" ItemsSource="{Binding Path=ActiveItem.LogSourceRoot.Children}">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}" DataType="{x:Type viewModels:LogSource}">
+                            <ContentPresenter Content="{Binding Name, Mode=OneTime}"/>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                            <Setter Property="IsExpanded" Value="True" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </Grid>
+
+            <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" Height="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+
+            <Grid x:Name="Details" Grid.Row="2" Grid.ColumnSpan="3">
+                <TextBox FontFamily="Courier New" Style="{StaticResource TextBoxAsTextBlockStyle}" VerticalAlignment="Top" Text="{Binding Path=ActiveItem.SelectedLogMessage.Message, Mode=OneWay}" Margin="10" TextWrapping="Wrap" />
+            </Grid>
+        </Grid>
+    </DockPanel>
+</controls:MetroWindow>
