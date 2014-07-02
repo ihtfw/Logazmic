@@ -1,4 +1,4 @@
-﻿namespace Logazmic
+﻿namespace Logazmic.ViewModels
 {
     using System;
     using System.IO;
@@ -9,13 +9,12 @@
 
     using Logazmic.Core.Reciever;
     using Logazmic.Utils;
-    using Logazmic.ViewModels;
 
-    public class LogViewerViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
+    public class MainWindowViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
     {
         private static int i = 0;
 
-        public LogViewerViewModel()
+        public MainWindowViewModel()
         {
             DisplayName = "Logazmic";
 
@@ -25,6 +24,16 @@
                           ContentId = "tcp",
                           CanClose = false
                       });
+        }
+
+        public bool IsSettingsOpen { get; set; }
+
+        public void Dispose()
+        {
+            foreach (var item in Items)
+            {
+                item.Dispose();
+            }
         }
 
         protected override void OnViewLoaded(object view)
@@ -60,6 +69,7 @@
                 }
             }
         }
+
         public void Clear()
         {
             try
@@ -88,7 +98,7 @@
 
             Open(path);
         }
-        
+
         public void Open(string path)
         {
             try
@@ -100,7 +110,6 @@
 
                 if (Items.Any(it => it.ToolTip == path))
                 {
-                    //                    Dialogs.ShowPopupMessage("File already opened: " + path);
                     return;
                 }
 
@@ -135,6 +144,11 @@
             ActivateItem(Items.First());
         }
 
+        public void Test()
+        {
+            Dialogs.ShowErrorMessageBox(new ApplicationException("123"));
+        }
+
         protected override void OnDeactivate(bool close)
         {
             if (close)
@@ -142,14 +156,6 @@
                 Dispose();
             }
             base.OnDeactivate(close);
-        }
-
-        public void Dispose()
-        {
-            foreach (var item in Items)
-            {
-                item.Dispose();
-            }
         }
     }
 }

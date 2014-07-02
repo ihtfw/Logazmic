@@ -7,25 +7,32 @@
 
     using Logazmic.Core.Log;
 
-    class LogLevelToBrushConverter : IValueConverter
+    internal class LogLevelToBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var logLevel = (LogLevel)value;
-            switch (logLevel)
+            try
             {
-                case LogLevel.Trace:
-                    return Brushes.DarkGray;
-                case LogLevel.Info:
-                    return Brushes.Green;
-                case LogLevel.Warn:
-                    return Brushes.Orange;
-                case LogLevel.Error:
-                    return Brushes.Red;
-                case LogLevel.Fatal:
-                    return Brushes.Purple;
-                default:
-                    return Brushes.Black;
+                var logLevel = (LogLevel)value;
+                switch (logLevel)
+                {
+                    case LogLevel.Trace:
+                        return Brushes.DarkGray;
+                    case LogLevel.Info:
+                        return Brushes.Green;
+                    case LogLevel.Warn:
+                        return Brushes.Orange;
+                    case LogLevel.Error:
+                        return Brushes.Red;
+                    case LogLevel.Fatal:
+                        return Brushes.Purple;
+                    default:
+                        return Brushes.Black;
+                }
+            }
+            catch(Exception)
+            {
+                return Brushes.Black;
             }
         }
 

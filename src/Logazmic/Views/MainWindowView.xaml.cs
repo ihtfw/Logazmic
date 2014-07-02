@@ -1,11 +1,11 @@
-﻿namespace Logazmic
+﻿namespace Logazmic.Views
 {
     /// <summary>
     /// Interaction logic for LogViewer.xaml
     /// </summary>
-    public partial class LogViewerView
+    public partial class MainWindowView
     {
-        public LogViewerView()
+        public MainWindowView()
         {
             InitializeComponent();
         }

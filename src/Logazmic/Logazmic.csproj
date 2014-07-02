@@ -76,23 +76,46 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LogViewerView.xaml.cs">
-      <DependentUpon>LogViewerView.xaml</DependentUpon>
+    <Compile Include="Controls\TwoColumnGrid.cs" />
+    <Compile Include="Controls\MetroButton.xaml.cs">
+      <DependentUpon>MetroButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LogViewerViewModel.cs" />
+    <Compile Include="Controls\MetroToggleButton.xaml.cs">
+      <DependentUpon>MetroToggleButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\Settings.cs" />
+    <Compile Include="Views\MainWindowView.xaml.cs">
+      <DependentUpon>MainWindowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Utils\Dialogs.cs" />
     <Compile Include="Utils\Messaging.cs" />
     <Compile Include="ViewModels\LogPaneViewModel.cs" />
     <Compile Include="ViewModels\LogSource.cs" />
     <Compile Include="ViewModels\RefreshCheckEvent.cs" />
     <Compile Include="ViewModels\RefreshEvent.cs" />
-    <Page Include="LogViewerView.xaml">
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\MetroButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MetroToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +132,7 @@
     <Compile Include="Core\Reciever\IReceiver.cs" />
     <Compile Include="Core\Reciever\ReceiverUtils.cs" />
     <Compile Include="Core\Reciever\TcpReceiver.cs" />
-    <Compile Include="LogViewerBootstrapper.cs" />
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -149,7 +172,9 @@
       <SubType>Designer</SubType>
     </Resource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Styles\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

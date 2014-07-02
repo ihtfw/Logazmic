@@ -1,9 +1,13 @@
 ﻿namespace Logazmic.Utils
 {
     using System;
+    using System.Linq;
     using System.Windows;
 
     using Caliburn.Micro;
+
+    using MahApps.Metro.Controls;
+    using MahApps.Metro.Controls.Dialogs;
 
     using Microsoft.Win32;
 
@@ -11,8 +15,11 @@
     {
         public static void ShowErrorMessageBox(Exception e)
         {
-            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK);
-        }
+            var window = Application.Current.Windows.OfType<MetroWindow>().Single(w => w.IsActive);
+            window.ShowMessageAsync("Error", e.Message);
+
+        }   
+
         public static bool ShowOpenDialog(out string path, string defaultExt, string filter, string initialDir = null)
         {
             bool? res = null;

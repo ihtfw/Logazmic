@@ -7,7 +7,7 @@
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary>
-          <logazmic:LogViewerBootstrapper x:Key="LogViewerBootstrapper" />
+          <logazmic:Bootstrapper x:Key="LogViewerBootstrapper" />
         </ResourceDictionary>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
@@ -16,7 +16,18 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
         <ResourceDictionary Source="/Resources/Icons.xaml" />
       </ResourceDictionary.MergedDictionaries>
-      <converters:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter"/>
-    </ResourceDictionary>
+      
+        <converters:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter"/>
+
+
+            <Style x:Key="DescriptionHeaderStyle"
+                   TargetType="Label">
+                <Setter Property="FontSize"
+                        Value="22" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Center" />
+            </Style>
+        
+        </ResourceDictionary>
   </Application.Resources>
 </Application>
