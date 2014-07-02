@@ -1,5 +1,7 @@
 ﻿namespace Logazmic.Views
 {
+    using MahApps.Metro.Controls;
+
     /// <summary>
     /// Interaction logic for LogViewer.xaml
     /// </summary>
@@ -8,6 +10,11 @@
         public MainWindowView()
         {
             InitializeComponent();
+        }
+
+        private void Items_OnTabItemClosingEvent(object sender, BaseMetroTabControl.TabItemClosingEventArgs e)
+        {
+            
         }
     }
 }

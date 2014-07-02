@@ -83,7 +83,7 @@
     <Compile Include="Controls\MetroToggleButton.xaml.cs">
       <DependentUpon>MetroToggleButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Settings.cs" />
+    <Compile Include="Properties\Settings.cs" />
     <Compile Include="Views\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>
     </Compile>

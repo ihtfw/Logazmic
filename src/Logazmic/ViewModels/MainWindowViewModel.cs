@@ -4,15 +4,19 @@
     using System.IO;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
 
     using Caliburn.Micro;
 
     using Logazmic.Core.Reciever;
     using Logazmic.Utils;
 
+    using MahApps.Metro.Actions;
+    using MahApps.Metro.Controls;
+
     public class MainWindowViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
     {
-        private static int i = 0;
+        private static int i;
 
         public MainWindowViewModel()
         {
@@ -36,6 +40,7 @@
             }
         }
 
+
         protected override void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
@@ -49,6 +54,11 @@
 
                 Open(uri.LocalPath);
             }
+        }
+
+        public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
+        {
+            
         }
 
         public void OnDrop(DragEventArgs e)
@@ -114,7 +124,7 @@
                 }
 
                 var name = Path.GetFileNameWithoutExtension(path) + "_" + i;
-                var paneViewModel = new LogPaneViewModel(() => new FileReceiver()
+                var paneViewModel = new LogPaneViewModel(() => new FileReceiver
                                                                {
                                                                    FileToWatch = path,
                                                                    FileFormat = FileReceiver.FileFormatEnums.Log4jXml,

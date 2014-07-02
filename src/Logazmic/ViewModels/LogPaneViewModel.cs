@@ -14,7 +14,8 @@ namespace Logazmic.ViewModels
     using Logazmic.Core.Reciever;
     using Logazmic.Utils;
 
-    public class LogPaneViewModel : Screen, ILogMessageNotifiable, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>, IDisposable
+    public class LogPaneViewModel : Screen, ILogMessageNotifiable, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>, 
+                                    IDisposable
     {
         private CollectionViewSource collectionViewSource;
 
@@ -28,11 +29,10 @@ namespace Logazmic.ViewModels
             ReceiverFunc = receiverFunc;
             MinLogLevel = LogLevel.Trace;
             CanClose = true;
-            LogSourceRoot = new LogSource(null)
-            {
+            LogSourceRoot = new LogSource
+                            {
                 Name = "Root"
             };
-
             Messaging.Subscribe(this);
 
             Init();
@@ -58,7 +58,7 @@ namespace Logazmic.ViewModels
 
         public bool IsLoading { get; private set; }
 
-        protected override async void OnActivate()
+        protected override void OnActivate()
         {
             base.OnActivate();
 

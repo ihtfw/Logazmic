@@ -47,7 +47,7 @@
             get { return _fileToWatch; }
             set
             {
-                if (String.Compare(_fileToWatch, value, true) == 0)
+                if (String.Compare(_fileToWatch, value, StringComparison.OrdinalIgnoreCase) == 0)
                     return;
 
                 _fileToWatch = value;

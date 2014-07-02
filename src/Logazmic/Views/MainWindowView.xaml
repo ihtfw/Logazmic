@@ -5,10 +5,8 @@
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:cal="http://www.caliburnproject.org"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      xmlns:logazmic="clr-namespace:Logazmic"
                       xmlns:log="clr-namespace:Logazmic.Core.Log"
                       xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
-                      xmlns:utils="clr-namespace:Logazmic.Utils"
                       xmlns:controls1="clr-namespace:Logazmic.Controls"
                       xmlns:properties="clr-namespace:Logazmic.Properties"
                       xmlns:views="clr-namespace:Logazmic.Views"
@@ -24,14 +22,6 @@
 
         <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MetroDataGridRow}">
             <Setter Property="Foreground" Value="{Binding LogLevel, Converter={StaticResource LogLevelToBrushConverter}}" />
-        </Style>
-
-        <Style x:Key="DescriptionHeaderStyle"
-                   TargetType="Label">
-            <Setter Property="FontSize"
-                        Value="22" />
-            <Setter Property="HorizontalAlignment"
-                        Value="Center" />
         </Style>
 
         <!---->
@@ -90,7 +80,12 @@
             </Grid.ColumnDefinitions>
 
             <Grid x:Name="Main">
-                <TabControl x:Name="Items">
+                <controls:MetroTabControl x:Name="Items" TabItemClosingEvent="Items_OnTabItemClosingEvent" cal:Message.Attach="[Event TabItemClosingEvent] = [Action CloseTab($eventArgs)]">
+                    <controls:MetroTabControl.Resources>
+                        <Style TargetType="controls:MetroTabItem">
+                            <Setter Property="CloseButtonEnabled" Value="True"/>
+                        </Style>
+                    </controls:MetroTabControl.Resources>
                     <TabControl.ContentTemplate>
                         <DataTemplate DataType="viewModels:LogPaneViewModel">
                             <DataGrid ItemsSource="{Binding Path=CollectionViewSource.View}" SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
@@ -107,7 +102,7 @@
                             </DataGrid>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
-                </TabControl>
+                </controls:MetroTabControl>
             </Grid>
 
             <GridSplitter Grid.Row="0" Grid.Column="1" Width="3" ResizeDirection="Columns" HorizontalAlignment="Stretch" />

@@ -4,7 +4,7 @@ namespace Logazmic.Core.Log
 
     public sealed class LogLevels
     {
-        private static LogLevels _instance = null;
+        private static LogLevels _instance;
 
         public readonly LogLevelInfo InvalidLogLevel;
         public readonly LogLevelInfo[] LogLevelInfos;
@@ -13,14 +13,14 @@ namespace Logazmic.Core.Log
         {
             InvalidLogLevel = new LogLevelInfo(LogLevel.None);
 
-            LogLevelInfos = new LogLevelInfo[]
+            LogLevelInfos = new[]
                             {
                                 new LogLevelInfo(LogLevel.Trace, "Trace", 10000, 0, 10000),
                                 new LogLevelInfo(LogLevel.Debug, "Debug", 30000, 10001, 30000),
                                 new LogLevelInfo(LogLevel.Info, "Info", 40000, 30001, 40000),
                                 new LogLevelInfo(LogLevel.Warn, "Warn", 60000, 40001, 60000),
                                 new LogLevelInfo(LogLevel.Error, "Error",  70000, 60001, 70000),
-                                new LogLevelInfo(LogLevel.Fatal, "Fatal", 110000, 70001, 110000),
+                                new LogLevelInfo(LogLevel.Fatal, "Fatal", 110000, 70001, 110000)
                             };
         }
 
@@ -48,7 +48,7 @@ namespace Logazmic.Core.Log
         {
             get
             {
-                int level = (int)logLevel;
+                var level = (int)logLevel;
                 if ((level < (int)LogLevel.Trace) || (level > (int)LogLevel.Fatal))
                     return InvalidLogLevel;
                 return LogLevelInfos[level];
