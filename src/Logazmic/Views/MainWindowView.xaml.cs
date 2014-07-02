@@ -12,9 +12,5 @@
             InitializeComponent();
         }
 
-        private void Items_OnTabItemClosingEvent(object sender, BaseMetroTabControl.TabItemClosingEventArgs e)
-        {
-            
-        }
     }
 }

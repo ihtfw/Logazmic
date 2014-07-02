@@ -52,15 +52,11 @@
                 string[] activationData = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
                 var uri = new Uri(activationData[0]);
 
-                Open(uri.LocalPath);
+                LoadFile(uri.LocalPath);
             }
         }
 
-        public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
-        {
-            
-        }
-
+        
         public void OnDrop(DragEventArgs e)
         {
             var dataObject = e.Data as DataObject;
@@ -75,41 +71,12 @@
 
                 foreach (var fileName in fileNames)
                 {
-                    Open(fileName);
+                    LoadFile(fileName);
                 }
             }
         }
 
-        public void Clear()
-        {
-            try
-            {
-                if (ActiveItem == null)
-                {
-                    return;
-                }
-
-                ActiveItem.Clear();
-            }
-            catch (Exception e)
-            {
-                Dialogs.ShowErrorMessageBox(e);
-            }
-        }
-
-        public void Open()
-        {
-            string path;
-            var res = Dialogs.ShowOpenDialog(out path, ".log4jxml", "Nlog log4jxml|*.log4jxml");
-            if (!res)
-            {
-                return;
-            }
-
-            Open(path);
-        }
-
-        public void Open(string path)
+        public void LoadFile(string path)
         {
             try
             {
@@ -146,6 +113,48 @@
                 Dialogs.ShowErrorMessageBox(e);
             }
         }
+
+        #region Actions
+
+
+        public void Clear()
+        {
+            try
+            {
+                if (ActiveItem == null)
+                {
+                    return;
+                }
+
+                ActiveItem.Clear();
+            }
+            catch (Exception e)
+            {
+                Dialogs.ShowErrorMessageBox(e);
+            }
+        }
+
+        public void Open()
+        {
+            string path;
+            var res = Dialogs.ShowOpenDialog(out path, ".log4jxml", "Nlog log4jxml|*.log4jxml");
+            if (!res)
+            {
+                return;
+            }
+
+            LoadFile(path);
+        }
+
+        public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
+        {
+            var pane = (LogPaneViewModel)args.ClosingTabItem.Content;
+            pane.Dispose();
+            Items.Remove(pane);
+        }
+
+
+        #endregion
 
         protected override void OnActivate()
         {

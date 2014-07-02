@@ -14,10 +14,12 @@ namespace Logazmic.ViewModels
     using Logazmic.Core.Reciever;
     using Logazmic.Utils;
 
-    public class LogPaneViewModel : Screen, ILogMessageNotifiable, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>, 
-                                    IDisposable
+    public class LogPaneViewModel : Screen, ILogMessageNotifiable, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>,
+        IDisposable
     {
         private CollectionViewSource collectionViewSource;
+
+        private List<string> logSourceLeaves = new List<string>();
 
         private LogLevel minLogLevel;
 
@@ -31,8 +33,8 @@ namespace Logazmic.ViewModels
             CanClose = true;
             LogSourceRoot = new LogSource
                             {
-                Name = "Root"
-            };
+                                Name = "Root"
+                            };
             Messaging.Subscribe(this);
 
             Init();
@@ -48,62 +50,11 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public void Clear()
-        {
-            LogMessages.Clear();
-            Update();
-        }
-
         public bool IsInited { get; private set; }
 
         public bool IsLoading { get; private set; }
 
-        protected override void OnActivate()
-        {
-            base.OnActivate();
-
-            Init();
-        }
-
         public bool CanInit { get { return !IsInited && !IsLoading; } }
-
-        public async void Init()
-        {
-            if (!CanInit)
-            {
-                return;
-            }
-
-            IsLoading = true;
-            try
-            {
-                await Task.Factory.StartNew(() =>
-                {
-                    if (Receiver != null)
-                    {
-                        Receiver.Terminate();
-                        Receiver.Detach();
-                    }
-
-                    Receiver = ReceiverFunc();
-
-                    Receiver.Initialize();
-                    Receiver.Attach(this);
-                    IsInited = true;
-                });
-            }
-            catch (Exception e)
-            {
-                IsInited = false;
-                Dialogs.ShowErrorMessageBox(e);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-        }
-
-        private List<string> logSourceLeaves = new List<string>();
 
         public LogSource LogSourceRoot { get; private set; }
 
@@ -140,16 +91,86 @@ namespace Logazmic.ViewModels
                     collectionViewSource = new CollectionViewSource();
                     collectionViewSource.Filter += LogMessagesViewSourceFilter;
                     var binding = new Binding
-                    {
-                        IsAsync = true,
-                        Source = this,
-                        Mode = BindingMode.OneWay,
-                        NotifyOnSourceUpdated = true,
-                        Path = new PropertyPath("LogMessages")
-                    };
+                                  {
+                                      IsAsync = true,
+                                      Source = this,
+                                      Mode = BindingMode.OneWay,
+                                      NotifyOnSourceUpdated = true,
+                                      Path = new PropertyPath("LogMessages")
+                                  };
                     BindingOperations.SetBinding(collectionViewSource, CollectionViewSource.SourceProperty, binding);
                 }
                 return collectionViewSource;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (Receiver != null)
+            {
+                Receiver.Terminate();
+                Receiver.Detach();
+            }
+            Receiver = null;
+        }
+
+        public void Handle(RefreshCheckEvent message)
+        {
+            logSourceLeaves = LogSourceRoot.Leaves().Where(l => l.IsChecked).Select(c => c.Name).Distinct().ToList();
+            Update();
+        }
+
+        public void Handle(RefreshEvent message)
+        {
+            Update();
+        }
+
+        public void Clear()
+        {
+            LogMessages.Clear();
+            Update();
+        }
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+
+            Init();
+        }
+
+        public async void Init()
+        {
+            if (!CanInit)
+            {
+                return;
+            }
+
+            IsLoading = true;
+            try
+            {
+                await Task.Factory.StartNew(() =>
+                                            {
+                                                if (Receiver != null)
+                                                {
+                                                    Receiver.Terminate();
+                                                    Receiver.Detach();
+                                                }
+
+                                                Receiver = ReceiverFunc();
+
+                                                Receiver.Initialize();
+                                                Receiver.Attach(this);
+                                                IsInited = true;
+                                            });
+            }
+            catch (Exception e)
+            {
+                IsInited = false;
+                Dialogs.ShowErrorMessageBox(e);
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 
@@ -184,6 +205,20 @@ namespace Logazmic.ViewModels
             e.Accepted = true;
         }
 
+        protected void Update()
+        {
+            Execute.OnUIThread(() =>
+                               {
+                                   try
+                                   {
+                                       CollectionViewSource.View.Refresh();
+                                   }
+                                   catch
+                                   {
+                                   }
+                               });
+        }
+
         #region ILogMessageNotifiable
 
         public void Notify(LogMessage[] logMsgs)
@@ -200,41 +235,5 @@ namespace Logazmic.ViewModels
         }
 
         #endregion
-
-        protected void Update()
-        {
-            Execute.OnUIThread(() =>
-            {
-                try
-                {
-
-                    CollectionViewSource.View.Refresh();
-                }
-                catch
-                {
-                }
-            });
-        }
-
-        public void Handle(RefreshEvent message)
-        {
-            Update();
-        }
-
-        public void Handle(RefreshCheckEvent message)
-        {
-            logSourceLeaves = LogSourceRoot.Leaves().Where(l => l.IsChecked).Select(c => c.Name).Distinct().ToList();
-            Update();
-        }
-
-        public void Dispose()
-        {
-            if (Receiver != null)
-            {
-                Receiver.Terminate();
-                Receiver.Detach();
-            }
-            Receiver = null;
-        }
     }
 }
