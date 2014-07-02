@@ -25,10 +25,10 @@ namespace Logazmic.ViewModels
 
         private string searchString;
 
-        public LogPaneViewModel(Func<IReceiver> receiverFunc)
+        public LogPaneViewModel(IReceiver receiver)
         {
             LogMessages = new BindableCollection<LogMessage>();
-            ReceiverFunc = receiverFunc;
+            Receiver = receiver;
             MinLogLevel = LogLevel.Trace;
             CanClose = true;
             LogSourceRoot = new LogSource
@@ -59,8 +59,6 @@ namespace Logazmic.ViewModels
         public LogSource LogSourceRoot { get; private set; }
 
         public bool CanClose { get; set; }
-
-        public Func<IReceiver> ReceiverFunc { get; private set; }
 
         public IReceiver Receiver { get; private set; }
 
@@ -155,9 +153,6 @@ namespace Logazmic.ViewModels
                                                     Receiver.Terminate();
                                                     Receiver.Detach();
                                                 }
-
-                                                Receiver = ReceiverFunc();
-
                                                 Receiver.Initialize();
                                                 Receiver.Attach(this);
                                                 IsInited = true;

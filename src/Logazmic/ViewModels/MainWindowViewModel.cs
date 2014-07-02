@@ -3,12 +3,14 @@
     using System;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
 
     using Caliburn.Micro;
 
     using Logazmic.Core.Reciever;
+    using Logazmic.Properties;
     using Logazmic.Utils;
 
     using MahApps.Metro.Actions;
@@ -22,7 +24,12 @@
         {
             DisplayName = "Logazmic";
 
-            Items.Add(new LogPaneViewModel(() => new TcpReceiver())
+            LoadRecivers()
+        }
+
+        private void LoadRecivers()
+        {
+            Items.Add(new LogPaneViewModel(new TcpReceiver())
                       {
                           DisplayName = "TCP",
                           ContentId = "tcp",
@@ -91,7 +98,7 @@
                 }
 
                 var name = Path.GetFileNameWithoutExtension(path) + "_" + i;
-                var paneViewModel = new LogPaneViewModel(() => new FileReceiver
+                var paneViewModel = new LogPaneViewModel(new FileReceiver
                                                                {
                                                                    FileToWatch = path,
                                                                    FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
