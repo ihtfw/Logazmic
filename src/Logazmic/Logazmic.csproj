@@ -121,6 +121,7 @@
     <Compile Include="Services\Messaging.cs" />
     <Compile Include="Services\MetroDialogService.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
+    <Compile Include="ViewModels\UpdatableScreen.cs" />
     <Compile Include="Views\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>
     </Compile>

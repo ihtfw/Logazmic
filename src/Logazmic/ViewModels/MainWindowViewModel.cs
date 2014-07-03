@@ -24,6 +24,7 @@
         public MainWindowViewModel()
         {
             DisplayName = "Logazmic";
+
             LoadRecivers();
         }
 
@@ -167,7 +168,7 @@
         {
             base.OnActivate();
             if(Items.Any())
-                ActivateItem(Items.First());
+            ActivateItem(Items.First());
         }
 
         public void Test()

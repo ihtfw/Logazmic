@@ -158,7 +158,9 @@
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}"
                                                   DataType="{x:Type viewModels:LogSource}">
-                            <ContentPresenter Content="{Binding Name, Mode=OneTime}" />
+                            <CheckBox IsChecked="{Binding Path=IsChecked}">
+                                <ContentPresenter VerticalAlignment="Center" Content="{Binding Name, Mode=OneTime}" />
+                            </CheckBox>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                     <TreeView.ItemContainerStyle>

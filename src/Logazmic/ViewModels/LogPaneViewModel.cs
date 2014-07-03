@@ -14,7 +14,7 @@ namespace Logazmic.ViewModels
     using Logazmic.Core.Reciever;
     using Logazmic.Services;
 
-    public class LogPaneViewModel : Screen, ILogMessageNotifiable, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>,
+    public class LogPaneViewModel : UpdatableScreen, ILogMessageNotifiable, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>,
         IDisposable
     {
         private CollectionViewSource collectionViewSource;
@@ -114,8 +114,7 @@ namespace Logazmic.ViewModels
 
         public void Handle(RefreshCheckEvent message)
         {
-            logSourceLeaves = LogSourceRoot.Leaves().Where(l => l.IsChecked).Select(c => c.Name).Distinct().ToList();
-            Update();
+            Update(true);
         }
 
         public void Handle(RefreshEvent message)
@@ -156,6 +155,8 @@ namespace Logazmic.ViewModels
                                                 Receiver.Initialize();
                                                 Receiver.Attach(this);
                                                 IsInited = true;
+
+                                                Update(true);
                                             });
             }
             catch (Exception e)
@@ -192,6 +193,10 @@ namespace Logazmic.ViewModels
                 }
             }
 
+            if (!logSourceLeaves.Contains(resultRow.LastLoggerName))
+            {
+                return;
+            }
             //            if (LogSourceRoot.Checked.All(c => c != resultRow.LastLoggerName))
             //            {
             //                return;
@@ -200,8 +205,15 @@ namespace Logazmic.ViewModels
             e.Accepted = true;
         }
 
-        protected void Update()
+        
+
+        protected override void DoUpdate(bool full)
         {
+            if (full)
+            {
+                logSourceLeaves = LogSourceRoot.Leaves().Where(l => l.IsChecked).Select(c => c.Name).Distinct().ToList();
+            }
+
             Execute.OnUIThread(() =>
                                {
                                    try
