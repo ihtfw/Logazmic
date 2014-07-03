@@ -6,8 +6,6 @@
 
     public class LogMessage
     {
-        private List<string> loggerNames;
-
         /// <summary>
         /// The Line Number of the Log Message
         /// </summary>
@@ -16,24 +14,17 @@
         /// <summary>
         /// Logger Name.
         /// </summary>
-        public string LoggerName { get; set; }
-
-        public IReadOnlyList<string> LoggerNames
-        {
-            get
+        public string LoggerName { get { return loggerName; }
+            set
             {
-                if (loggerNames == null)
-                {
-                    loggerNames = LoggerName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                }
-                return loggerNames;
-            }
-        }
+                loggerName = value;
+                LoggerNames = loggerName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                LastLoggerName = LoggerNames.LastOrDefault();
+            } }
 
-        public string LastLoggerName
-        {
-            get { return LoggerNames.LastOrDefault(); }
-        }
+        public IReadOnlyList<string> LoggerNames { get; private set; }
+
+        public string LastLoggerName { get; private set; }
 
         public LogLevel LogLevel
         {
@@ -85,6 +76,8 @@
         public Dictionary<string, string> Properties = new Dictionary<string, string>();
 
         private string messageSingleLine;
+
+        private string loggerName;
 
         /// <summary>
         /// An exception message to associate to this message.

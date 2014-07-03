@@ -24,7 +24,7 @@
         {
             DisplayName = "Logazmic";
 
-            LoadRecivers()
+            LoadRecivers();
         }
 
         private void LoadRecivers()
