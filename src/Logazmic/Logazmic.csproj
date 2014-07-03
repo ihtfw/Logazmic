@@ -117,12 +117,14 @@
       <DependentUpon>MetroToggleButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\Messaging.cs" />
+    <Compile Include="Services\MetroDialogService.cs" />
+    <Compile Include="Utils\PropertyChangedHelpers.cs" />
     <Compile Include="Views\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="Utils\Dialogs.cs" />
-    <Compile Include="Utils\Messaging.cs" />
     <Compile Include="ViewModels\LogPaneViewModel.cs" />
     <Compile Include="ViewModels\LogSource.cs" />
     <Compile Include="ViewModels\RefreshCheckEvent.cs" />
@@ -135,6 +137,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MetroToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Common.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\DarkTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -206,9 +220,7 @@
       <SubType>Designer</SubType>
     </Resource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Styles\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>

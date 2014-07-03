@@ -23,15 +23,32 @@
         </Style>
 
         <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MetroDataGridRow}">
-            <Setter Property="Foreground"
-                    Value="{Binding LogLevel, Converter={StaticResource LogLevelToBrushConverter}}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Trace}">
+                    <Setter Property="Foreground" Value="{DynamicResource TraceColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
+                    <Setter Property="Foreground" Value="{DynamicResource DebugColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Warn}">
+                    <Setter Property="Foreground" Value="{DynamicResource WarnColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Error}">
+                    <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Fatal}">
+                    <Setter Property="Foreground" Value="{DynamicResource FatalColor}" />
+                </DataTrigger>
+            </Style.Triggers>
+            <!--            <Setter Property="Foreground"-->
+            <!--                    Value="{Binding LogLevel, Converter={StaticResource LogLevelToBrushConverter}}" />-->
         </Style>
 
         <!---->
         <Style x:Key="DetailsTextBlock" TargetType="TextBox">
             <Setter Property="IsReadOnly" Value="True" />
             <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderThickness" Value="  0" />
             <Setter Property="Background" Value="Transparent" />
         </Style>
     </controls:MetroWindow.Resources>
@@ -109,6 +126,11 @@
                                       CanUserResizeRows="False" SelectionMode="Single"
                                       FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=GridFontSize}"
                                       CellStyle="{StaticResource CellStyle}" RowStyle="{StaticResource RowStyle}">
+                                <DataGrid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </Style>
+                                </DataGrid.Resources>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn IsReadOnly="True" Header="Time"
                                                         Binding="{Binding Path=TimeStamp}" />

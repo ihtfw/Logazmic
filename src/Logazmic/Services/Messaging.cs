@@ -1,4 +1,4 @@
-﻿namespace Logazmic.Utils
+﻿namespace Logazmic.Services
 {
     using System;
 

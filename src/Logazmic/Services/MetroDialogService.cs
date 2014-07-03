@@ -1,6 +1,5 @@
-﻿namespace Logazmic.Utils
+﻿namespace Logazmic.Services
 {
-    using System;
     using System.Linq;
     using System.Windows;
 
@@ -11,16 +10,19 @@
 
     using Microsoft.Win32;
 
-    static class Dialogs
+    class MetroDialogService : DialogService
     {
-        public static void ShowErrorMessageBox(Exception e)
+        private MetroWindow GetActiveWindow()
         {
-            var window = Application.Current.Windows.OfType<MetroWindow>().Single(w => w.IsActive);
-            window.ShowMessageAsync("Error", e.Message);
+            return Application.Current.Windows.OfType<MetroWindow>().Single(w => w.IsActive);
+        }
 
-        }   
+        public override void ShowMessageBox(string title, string message)
+        {
+            GetActiveWindow().ShowMessageAsync(title, message);
+        }
 
-        public static bool ShowOpenDialog(out string path, string defaultExt, string filter, string initialDir = null)
+        public override bool ShowOpenDialog(out string path, string defaultExt, string filter, string initialDir = null)
         {
             bool? res = null;
             string lPath = null;
@@ -28,10 +30,10 @@
             Execute.OnUIThread(() =>
             {
                 var ofd = new OpenFileDialog
-                {
-                    DefaultExt = defaultExt,
-                    Filter = filter,
-                };
+                          {
+                              DefaultExt = defaultExt,
+                              Filter = filter,
+                          };
 
                 if (initialDir != null)
                 {

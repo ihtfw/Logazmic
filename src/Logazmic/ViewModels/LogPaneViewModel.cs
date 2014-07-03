@@ -12,7 +12,7 @@ namespace Logazmic.ViewModels
 
     using Logazmic.Core.Log;
     using Logazmic.Core.Reciever;
-    using Logazmic.Utils;
+    using Logazmic.Services;
 
     public class LogPaneViewModel : Screen, ILogMessageNotifiable, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>,
         IDisposable
@@ -161,7 +161,7 @@ namespace Logazmic.ViewModels
             catch (Exception e)
             {
                 IsInited = false;
-                Dialogs.ShowErrorMessageBox(e);
+                DialogService.Current.ShowErrorMessageBox(e);
             }
             finally
             {

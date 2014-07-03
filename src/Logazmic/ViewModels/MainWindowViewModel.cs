@@ -11,8 +11,9 @@
 
     using Logazmic.Core.Reciever;
     using Logazmic.Properties;
-    using Logazmic.Utils;
+    using Logazmic.Services;
 
+    using MahApps.Metro;
     using MahApps.Metro.Actions;
     using MahApps.Metro.Controls;
 
@@ -23,8 +24,7 @@
         public MainWindowViewModel()
         {
             DisplayName = "Logazmic";
-
-            LoadRecivers()
+            LoadRecivers();
         }
 
         private void LoadRecivers()
@@ -117,7 +117,7 @@
             }
             catch (Exception e)
             {
-                Dialogs.ShowErrorMessageBox(e);
+                DialogService.Current.ShowErrorMessageBox(e);
             }
         }
 
@@ -137,14 +137,14 @@
             }
             catch (Exception e)
             {
-                Dialogs.ShowErrorMessageBox(e);
+                DialogService.Current.ShowErrorMessageBox(e);
             }
         }
 
         public void Open()
         {
             string path;
-            var res = Dialogs.ShowOpenDialog(out path, ".log4jxml", "Nlog log4jxml|*.log4jxml");
+            var res = DialogService.Current.ShowOpenDialog(out path, ".log4jxml", "Nlog log4jxml|*.log4jxml");
             if (!res)
             {
                 return;
@@ -166,13 +166,13 @@
         protected override void OnActivate()
         {
             base.OnActivate();
-
-            ActivateItem(Items.First());
+            if(Items.Any())
+                ActivateItem(Items.First());
         }
 
         public void Test()
         {
-            Dialogs.ShowErrorMessageBox(new ApplicationException("123"));
+            DialogService.Current.ShowErrorMessageBox(new ApplicationException("123"));
         }
 
         protected override void OnDeactivate(bool close)

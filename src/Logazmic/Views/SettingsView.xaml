@@ -7,27 +7,38 @@
                  xmlns:controls1="clr-namespace:Logazmic.Controls"
                  xmlns:properties="clr-namespace:Logazmic.Properties"
                  mc:Ignorable="d"
+                 Theme="Inverse"
                  d:DesignHeight="300" d:DesignWidth="300"
                  Position="Right" Header="Settings" IsOpen="{Binding IsSettingsOpen}" Padding="10">
-    <StackPanel>
+    <StackPanel DataContext="{x:Static properties:Settings.Default}">
         <Label Style="{StaticResource DescriptionHeaderStyle}">Appearance</Label>
         <controls1:TwoColumnGrid>
             <controls1:TwoColumnGrid.Resources>
                 <Style x:Key="Default" TargetType="FrameworkElement">
-                    <Setter Property="Margin" Value="15,3" />
+                    <Setter Property="Margin" Value="25,3" />
                     <Setter Property="VerticalAlignment" Value="Center" />
                 </Style>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource Default}" />
                 <Style TargetType="controls:NumericUpDown" BasedOn="{StaticResource Default}" />
+                <Style TargetType="controls:ToggleSwitch" BasedOn="{StaticResource Default}">
+
+                    <Setter Property="OffLabel" Value="" />
+                    <Setter Property="OnLabel" Value="" />
+                </Style>
             </controls1:TwoColumnGrid.Resources>
+            
             <TextBlock>Grid font size:</TextBlock>
-            <controls:NumericUpDown Value="{Binding Source={x:Static properties:Settings.Default}, Path=GridFontSize}"
-                                                Minimum="0"
-                                                Maximum="30" />
+            <controls:NumericUpDown Value="{Binding GridFontSize}"
+                                    Minimum="5"
+                                    Maximum="30" />
+            
             <TextBlock>Description font size:</TextBlock>
-            <controls:NumericUpDown Value="{Binding Source={x:Static properties:Settings.Default}, Path=DescriptionFontSize}"
-                                                Minimum="0"
-                                                Maximum="30" />
+            <controls:NumericUpDown Value="{Binding DescriptionFontSize}"
+                                    Minimum="5"
+                                    Maximum="30" />
+            
+<!--            <TextBlock>Dark theme:</TextBlock>-->
         </controls1:TwoColumnGrid>
-    </StackPanel>
+        <controls:ToggleSwitch HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="15" Header="Dark theme" IsChecked="{Binding UseDarkTheme}" />
+    </StackPanel>   
 </controls:Flyout>

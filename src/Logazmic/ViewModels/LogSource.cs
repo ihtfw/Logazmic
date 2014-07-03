@@ -5,7 +5,7 @@ namespace Logazmic.ViewModels
 
     using Caliburn.Micro;
 
-    using Logazmic.Utils;
+    using Logazmic.Services;
 
     public class LogSource : PropertyChangedBase
     {
