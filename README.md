@@ -19,7 +19,23 @@ http://logazmic.azurewebsites.net/
 
 
 
-##Setup for NLog (http://nlog-project.org/):
+##Setup 
+###NLog (http://nlog-project.org/):
+### Xml configuration
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <targets>
+        <target name="logfile"  layout="${log4jxmlevent}"  xsi:type="File" fileName="file.txt" />
+    </targets>
+
+    <rules>
+        <logger name="*" minlevel="Info" writeTo="logfile" />
+    </rules>
+</nlog>
+```
+### Code configuration
 ```csharp
 var config = new LoggingConfiguration(); 
 
@@ -52,8 +68,7 @@ config.LoggingRules.Add(tcpNetworkRule);
 
 LogManager.Configuration = config;
 ```
-##Setup for log4net
-Configuration for log4net:
+###Log4net
 ```xml
 <appender name=\"FileAppender\" type=\"log4net.Appender.FileAppender\">
     <file value=\"log-file.txt\" />
