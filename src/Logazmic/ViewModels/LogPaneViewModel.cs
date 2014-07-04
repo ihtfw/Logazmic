@@ -15,8 +15,7 @@ namespace Logazmic.ViewModels
     using Logazmic.Core.Reciever;
     using Logazmic.Services;
 
-    public class LogPaneViewModel : UpdatableScreen, ILogMessageNotifiable, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>,
-        IDisposable
+    public class LogPaneViewModel : UpdatableScreen, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>, IDisposable
     {
         private CollectionViewSource collectionViewSource;
 
@@ -26,7 +25,7 @@ namespace Logazmic.ViewModels
 
         private string searchString;
 
-        public LogPaneViewModel([NotNull] IReceiver receiver)
+        public LogPaneViewModel([NotNull] AReceiver receiver)
         {
             if (receiver == null)
             {
@@ -45,7 +44,17 @@ namespace Logazmic.ViewModels
             Task.Factory.StartNew(Init);
         }
 
-        public override string DisplayName { get { return Receiver.DisplayName; } set { Receiver.DisplayName = value; } }
+        public override string DisplayName
+        {
+            get
+            {
+                if (Receiver == null)
+                    return null;
+
+                return Receiver.DisplayName;
+            }
+            set { Receiver.DisplayName = value; }
+        }
 
         public string SearchString
         {
@@ -59,7 +68,7 @@ namespace Logazmic.ViewModels
 
         public LogSource LogSourceRoot { get; private set; }
 
-        public IReceiver Receiver { get; private set; }
+        public AReceiver Receiver { get; private set; }
 
         public BindableCollection<LogMessage> LogMessages { get; private set; }
 
@@ -103,8 +112,11 @@ namespace Logazmic.ViewModels
         {
             if (Receiver != null)
             {
+                Receiver.NewMessage -= OnNewMessage;
+                Receiver.NewMessages -= OnNewMessages;
                 Receiver.Terminate();
-                Receiver.Detach();
+
+                Receiver = null;
             }
         }
 
@@ -128,8 +140,10 @@ namespace Logazmic.ViewModels
         {
             try
             {
+                Receiver.NewMessage += OnNewMessage;
+                Receiver.NewMessages += OnNewMessages;
                 Receiver.Initialize();
-                Receiver.Attach(this);
+                
                 Update(true);
             }
             catch (Exception e)
@@ -188,15 +202,15 @@ namespace Logazmic.ViewModels
             });
         }
 
-        #region ILogMessageNotifiable
-
-        public void Notify(LogMessage[] logMsgs)
+        #region OnNewMessages
+        
+        private void OnNewMessages(object sender, LogMessage[] logMsgs)
         {
             LogMessages.AddRange(logMsgs);
             Array.ForEach(logMsgs, m => LogSourceRoot.Find(m.LoggerNames));
         }
 
-        public void Notify(LogMessage logMsg)
+        private void OnNewMessage(object sender, LogMessage logMsg)
         {
             LogMessages.Add(logMsg);
 
@@ -204,5 +218,6 @@ namespace Logazmic.ViewModels
         }
 
         #endregion
+
     }
 }

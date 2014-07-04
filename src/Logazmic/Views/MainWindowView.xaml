@@ -96,7 +96,9 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
 
-            <controls1:MetroButton cal:Message.Attach="Open" ToolTip="OpenFile" Visual="{DynamicResource appbar_folder_open}" />
+            <controls1:MetroButton cal:Message.Attach="Add" ToolTip="Add logger" Visual="{DynamicResource appbar_add}" />
+          
+            <controls1:MetroButton cal:Message.Attach="Open" ToolTip="Open File" Visual="{DynamicResource appbar_folder_open}" />
 
             <controls1:MetroButton cal:Message.Attach="Clear" ToolTip="Clear log" Visual="{DynamicResource appbar_close}" />
 

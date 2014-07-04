@@ -24,14 +24,7 @@
         }
 
         public bool IsSettingsOpen { get; set; }
-
-        public void Dispose()
-        {
-            foreach (var item in Items)
-            {
-                item.Dispose();
-            }
-        }
+        
 
         private void LoadRecivers()
         {
@@ -41,7 +34,7 @@
             }
         }
 
-        public void AddReceiver(IReceiver receiver)
+        public void AddReceiver(AReceiver receiver)
         {
             LogazmicSettings.Instance.Receivers.Add(receiver);
             Items.Add(new LogPaneViewModel(receiver));
@@ -81,6 +74,33 @@
             }
         }
 
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+            if (Items.Any())
+            {
+                ActivateItem(Items.First());
+            }
+        }
+
+
+        protected override void OnDeactivate(bool close)
+        {
+            if (close)
+            {
+                Dispose();
+            }
+            base.OnDeactivate(close);
+        }
+
+        #region Actions
+
+        public void Add()
+        {
+            DialogService.Current.ShowMessageBox("TODO", "Here will be adding new logger");
+        }
+
         public void LoadFile(string path)
         {
             try
@@ -95,13 +115,14 @@
                     return;
                 }
 
-               
-                var paneViewModel = new LogPaneViewModel(new FileReceiver(path){
-                                                             FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
-                                                             })
-                                    {
-                                        ToolTip = path,
-                                    };
+
+                var paneViewModel = new LogPaneViewModel(new FileReceiver(path)
+                {
+                    FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
+                })
+                {
+                    ToolTip = path,
+                };
                 i++;
                 Items.Add(paneViewModel);
 
@@ -112,31 +133,6 @@
                 DialogService.Current.ShowErrorMessageBox(e);
             }
         }
-
-        protected override void OnActivate()
-        {
-            base.OnActivate();
-            if (Items.Any())
-            {
-                ActivateItem(Items.First());
-            }
-        }
-
-        public void Test()
-        {
-            DialogService.Current.ShowErrorMessageBox(new ApplicationException("123"));
-        }
-
-        protected override void OnDeactivate(bool close)
-        {
-            if (close)
-            {
-                Dispose();
-            }
-            base.OnDeactivate(close);
-        }
-
-        #region Actions
 
         public void Clear()
         {
@@ -175,6 +171,20 @@
             Items.Remove(pane);
         }
 
+        public void Test()
+        {
+            DialogService.Current.ShowErrorMessageBox(new ApplicationException("123"));
+        }
+
         #endregion
+
+
+        public void Dispose()
+        {
+            foreach (var item in Items)
+            {
+                item.Dispose();
+            }
+        }
     }
 }

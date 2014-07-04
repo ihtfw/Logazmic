@@ -176,16 +176,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Log\ILogMessageNotifiable.cs" />
     <Compile Include="Core\Log\LogLevel.cs" />
-    <Compile Include="Core\Log\LogLevelInfo.cs" />
-    <Compile Include="Core\Log\LogLevels.cs" />
     <Compile Include="Core\Log\LogMessage.cs" />
-    <Compile Include="Core\Log\LogMessageField.cs" />
-    <Compile Include="Core\Log\LogUtils.cs" />
-    <Compile Include="Core\Reciever\BaseReceiver.cs" />
+    <Compile Include="Core\Reciever\AReceiver.cs" />
     <Compile Include="Core\Reciever\FileReceiver.cs" />
-    <Compile Include="Core\Reciever\IReceiver.cs" />
     <Compile Include="Core\Reciever\ReceiverUtils.cs" />
     <Compile Include="Core\Reciever\TcpReceiver.cs" />
     <Compile Include="Bootstrapper.cs" />
