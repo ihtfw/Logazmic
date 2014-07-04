@@ -14,7 +14,9 @@
                       mc:Ignorable="d"
                       d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
                       AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];"
-                      WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024">
+                      WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
+                       Icon="../Resources/appbar.flag.bear.ico"
+                      ShowIconOnTitleBar="True">
     <controls:MetroWindow.Resources>
         <!--        Styles to ovveride grid foreground-->
         <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}">
