@@ -8,7 +8,7 @@ Minimalistic log viewer for Windows. Supports only log4j xml layout yet.
 * Opening *.log4j files 
 * Drag-and-drop files
 
-##Install link 
+##Download 
 
 http://logazmic.azurewebsites.net/
 
