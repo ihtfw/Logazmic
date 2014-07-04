@@ -1,4 +1,4 @@
-#Logazmic
+Logazmic
 ========
 
 Minimalistic log viewer for Windows. Supports only log4j xml layout yet.
@@ -8,12 +8,14 @@ Minimalistic log viewer for Windows. Supports only log4j xml layout yet.
 * Opening *.log4j files 
 * Drag-and-drop files
 
-##Screenshots:
-![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot1.png) ![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot2.png)
-
 ##Install link 
 
 http://logazmic.azurewebsites.net/
+
+##Screenshots:
+![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot1.png) ![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot2.png)
+
+
 
 ##Setup for NLog (http://nlog-project.org/):
 ```csharp
