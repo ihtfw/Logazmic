@@ -1,16 +1,20 @@
 ﻿namespace Logazmic.Core.Reciever
 {
+    using System.ComponentModel;
+
     using Logazmic.Core.Log;
 
     public interface IReceiver
     {
-        string SampleClientConfig { get; }
-        string DisplayName { get; }
-
         void Initialize();
         void Terminate();
 
         void Attach(ILogMessageNotifiable notifiable);
         void Detach();
+
+        [Browsable(false)]
+        string DisplayName { get; set; }
+
+        bool IsInitilized { get; set; }
     }
 }

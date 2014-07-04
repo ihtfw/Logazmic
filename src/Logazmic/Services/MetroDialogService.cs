@@ -14,7 +14,10 @@
     {
         private MetroWindow GetActiveWindow()
         {
-            return Application.Current.Windows.OfType<MetroWindow>().Single(w => w.IsActive);
+            var window = Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault(w => w.IsActive);
+            if (window == null)
+                window = Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault();
+            return window;
         }
 
         public override void ShowMessageBox(string title, string message)

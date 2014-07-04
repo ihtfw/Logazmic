@@ -3,18 +3,14 @@
     using System;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Controls;
 
     using Caliburn.Micro;
 
     using Logazmic.Core.Reciever;
-    using Logazmic.Properties;
     using Logazmic.Services;
+    using Logazmic.Settings;
 
-    using MahApps.Metro;
-    using MahApps.Metro.Actions;
     using MahApps.Metro.Controls;
 
     public class MainWindowViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
@@ -24,18 +20,7 @@
         public MainWindowViewModel()
         {
             DisplayName = "Logazmic";
-
             LoadRecivers();
-        }
-
-        private void LoadRecivers()
-        {
-            Items.Add(new LogPaneViewModel(new TcpReceiver())
-                      {
-                          DisplayName = "TCP",
-                          ContentId = "tcp",
-                          CanClose = false
-                      });
         }
 
         public bool IsSettingsOpen { get; set; }
@@ -48,6 +33,19 @@
             }
         }
 
+        private void LoadRecivers()
+        {
+            foreach (var receiver in LogazmicSettings.Instance.Receivers)
+            {
+                Items.Add(new LogPaneViewModel(receiver));
+            }
+        }
+
+        public void AddReceiver(IReceiver receiver)
+        {
+            LogazmicSettings.Instance.Receivers.Add(receiver);
+            Items.Add(new LogPaneViewModel(receiver));
+        }
 
         protected override void OnViewLoaded(object view)
         {
@@ -64,7 +62,6 @@
             }
         }
 
-        
         public void OnDrop(DragEventArgs e)
         {
             var dataObject = e.Data as DataObject;
@@ -98,18 +95,12 @@
                     return;
                 }
 
-                var name = Path.GetFileNameWithoutExtension(path) + "_" + i;
-                var paneViewModel = new LogPaneViewModel(new FileReceiver
-                                                               {
-                                                                   FileToWatch = path,
-                                                                   FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
-                                                                   ShowFromBeginning = true
-                                                               })
+               
+                var paneViewModel = new LogPaneViewModel(new FileReceiver(path){
+                                                             FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
+                                                             })
                                     {
-                                        DisplayName = name,
                                         ToolTip = path,
-                                        ContentId = name.ToLower(),
-                                        CanClose = true
                                     };
                 i++;
                 Items.Add(paneViewModel);
@@ -122,8 +113,30 @@
             }
         }
 
-        #region Actions
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+            if (Items.Any())
+            {
+                ActivateItem(Items.First());
+            }
+        }
 
+        public void Test()
+        {
+            DialogService.Current.ShowErrorMessageBox(new ApplicationException("123"));
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            if (close)
+            {
+                Dispose();
+            }
+            base.OnDeactivate(close);
+        }
+
+        #region Actions
 
         public void Clear()
         {
@@ -157,32 +170,11 @@
         public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
         {
             var pane = (LogPaneViewModel)args.ClosingTabItem.Content;
+            LogazmicSettings.Instance.Receivers.Remove(pane.Receiver);
             pane.Dispose();
             Items.Remove(pane);
         }
 
-
         #endregion
-
-        protected override void OnActivate()
-        {
-            base.OnActivate();
-            if(Items.Any())
-            ActivateItem(Items.First());
-        }
-
-        public void Test()
-        {
-            DialogService.Current.ShowErrorMessageBox(new ApplicationException("123"));
-        }
-
-        protected override void OnDeactivate(bool close)
-        {
-            if (close)
-            {
-                Dispose();
-            }
-            base.OnDeactivate(close);
-        }
     }
 }

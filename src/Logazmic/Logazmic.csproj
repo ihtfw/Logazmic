@@ -29,8 +29,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>http://logazmic.azurewebsites.net/</UpdateUrl>
     <ProductName>Logazmic</ProductName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
+    <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
@@ -82,6 +82,10 @@
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.0.3.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PropertyChanged">
       <HintPath>..\packages\PropertyChanged.Fody.1.48.2.0\Lib\NET35\PropertyChanged.dll</HintPath>
       <Private>True</Private>
@@ -119,10 +123,12 @@
     <Compile Include="Controls\MetroToggleButton.xaml.cs">
       <DependentUpon>MetroToggleButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Messaging.cs" />
     <Compile Include="Services\MetroDialogService.cs" />
+    <Compile Include="Settings\JsonSettingsBase.cs" />
+    <Compile Include="Settings\LogazmicSettings.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
     <Compile Include="ViewModels\UpdatableScreen.cs" />
     <Compile Include="Views\MainWindowView.xaml.cs">
@@ -191,21 +197,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Logazmic_TemporaryKey.pfx" />
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <AppDesigner Include="Properties\" />
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
@@ -246,6 +243,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <FileAssociation Include=".log4j">
+      <Visible>False</Visible>
+      <Description>log4jxml</Description>
+      <Progid>log4jxml</Progid>
+      <DefaultIcon>Resources\appbar.flag.bear.ico</DefaultIcon>
+    </FileAssociation>
     <FileAssociation Include=".log4jxml">
       <Visible>False</Visible>
       <Description>log4jxml</Description>

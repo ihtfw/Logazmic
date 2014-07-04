@@ -8,9 +8,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    [Serializable]
-    [DisplayName("TCP (IP v4 and v6)")]
-    public class TcpReceiver : BaseReceiver
+    public class TcpReceiver : ReceiverBase
     {
         #region Port Property
 
@@ -52,21 +50,11 @@
 
         #region IReceiver Members
 
-        [Browsable(false)]
-        public override string SampleClientConfig
-        {
-            get
-            {
-                return
-                    "Configuration for NLog:" + Environment.NewLine +
-                    "<target name=\"TcpOutlet\" xsi:type=\"NLogViewer\" address=\"tcp://localhost:4505\"/>";
-            }
-        }
-
+   
         [NonSerialized]
         Socket _socket;
 
-        public override void Initialize()
+        protected override void DoInitilize()
         {
             if (_socket != null) return;
 

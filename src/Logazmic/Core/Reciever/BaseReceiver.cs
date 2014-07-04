@@ -1,32 +1,27 @@
 ﻿namespace Logazmic.Core.Reciever
 {
-    using System;
-    using System.ComponentModel;
-
     using Logazmic.Core.Log;
 
-    [Serializable]
-    public abstract class BaseReceiver : MarshalByRefObject, IReceiver
+    public abstract class ReceiverBase : IReceiver
     {
-        [NonSerialized]
         protected ILogMessageNotifiable Notifiable;
-
-        [NonSerialized]
-        private string _displayName;
-
 
         #region IReceiver Members
 
-        public abstract string SampleClientConfig { get; }
+        public string DisplayName { get; set; }
 
-        [Browsable(false)]
-        public string DisplayName
+        public void Initialize()
         {
-            get { return _displayName; }
-            protected set { _displayName = value; }
+            if (IsInitilized)
+            {
+                return;
+            }
+            DoInitilize();
+            IsInitilized = true;
         }
 
-        public abstract void Initialize();
+        public bool IsInitilized { get; set; }
+
         public abstract void Terminate();
 
         public virtual void Attach(ILogMessageNotifiable notifiable)
@@ -38,6 +33,8 @@
         {
             Notifiable = null;
         }
+
+        protected abstract void DoInitilize();
 
         #endregion
     }

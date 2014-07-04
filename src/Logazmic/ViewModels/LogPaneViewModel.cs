@@ -10,6 +10,7 @@ namespace Logazmic.ViewModels
 
     using Caliburn.Micro;
 
+    using Logazmic.Annotations;
     using Logazmic.Core.Log;
     using Logazmic.Core.Reciever;
     using Logazmic.Services;
@@ -25,20 +26,26 @@ namespace Logazmic.ViewModels
 
         private string searchString;
 
-        public LogPaneViewModel(IReceiver receiver)
+        public LogPaneViewModel([NotNull] IReceiver receiver)
         {
-            LogMessages = new BindableCollection<LogMessage>();
+            if (receiver == null)
+            {
+                throw new ArgumentNullException("receiver");
+            }
+
             Receiver = receiver;
+            LogMessages = new BindableCollection<LogMessage>();
             MinLogLevel = LogLevel.Trace;
-            CanClose = true;
             LogSourceRoot = new LogSource
                             {
                                 Name = "Root"
                             };
             Messaging.Subscribe(this);
 
-            Init();
+            Task.Factory.StartNew(Init);
         }
+
+        public override string DisplayName { get { return Receiver.DisplayName; } set { Receiver.DisplayName = value; } }
 
         public string SearchString
         {
@@ -50,15 +57,7 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public bool IsInited { get; private set; }
-
-        public bool IsLoading { get; private set; }
-
-        public bool CanInit { get { return !IsInited && !IsLoading; } }
-
         public LogSource LogSourceRoot { get; private set; }
-
-        public bool CanClose { get; set; }
 
         public IReceiver Receiver { get; private set; }
 
@@ -67,8 +66,6 @@ namespace Logazmic.ViewModels
         public LogMessage SelectedLogMessage { get; set; }
 
         public string ToolTip { get; set; }
-
-        public string ContentId { get; set; }
 
         public LogLevel MinLogLevel
         {
@@ -109,7 +106,6 @@ namespace Logazmic.ViewModels
                 Receiver.Terminate();
                 Receiver.Detach();
             }
-            Receiver = null;
         }
 
         public void Handle(RefreshCheckEvent message)
@@ -128,45 +124,17 @@ namespace Logazmic.ViewModels
             Update();
         }
 
-        protected override void OnActivate()
+        private void Init()
         {
-            base.OnActivate();
-
-            Init();
-        }
-
-        public async void Init()
-        {
-            if (!CanInit)
-            {
-                return;
-            }
-
-            IsLoading = true;
             try
             {
-                await Task.Factory.StartNew(() =>
-                                            {
-                                                if (Receiver != null)
-                                                {
-                                                    Receiver.Terminate();
-                                                    Receiver.Detach();
-                                                }
-                                                Receiver.Initialize();
-                                                Receiver.Attach(this);
-                                                IsInited = true;
-
-                                                Update(true);
-                                            });
+                Receiver.Initialize();
+                Receiver.Attach(this);
+                Update(true);
             }
             catch (Exception e)
             {
-                IsInited = false;
                 DialogService.Current.ShowErrorMessageBox(e);
-            }
-            finally
-            {
-                IsLoading = false;
             }
         }
 
@@ -197,15 +165,9 @@ namespace Logazmic.ViewModels
             {
                 return;
             }
-            //            if (LogSourceRoot.Checked.All(c => c != resultRow.LastLoggerName))
-            //            {
-            //                return;
-            //            }
 
             e.Accepted = true;
         }
-
-        
 
         protected override void DoUpdate(bool full)
         {
@@ -215,15 +177,15 @@ namespace Logazmic.ViewModels
             }
 
             Execute.OnUIThread(() =>
-                               {
-                                   try
-                                   {
-                                       CollectionViewSource.View.Refresh();
-                                   }
-                                   catch
-                                   {
-                                   }
-                               });
+            {
+                try
+                {
+                    CollectionViewSource.View.Refresh();
+                }
+                catch
+                {
+                }
+            });
         }
 
         #region ILogMessageNotifiable

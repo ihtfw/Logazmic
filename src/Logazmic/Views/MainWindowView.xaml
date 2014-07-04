@@ -8,9 +8,9 @@
                       xmlns:log="clr-namespace:Logazmic.Core.Log"
                       xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
                       xmlns:controls1="clr-namespace:Logazmic.Controls"
-                      xmlns:properties="clr-namespace:Logazmic.Properties"
                       xmlns:views="clr-namespace:Logazmic.Views"
                       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                      xmlns:settings="clr-namespace:Logazmic.Settings"
                       mc:Ignorable="d"
                       d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
                       AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];"
@@ -96,9 +96,9 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
 
-            <controls1:MetroButton cal:Message.Attach="Open" Visual="{DynamicResource appbar_folder_open}" />
+            <controls1:MetroButton cal:Message.Attach="Open" ToolTip="OpenFile" Visual="{DynamicResource appbar_folder_open}" />
 
-            <controls1:MetroButton cal:Message.Attach="Clear" Visual="{DynamicResource appbar_close}" />
+            <controls1:MetroButton cal:Message.Attach="Clear" ToolTip="Clear log" Visual="{DynamicResource appbar_close}" />
 
             <controls1:MetroButton cal:Message.Attach="Test" Visual="{DynamicResource appbar_debug_restart}" />
 
@@ -145,6 +145,7 @@
                     </i:Interaction.Triggers>
                     <controls:MetroTabControl.Resources>
                         <Style TargetType="controls:MetroTabItem">
+                            <Setter Property="ToolTip" Value="{Binding ToolTip}"></Setter>
                             <Setter Property="CloseButtonEnabled" Value="True" />
                         </Style>
                     </controls:MetroTabControl.Resources>
@@ -154,7 +155,7 @@
                                       SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
                                       CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                                       CanUserResizeRows="False" SelectionMode="Single"
-                                      FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=GridFontSize}"
+                                      FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=GridFontSize}"
                                       CellStyle="{StaticResource CellStyle}" RowStyle="{StaticResource RowStyle}">
                                 <DataGrid.Resources>
                                     <Style TargetType="TextBlock">
@@ -177,6 +178,18 @@
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </controls:MetroTabControl>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Text="Add at least one tab.">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Items.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
 
             <GridSplitter Grid.Row="0" Grid.Column="1" Width="3" ResizeDirection="Columns"
@@ -206,7 +219,7 @@
 
             <Grid x:Name="Details" Grid.Row="2" Grid.ColumnSpan="3">
                 <TextBox FontFamily="Courier New" Style="{StaticResource DetailsTextBlock}"
-                         FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=DescriptionFontSize}"
+                         FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=DescriptionFontSize}"
                          VerticalAlignment="Top"
                          Text="{Binding Path=ActiveItem.SelectedLogMessage.Message, Mode=OneWay}" Margin="10"
                          TextWrapping="Wrap" />

@@ -5,7 +5,8 @@ namespace Logazmic
     using System;
     using System.Linq;
 
-    using Logazmic.Properties;
+
+    using Logazmic.Settings;
     using Logazmic.Utils;
 
     using MahApps.Metro;
@@ -17,7 +18,7 @@ namespace Logazmic
     {
         public App()
         {
-            Settings.Default.SubscribeToPropertyChanged(settings => settings.UseDarkTheme, ChangeTheme);
+            LogazmicSettings.Instance.SubscribeToPropertyChanged(settings => settings.UseDarkTheme, ChangeTheme);
         }
 
         private void ChangeTheme()
@@ -26,10 +27,10 @@ namespace Logazmic
             if(oldTheme != null)
                 Resources.MergedDictionaries.Remove(oldTheme);
 
-            var themeFile = Settings.Default.UseDarkTheme ? "Styles/DarkTheme.xaml" : "Styles/LightTheme.xaml";
+            var themeFile = LogazmicSettings.Instance.UseDarkTheme ? "Styles/DarkTheme.xaml" : "Styles/LightTheme.xaml";
             Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(themeFile, UriKind.Relative) });
 
-            var appTheme = ThemeManager.GetAppTheme(Settings.Default.UseDarkTheme? "BaseDark" : "BaseLight");
+            var appTheme = ThemeManager.GetAppTheme(LogazmicSettings.Instance.UseDarkTheme ? "BaseDark" : "BaseLight");
             var accent = ThemeManager.GetAccent("Cyan");
             ThemeManager.ChangeAppStyle(this, accent, appTheme);
         }

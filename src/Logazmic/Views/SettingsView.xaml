@@ -5,7 +5,7 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:controls1="clr-namespace:Logazmic.Controls"
-                 xmlns:properties="clr-namespace:Logazmic.Properties"
+                 xmlns:settings="clr-namespace:Logazmic.Settings"
                  mc:Ignorable="d"
                  Theme="Inverse"
                  d:DesignHeight="300" d:DesignWidth="300"
@@ -19,7 +19,7 @@
                         Value="Center" />
         </Style>
     </controls:Flyout.Resources>
-    <StackPanel DataContext="{x:Static properties:Settings.Default}">
+    <StackPanel DataContext="{x:Static settings:LogazmicSettings.Instance}">
         <Label Style="{StaticResource DescriptionHeaderStyle}">Appearance</Label>
         <controls1:TwoColumnGrid>
             <controls1:TwoColumnGrid.Resources>
