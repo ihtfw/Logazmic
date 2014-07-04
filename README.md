@@ -1,17 +1,22 @@
-Logazmic
+#Logazmic
 ========
 
 Minimalistic log viewer for Windows. Supports only log4j xml layout yet.
 
-Supports:
+##Supports:
 * Listnening on tcp port(4505)
 * Opening *.log4j files 
 * Drag-and-drop files
 
-Install link: http://logazmic.azurewebsites.net/
+##Screenshots:
+![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot1.png) ![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot2.png)
 
-Setup for NLog (http://nlog-project.org/):
-```
+##Install link 
+
+http://logazmic.azurewebsites.net/
+
+##Setup for NLog (http://nlog-project.org/):
+```csharp
 var config = new LoggingConfiguration(); 
 
 #region file
