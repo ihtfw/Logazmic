@@ -6,7 +6,7 @@ Logazmic
 Minimalistic log viewer for Windows. Supports only log4j xml layout yet. Core is based on [Log2console](https://log2console.codeplex.com/). UI is rewritten in WPF with usage of [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
 
 ##Supports:
-* Listnening on tcp port(4505)
+* Listening on tcp port(4505)
 * Opening *.log4j files 
 * Drag-and-drop files
 
