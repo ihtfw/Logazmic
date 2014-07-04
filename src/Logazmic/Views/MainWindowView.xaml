@@ -26,7 +26,6 @@
             <Style.Triggers>
                 <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Trace}">
                     <Setter Property="Foreground" Value="{DynamicResource TraceColor}" />
-                    <Setter Property="FontWeight" Value="Thin" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
                     <Setter Property="Foreground" Value="{DynamicResource DebugColor}" />
