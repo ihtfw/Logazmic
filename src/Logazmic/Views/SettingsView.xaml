@@ -10,6 +10,15 @@
                  Theme="Inverse"
                  d:DesignHeight="300" d:DesignWidth="300"
                  Position="Right" Header="Settings" IsOpen="{Binding IsSettingsOpen}" Padding="10">
+    <controls:Flyout.Resources>
+        <Style x:Key="DescriptionHeaderStyle"
+                   TargetType="Label">
+            <Setter Property="FontSize"
+                        Value="22" />
+            <Setter Property="HorizontalAlignment"
+                        Value="Center" />
+        </Style>
+    </controls:Flyout.Resources>
     <StackPanel DataContext="{x:Static properties:Settings.Default}">
         <Label Style="{StaticResource DescriptionHeaderStyle}">Appearance</Label>
         <controls1:TwoColumnGrid>
@@ -21,24 +30,25 @@
                 <Style TargetType="TextBlock" BasedOn="{StaticResource Default}" />
                 <Style TargetType="controls:NumericUpDown" BasedOn="{StaticResource Default}" />
                 <Style TargetType="controls:ToggleSwitch" BasedOn="{StaticResource Default}">
-
                     <Setter Property="OffLabel" Value="" />
                     <Setter Property="OnLabel" Value="" />
                 </Style>
             </controls1:TwoColumnGrid.Resources>
-            
+
             <TextBlock>Grid font size:</TextBlock>
             <controls:NumericUpDown Value="{Binding GridFontSize}"
                                     Minimum="5"
                                     Maximum="30" />
-            
+
             <TextBlock>Description font size:</TextBlock>
             <controls:NumericUpDown Value="{Binding DescriptionFontSize}"
                                     Minimum="5"
                                     Maximum="30" />
-            
-<!--            <TextBlock>Dark theme:</TextBlock>-->
+
+            <TextBlock>Dark theme:</TextBlock>
+            <controls:ToggleSwitch HorizontalAlignment="Left" HorizontalContentAlignment="Center"
+                                   IsChecked="{Binding UseDarkTheme}" />
+
         </controls1:TwoColumnGrid>
-        <controls:ToggleSwitch HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="15" Header="Dark theme" IsChecked="{Binding UseDarkTheme}" />
-    </StackPanel>   
+    </StackPanel>
 </controls:Flyout>

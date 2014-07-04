@@ -1,8 +1,7 @@
 ﻿<Application x:Class="Logazmic.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:logazmic="clr-namespace:Logazmic"
-             xmlns:converters="clr-namespace:Logazmic.Converters">
+             xmlns:logazmic="clr-namespace:Logazmic">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

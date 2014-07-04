@@ -6,6 +6,7 @@
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
+    using System.Threading.Tasks;
 
     [Serializable]
     [DisplayName("TCP (IP v4 and v6)")]
@@ -85,7 +86,7 @@
         {
             if (_socket == null || e.SocketError != SocketError.Success) return;
 
-            new Thread(Start) { IsBackground = true }.Start(e.AcceptSocket);
+            Task.Factory.StartNew(() => Start(e.AcceptSocket));
 
             e.AcceptSocket = null;
             _socket.AcceptAsync(e);

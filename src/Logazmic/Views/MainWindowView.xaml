@@ -26,6 +26,7 @@
             <Style.Triggers>
                 <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Trace}">
                     <Setter Property="Foreground" Value="{DynamicResource TraceColor}" />
+                    <Setter Property="FontWeight" Value="Thin" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
                     <Setter Property="Foreground" Value="{DynamicResource DebugColor}" />
@@ -35,13 +36,13 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Error}">
                     <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
+                    <Setter Property="FontWeight" Value="DemiBold" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Fatal}">
                     <Setter Property="Foreground" Value="{DynamicResource FatalColor}" />
+                    <Setter Property="FontWeight" Value="Bold" />
                 </DataTrigger>
             </Style.Triggers>
-            <!--            <Setter Property="Foreground"-->
-            <!--                    Value="{Binding LogLevel, Converter={StaticResource LogLevelToBrushConverter}}" />-->
         </Style>
 
         <!---->
@@ -51,6 +52,40 @@
             <Setter Property="BorderThickness" Value="  0" />
             <Setter Property="Background" Value="Transparent" />
         </Style>
+        
+        <DataTemplate x:Key="ComboboxLogLevelDataTemplate">
+            <TextBlock Text="{Binding}">
+                <TextBlock.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Trace}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource TraceColor}" />
+                                <Setter Property="Control.FontWeight" Value="Thin" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Debug}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource DebugColor}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Warn}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource WarnColor}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Error}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource ErrorColor}" />
+                                <Setter Property="Control.FontWeight" Value="DemiBold" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Fatal}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource FatalColor}" />
+                                <Setter Property="Control.FontWeight" Value="Bold" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </DataTemplate>
     </controls:MetroWindow.Resources>
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
@@ -70,14 +105,8 @@
                                          Visual="{DynamicResource appbar_settings}" />
 
 
-            <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120"
+            <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120" ItemTemplate="{StaticResource ComboboxLogLevelDataTemplate}"
                       VerticalAlignment="Center">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}"
-                                   Foreground="{Binding Converter={StaticResource LogLevelToBrushConverter}}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
                 <log:LogLevel>Trace</log:LogLevel>
                 <log:LogLevel>Debug</log:LogLevel>
                 <log:LogLevel>Info</log:LogLevel>

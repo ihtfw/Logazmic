@@ -17,7 +17,7 @@
     <RestorePackages>true</RestorePackages>
     <NuGetPackageImportStamp>97664a29</NuGetPackageImportStamp>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>..\..\publish\</PublishUrl>
+    <PublishUrl>ftp://waws-prod-blu-015.ftp.azurewebsites.windows.net/site/wwwroot/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -27,9 +27,11 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <UpdateUrl>https://rawgit.com/ihtfw/Logazmic/master/publish/</UpdateUrl>
+    <UpdateUrl>http://logazmic.azurewebsites.net/</UpdateUrl>
     <ProductName>Logazmic</ProductName>
-    <ApplicationRevision>5</ApplicationRevision>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -167,7 +169,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Core\Log\ILogMessageNotifiable.cs" />
     <Compile Include="Core\Log\LogLevel.cs" />
     <Compile Include="Core\Log\LogLevelInfo.cs" />
