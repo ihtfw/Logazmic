@@ -9,11 +9,11 @@ namespace Logazmic.ViewModels
     /// </summary>
     public class UpdatableScreen : Screen
     {
-        private bool needToUpdate = false;
+        private bool needToUpdate;
 
-        private bool fullUpdate = false;
+        private bool fullUpdate;
 
-        private bool isUpdating = false;
+        private bool isUpdating;
 
         private readonly Timer timer = new Timer(150);
 

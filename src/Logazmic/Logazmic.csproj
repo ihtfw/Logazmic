@@ -116,6 +116,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\CircleMenuButton.xaml.cs">
+      <DependentUpon>CircleMenuButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TwoColumnGrid.cs" />
     <Compile Include="Controls\MetroButton.xaml.cs">
       <DependentUpon>MetroButton.xaml</DependentUpon>
@@ -123,6 +126,7 @@
     <Compile Include="Controls\MetroToggleButton.xaml.cs">
       <DependentUpon>MetroToggleButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\Reciever\UDPReciever.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Messaging.cs" />
@@ -142,6 +146,10 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\CircleMenuButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MetroButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -176,16 +184,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Log\ILogMessageNotifiable.cs" />
     <Compile Include="Core\Log\LogLevel.cs" />
-    <Compile Include="Core\Log\LogLevelInfo.cs" />
-    <Compile Include="Core\Log\LogLevels.cs" />
     <Compile Include="Core\Log\LogMessage.cs" />
-    <Compile Include="Core\Log\LogMessageField.cs" />
-    <Compile Include="Core\Log\LogUtils.cs" />
-    <Compile Include="Core\Reciever\BaseReceiver.cs" />
+    <Compile Include="Core\Reciever\AReceiver.cs" />
     <Compile Include="Core\Reciever\FileReceiver.cs" />
-    <Compile Include="Core\Reciever\IReceiver.cs" />
     <Compile Include="Core\Reciever\ReceiverUtils.cs" />
     <Compile Include="Core\Reciever\TcpReceiver.cs" />
     <Compile Include="Bootstrapper.cs" />

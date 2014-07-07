@@ -7,7 +7,7 @@
         d:DesignHeight="300" d:DesignWidth="300"
         Name ="Button"
         Style="{StaticResource MetroCircleToggleButtonStyle}"
-        Height="50" Width="50" Margin="3,0,3,0">
+        Height="50" Width="50">
     <Rectangle Height="20" Width="20" Fill="{Binding Path=Foreground, ElementName=Button}">
         <Rectangle.OpacityMask>
             <VisualBrush Stretch="Fill" Visual="{Binding ElementName=Button, Path=Visual}" />

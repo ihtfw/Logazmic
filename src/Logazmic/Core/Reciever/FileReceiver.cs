@@ -11,7 +11,7 @@
     ///     This receiver watch a given file, like a 'tail' program, with one log event by line.
     ///     Ideally the log events should use the log4j XML Schema layout.
     /// </summary>
-    public class FileReceiver : ReceiverBase
+    public class FileReceiver : AReceiver
     {
         public enum FileFormatEnums
         {
@@ -20,9 +20,7 @@
             Flat,
         }
 
-        private FileFormatEnums _fileFormat;
-
-        private string _fullLoggerName;
+        private FileFormatEnums fileFormat;
 
         private StreamReader fileReader;
 
@@ -40,23 +38,26 @@
 
         public string FileToWatch { get; private set; }
 
-        public FileFormatEnums FileFormat { get { return _fileFormat; } set { _fileFormat = value; } }
+        public FileFormatEnums FileFormat { get { return fileFormat; } set { fileFormat = value; } }
 
-        #region IReceiver Members
+        #region AReceiver Members
 
         protected override void DoInitilize()
         {
-            fileReader =
-                new StreamReader(new FileStream(FileToWatch, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+            fileReader = new StreamReader(new FileStream(FileToWatch, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
             lastFileLength = 0;
 
             string path = Path.GetDirectoryName(FileToWatch);
             filename = Path.GetFileName(FileToWatch);
-            fileWatcher = new FileSystemWatcher(path, filename);
-            fileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
+            fileWatcher = new FileSystemWatcher(path, filename)
+                          {
+                              NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
+                          };
             fileWatcher.Changed += OnFileChanged;
             fileWatcher.EnableRaisingEvents = true;
+
+            ReadFile();
         }
 
         public override void Terminate()
@@ -77,20 +78,8 @@
             lastFileLength = 0;
         }
 
-        public override void Attach(ILogMessageNotifiable notifiable)
-        {
-            base.Attach(notifiable);
-            ReadFile();
-        }
-
         #endregion
-
-        private void Restart()
-        {
-            Terminate();
-            Initialize();
-        }
-
+        
         private void OnFileChanged(object sender, FileSystemEventArgs e)
         {
             if (e.ChangeType != WatcherChangeTypes.Changed)
@@ -118,14 +107,15 @@
 
             while ((line = fileReader.ReadLine()) != null)
             {
-                if (_fileFormat == FileFormatEnums.Flat)
+                if (fileFormat == FileFormatEnums.Flat)
                 {
-                    var logMsg = new LogMessage();
-                    logMsg.LoggerName = _fullLoggerName;
-                    logMsg.ThreadName = "NA";
-                    logMsg.Message = line;
-                    logMsg.TimeStamp = DateTime.Now;
-                    logMsg.Level = LogLevels.Instance[LogLevel.Info];
+                    var logMsg = new LogMessage
+                                 {
+                                     ThreadName = "NA",
+                                     Message = line, 
+                                     TimeStamp = DateTime.Now,
+                                     LogLevel = LogLevel.Info
+                                 };
 
                     logMsgs.Add(logMsg);
                 }
@@ -136,7 +126,7 @@
                     // This condition allows us to process events that spread over multiple lines
                     if (line.Contains("</log4j:event>"))
                     {
-                        LogMessage logMsg = ReceiverUtils.ParseLog4JXmlLogEvent(sb.ToString(), _fullLoggerName);
+                        LogMessage logMsg = ReceiverUtils.ParseLog4JXmlLogEvent(sb.ToString(), null);
                         logMsgs.Add(logMsg);
                         sb = new StringBuilder();
                     }
@@ -144,7 +134,7 @@
             }
 
             // Notify the UI with the set of messages
-            Notifiable.Notify(logMsgs.ToArray());
+            OnNewMessages(logMsgs.ToArray());
 
             // Update the last file length
             lastFileLength = fileReader.BaseStream.Position;

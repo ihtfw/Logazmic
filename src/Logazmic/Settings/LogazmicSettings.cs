@@ -19,7 +19,7 @@ namespace Logazmic.Settings
 
         private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\settings.json");
 
-        public ObservableCollection<IReceiver> Receivers { get; set; }
+        public ObservableCollection<AReceiver> Receivers { get; set; }
 
         [DefaultValue(12)]
         public int GridFontSize { get; set; }
@@ -33,7 +33,7 @@ namespace Logazmic.Settings
         protected override void SetDefaults()
         {
             base.SetDefaults();
-            Receivers = new ObservableCollection<IReceiver>();
+            Receivers = new ObservableCollection<AReceiver>();
         }
 
         protected override void Save()

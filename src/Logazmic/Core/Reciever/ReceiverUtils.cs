@@ -73,7 +73,7 @@
                     ThreadName = "NA",
                     Message = logEvent,
                     TimeStamp = DateTime.Now,
-                    Level = LogLevels.Instance[LogLevel.Info],
+                    LogLevel = LogLevel.Info,
                     ExceptionString = e.Message
                 };
             }
@@ -104,7 +104,7 @@
                 throw new Exception("The Log Event is not a valid log4j Xml block.");
 
             logMsg.LoggerName = reader.GetAttribute("logger");
-            logMsg.Level = LogLevels.Instance[reader.GetAttribute("level")];
+            logMsg.LogLevel = (LogLevel)Enum.Parse(typeof(LogLevel), reader.GetAttribute("level"), true);
             logMsg.ThreadName = reader.GetAttribute("thread");
 
             long timeStamp;

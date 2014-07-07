@@ -26,23 +26,8 @@
 
         public string LastLoggerName { get; private set; }
 
-        public LogLevel LogLevel
-        {
-            get
-            {
-                if (Level == null)
-                {
-                    return LogLevel.None;
-                }
-                return Level.Level;
-            }
-        }
-
-        /// <summary>
-        /// Log Level.
-        /// </summary>
-        public LogLevelInfo Level { get; set; }
-
+        public LogLevel LogLevel { get; set; }
+        
         /// <summary>
         /// Log Message.
         /// </summary>
@@ -104,27 +89,5 @@
         /// The Line of the Source File
         /// </summary>
         public uint SourceFileLineNr { get; set; }
-
-        public void CheckNull()
-        {
-            if (string.IsNullOrEmpty(LoggerName))
-                LoggerName = "Unknown";
-            if (string.IsNullOrEmpty(Message))
-                Message = "Unknown";
-            if (string.IsNullOrEmpty(ThreadName))
-                ThreadName = string.Empty;
-            if (string.IsNullOrEmpty(ExceptionString))
-                ExceptionString = string.Empty;
-            if (string.IsNullOrEmpty(ExceptionString))
-                ExceptionString = string.Empty;
-            if (string.IsNullOrEmpty(CallSiteClass))
-                CallSiteClass = string.Empty;
-            if (string.IsNullOrEmpty(CallSiteMethod))
-                CallSiteMethod = string.Empty;
-            if (string.IsNullOrEmpty(SourceFileName))
-                SourceFileName = string.Empty;
-            if (Level == null)
-                Level = LogLevels.Instance[(LogLevel.Error)];
-        }
     }
 }

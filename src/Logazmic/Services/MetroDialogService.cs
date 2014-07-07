@@ -1,6 +1,7 @@
 ﻿namespace Logazmic.Services
 {
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
 
     using Caliburn.Micro;
@@ -23,6 +24,11 @@
         public override void ShowMessageBox(string title, string message)
         {
             GetActiveWindow().ShowMessageAsync(title, message);
+        }
+
+        public override Task<string> ShowInputDialog(string title, string message)
+        {
+            return GetActiveWindow().ShowInputAsync(title, message);
         }
 
         public override bool ShowOpenDialog(out string path, string defaultExt, string filter, string initialDir = null)

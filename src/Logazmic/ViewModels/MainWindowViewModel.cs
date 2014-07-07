@@ -24,14 +24,7 @@
         }
 
         public bool IsSettingsOpen { get; set; }
-
-        public void Dispose()
-        {
-            foreach (var item in Items)
-            {
-                item.Dispose();
-            }
-        }
+        
 
         private void LoadRecivers()
         {
@@ -40,11 +33,14 @@
                 Items.Add(new LogPaneViewModel(receiver));
             }
         }
-
-        public void AddReceiver(IReceiver receiver)
+        
+        public void AddReceiver(AReceiver receiver)
         {
-            LogazmicSettings.Instance.Receivers.Add(receiver);
+            if(!LogazmicSettings.Instance.Receivers.Contains(receiver))
+                LogazmicSettings.Instance.Receivers.Add(receiver);
             Items.Add(new LogPaneViewModel(receiver));
+            if(ActiveItem == null)
+                ActivateItem(Items.First());
         }
 
         protected override void OnViewLoaded(object view)
@@ -81,6 +77,61 @@
             }
         }
 
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+            if (Items.Any())
+            {
+                ActivateItem(Items.First());
+            }
+        }
+
+
+        protected override void OnDeactivate(bool close)
+        {
+            if (close)
+            {
+                Dispose();
+            }
+            base.OnDeactivate(close);
+        }
+
+        #region Actions
+
+
+
+        public async void AddTCPReciever()
+        {
+            var result = await DialogService.Current.ShowInputDialog("TCP Reciever", "Enter port:");
+            if (result != null)
+            {
+                ushort port;
+                if (!ushort.TryParse(result, out port))
+                {
+                    DialogService.Current.ShowErrorMessageBox("Wrong port");
+                    return;
+                }
+                AddReceiver(new TcpReceiver { Port = port, DisplayName = string.Format("TCP({0})", port) });
+            }
+        }
+
+        public async void AddUDPReciever()
+        {
+            var result = await DialogService.Current.ShowInputDialog("UDP Reciever", "Enter port:");
+            if (result != null)
+            {
+                ushort port;
+                if (!ushort.TryParse(result, out port))
+                {
+                    DialogService.Current.ShowErrorMessageBox("Wrong port");
+                    return;
+                }
+                AddReceiver(new UdpReceiver { Port = port, DisplayName = string.Format("UDP({0})", port) });
+            }
+        }
+
+
         public void LoadFile(string path)
         {
             try
@@ -95,13 +146,14 @@
                     return;
                 }
 
-               
-                var paneViewModel = new LogPaneViewModel(new FileReceiver(path){
-                                                             FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
-                                                             })
-                                    {
-                                        ToolTip = path,
-                                    };
+
+                var paneViewModel = new LogPaneViewModel(new FileReceiver(path)
+                {
+                    FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
+                })
+                {
+                    ToolTip = path,
+                };
                 i++;
                 Items.Add(paneViewModel);
 
@@ -112,31 +164,6 @@
                 DialogService.Current.ShowErrorMessageBox(e);
             }
         }
-
-        protected override void OnActivate()
-        {
-            base.OnActivate();
-            if (Items.Any())
-            {
-                ActivateItem(Items.First());
-            }
-        }
-
-        public void Test()
-        {
-            DialogService.Current.ShowErrorMessageBox(new ApplicationException("123"));
-        }
-
-        protected override void OnDeactivate(bool close)
-        {
-            if (close)
-            {
-                Dispose();
-            }
-            base.OnDeactivate(close);
-        }
-
-        #region Actions
 
         public void Clear()
         {
@@ -175,6 +202,20 @@
             Items.Remove(pane);
         }
 
+        public void Test()
+        {
+            DialogService.Current.ShowErrorMessageBox(new ApplicationException("123"));
+        }
+
         #endregion
+
+
+        public void Dispose()
+        {
+            foreach (var item in Items)
+            {
+                item.Dispose();
+            }
+        }
     }
 }

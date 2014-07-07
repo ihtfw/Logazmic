@@ -31,11 +31,18 @@ namespace Logazmic.Services
 
         public void ShowErrorMessageBox(Exception e)
         {
-            ShowMessageBox("Error", e.Message);
+           ShowErrorMessageBox(e.Message);
+        }
+
+        public void ShowErrorMessageBox(string message)
+        {
+            ShowMessageBox("Error", message);
         }
         
         public abstract void ShowMessageBox(string title, string message);
 
         public abstract bool ShowOpenDialog(out string path, string defaultExt, string filter, string initialDir = null);
+
+        public abstract Task<string> ShowInputDialog(string title, string message);
     }
 }   
