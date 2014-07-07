@@ -14,7 +14,5 @@
 
         [Browsable(false)]
         string DisplayName { get; set; }
-
-        bool IsInitilized { get; set; }
     }
 }

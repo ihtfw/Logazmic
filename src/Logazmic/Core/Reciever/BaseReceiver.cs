@@ -12,15 +12,15 @@
 
         public void Initialize()
         {
-            if (IsInitilized)
+            if (isInitilized)
             {
                 return;
             }
             DoInitilize();
-            IsInitilized = true;
+            isInitilized = true;
         }
 
-        public bool IsInitilized { get; set; }
+        protected bool isInitilized;
 
         public abstract void Terminate();
 
