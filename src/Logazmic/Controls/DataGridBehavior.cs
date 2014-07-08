@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logazmic.Controls
 {
+    using System.Collections.Specialized;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -14,32 +12,70 @@ namespace Logazmic.Controls
         public static readonly DependencyProperty AutoscrollProperty = DependencyProperty.RegisterAttached(
             "Autoscroll", typeof(bool), typeof(DataGridBehavior), new PropertyMetadata(default(bool),AutoscrollChangedCallback));
 
+        private static readonly Dictionary<DataGrid, NotifyCollectionChangedEventHandler> handlersDict = new Dictionary<DataGrid, NotifyCollectionChangedEventHandler>();
+
         private static void AutoscrollChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             var dataGrid = dependencyObject as DataGrid;
             if (dataGrid == null)
             {
-                throw new InvalidOperationException("Dependancy object is not DataGrid");
+                throw new InvalidOperationException("Dependency object is not DataGrid.");
             }
+
+            dataGrid.Unloaded += DataGridOnUnloaded;
+            dataGrid.Loaded += DataGridOnLoaded;
+
             if ((bool)args.NewValue)
             {
-                dataGrid.InitializingNewItem += ScrollToEnd;
-                ScrollToEnd(dataGrid);
+                Subscribe(dataGrid);
             }
             else
-            {
-                dataGrid.InitializingNewItem -= ScrollToEnd;
+            {   
+                Unsubscribe(dataGrid);
             }
         }
 
-        private static void ScrollToEnd(object sender, InitializingNewItemEventArgs initializingNewItemEventArgs)
+        private static void Subscribe(DataGrid dataGrid)
         {
-            var datagrid = (DataGrid)sender;
-            ScrollToEnd(datagrid);
+            var handler = new NotifyCollectionChangedEventHandler((sender, eventArgs) => ScrollToEnd(dataGrid));
+            handlersDict.Add(dataGrid, handler);
+            ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged += handler;
+            ScrollToEnd(dataGrid);
+        }
+
+        private static void Unsubscribe(DataGrid dataGrid)
+        {
+            NotifyCollectionChangedEventHandler handler;
+            handlersDict.TryGetValue(dataGrid, out handler);
+            if (handler != null)
+            {
+                ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged -= handler;
+                handlersDict.Remove(dataGrid);
+            }
+        }
+
+        private static void DataGridOnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            var dataGrid = (DataGrid)sender;
+            if (GetAutoscroll(dataGrid))
+            {
+                Subscribe(dataGrid);
+            }
+        }
+
+        private static void DataGridOnUnloaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            var dataGrid = (DataGrid)sender;
+            if (GetAutoscroll(dataGrid))
+            {   
+                Unsubscribe(dataGrid);
+            }
         }
 
         private static void ScrollToEnd(DataGrid datagrid)
         {
+            if (datagrid.Items.Count == 0)
+                return;
             datagrid.ScrollIntoView(datagrid.Items[datagrid.Items.Count - 1]);
         }
 

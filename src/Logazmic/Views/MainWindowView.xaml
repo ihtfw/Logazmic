@@ -1,23 +1,23 @@
 ﻿<metro:MetroWindow x:Class="Logazmic.Views.MainWindowView"
-                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                      xmlns:cal="http://www.caliburnproject.org"
-                      xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
-                      xmlns:log="clr-namespace:Logazmic.Core.Log"
-                      xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
-                      xmlns:controls="clr-namespace:Logazmic.Controls"
-                      xmlns:views="clr-namespace:Logazmic.Views"
-                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                      xmlns:settings="clr-namespace:Logazmic.Settings"
-                      xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
-                      mc:Ignorable="d"
-                      d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-                      AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];"
-                      WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
-                      Icon="../Resources/appbar.flag.bear.ico"
-                      ShowIconOnTitleBar="True">
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:cal="http://www.caliburnproject.org"
+                   xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+                   xmlns:log="clr-namespace:Logazmic.Core.Log"
+                   xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
+                   xmlns:controls="clr-namespace:Logazmic.Controls"
+                   xmlns:views="clr-namespace:Logazmic.Views"
+                   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                   xmlns:settings="clr-namespace:Logazmic.Settings"
+                   xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
+                   mc:Ignorable="d"
+                   d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
+                   AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];"
+                   WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
+                   Icon="../Resources/appbar.flag.bear.ico"
+                   ShowIconOnTitleBar="True">
     <metro:MetroWindow.Resources>
 
 
@@ -73,7 +73,7 @@
 
 
             <controls:MetroButton cal:Message.Attach="Open" ToolTip="Open File"
-                                   Visual="{DynamicResource appbar_folder_open}" />
+                                  Visual="{DynamicResource appbar_folder_open}" />
 
             <controls:CircleMenuButton Visual="{DynamicResource appbar_add}">
                 <controls:CircleMenuButton.ItemsSource>
@@ -82,20 +82,21 @@
                         <MenuItem Header="UDP" cal:Message.Attach="AddUDPReciever" />
                     </CompositeCollection>
                 </controls:CircleMenuButton.ItemsSource>
-            </controls1:CircleMenuButton>
+            </controls:CircleMenuButton>
 
-            <Separator Width="15" />
+            <Rectangle Width="15" />
 
             <controls:MetroButton cal:Message.Attach="Clear" ToolTip="Clear log"
-                                   Visual="{DynamicResource appbar_close}" />
+                                  Visual="{DynamicResource appbar_close}" />
 
-            <controls:MetroButton cal:Message.Attach="Test" Visual="{DynamicResource appbar_debug_restart}" />
 
-            <controls:MetroToggleButton IsChecked="{Binding ActiveItem.ScrollToEnd}"
-                                         Visual="{DynamicResource appbar_settings}" />
+            <controls:MetroToggleButton IsChecked="{Binding ActiveItem.AutoScroll}"
+                                        Visual="{DynamicResource appbar_arrow_down}" />
+
+            <Rectangle Width="15" />
 
             <controls:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"
-                                         Visual="{DynamicResource appbar_settings}" />
+                                        Visual="{DynamicResource appbar_settings}" />
 
 
             <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120"
@@ -144,7 +145,7 @@
                     </metro:MetroTabControl.Resources>
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            <ContentControl cal:View.Model="{Binding}" />
+                            <ContentControl Focusable="False" cal:View.Model="{Binding}" />
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </metro:MetroTabControl>

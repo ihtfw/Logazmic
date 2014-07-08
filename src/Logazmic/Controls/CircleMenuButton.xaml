@@ -10,7 +10,7 @@
         Height="50" Width="50">
     <ItemsControl.Template>
         <ControlTemplate TargetType="controls:CircleMenuButton">
-            <controls:MetroToggleButton Margin="0" Visual="{TemplateBinding Visual}" ToolTip="{TemplateBinding ToolTip}" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded}">
+            <controls:MetroToggleButton Name="PART_ToggleButton" Margin="0" Visual="{TemplateBinding Visual}" ToolTip="{TemplateBinding ToolTip}" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded}">
                 <controls:MetroToggleButton.ContextMenu>
                     <ContextMenu Placement="Bottom" PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                        

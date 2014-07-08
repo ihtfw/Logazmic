@@ -25,6 +25,8 @@ namespace Logazmic.ViewModels
 
         private string searchString;
 
+        private bool scrollToEnd;
+
         public LogPaneViewModel([NotNull] AReceiver receiver)
         {
             if (receiver == null)
@@ -44,7 +46,7 @@ namespace Logazmic.ViewModels
             Task.Factory.StartNew(Init);
         }
 
-        public bool ScrollToEnd { get; set; }
+        public bool AutoScroll { get; set; }
 
         public override string DisplayName
         {

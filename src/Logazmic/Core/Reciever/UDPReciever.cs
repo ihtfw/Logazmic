@@ -1,10 +1,8 @@
 ﻿namespace Logazmic.Core.Reciever
 {
     using System;
-    using System.ComponentModel;
     using System.Net;
     using System.Net.Sockets;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Logazmic.Core.Log;
@@ -14,9 +12,6 @@
         private IPEndPoint remoteEndPoint;
 
         private UdpClient udpClient;
-
-
-        private bool isTerminated;
 
         public UdpReceiver()
         {
@@ -35,10 +30,8 @@
 
         #region IReceiver Members
 
-
         public override void Terminate()
         {
-            isTerminated = true;
             udpClient.Close();
         }
 
@@ -51,27 +44,27 @@
             {
                 udpClient.JoinMulticastGroup(IPAddress.Parse(Address));
             }
-
-            // We need a working thread
             Task.Factory.StartNew(Start);
         }
 
         #endregion
 
-       
         private void Start()
         {
-            while (!isTerminated)
+            while (true)
             {
                 try
                 {
                     byte[] buffer = udpClient.Receive(ref remoteEndPoint);
                     string loggingEvent = System.Text.Encoding.UTF8.GetString(buffer);
-                    
 
                     LogMessage logMsg = ReceiverUtils.ParseLog4JXmlLogEvent(loggingEvent, "UdpLogger");
                     logMsg.LoggerName = string.Format("{0}_{1}", remoteEndPoint.Address.ToString().Replace(".", "-"), logMsg.LoggerName);
                     OnNewMessage(logMsg);
+                }
+                catch (SocketException was)
+                {
+                    return;
                 }
                 catch (Exception ex)
                 {
