@@ -19,33 +19,7 @@
                       Icon="../Resources/appbar.flag.bear.ico"
                       ShowIconOnTitleBar="True">
     <controls:MetroWindow.Resources>
-        <!--        Styles to ovveride grid foreground-->
-        <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}">
-            <Setter Property="Foreground"
-                    Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor,AncestorType=DataGridRow}}" />
-        </Style>
 
-        <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MetroDataGridRow}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Trace}">
-                    <Setter Property="Foreground" Value="{DynamicResource TraceColor}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
-                    <Setter Property="Foreground" Value="{DynamicResource DebugColor}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Warn}">
-                    <Setter Property="Foreground" Value="{DynamicResource WarnColor}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Error}">
-                    <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
-                    <Setter Property="FontWeight" Value="DemiBold" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Fatal}">
-                    <Setter Property="Foreground" Value="{DynamicResource FatalColor}" />
-                    <Setter Property="FontWeight" Value="Bold" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
 
         <!---->
         <Style x:Key="DetailsTextBlock" TargetType="TextBox">
@@ -98,28 +72,34 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
 
 
-            <controls1:MetroButton cal:Message.Attach="Open" ToolTip="Open File" Visual="{DynamicResource appbar_folder_open}" />
+            <controls1:MetroButton cal:Message.Attach="Open" ToolTip="Open File"
+                                   Visual="{DynamicResource appbar_folder_open}" />
 
-            <controls1:CircleMenuButton Visual="{DynamicResource appbar_add}">
+            <!--   <controls1:CircleMenuButton Visual="{DynamicResource appbar_add}">
                 <controls1:CircleMenuButton.ItemsSource>
-                    <CompositeCollection> <!--TODO: why does just the content property doesn't work?-->
+                    <CompositeCollection> ~1~TODO: why does just the content property doesn't work?@1@
                         <MenuItem Header="TCP" cal:Message.Attach="AddTCPReciever" />
                         <MenuItem Header="UDP" cal:Message.Attach="AddUDPReciever" />
                     </CompositeCollection>
                 </controls1:CircleMenuButton.ItemsSource>
-            </controls1:CircleMenuButton>
+            </controls1:CircleMenuButton>-->
 
             <Separator />
 
-            <controls1:MetroButton cal:Message.Attach="Clear" ToolTip="Clear log" Visual="{DynamicResource appbar_close}" />
+            <controls1:MetroButton cal:Message.Attach="Clear" ToolTip="Clear log"
+                                   Visual="{DynamicResource appbar_close}" />
 
             <controls1:MetroButton cal:Message.Attach="Test" Visual="{DynamicResource appbar_debug_restart}" />
+
+            <controls1:MetroToggleButton IsChecked="{Binding ActiveItem.ScrollToEnd}"
+                                         Visual="{DynamicResource appbar_settings}" />
 
             <controls1:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"
                                          Visual="{DynamicResource appbar_settings}" />
 
 
-            <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120" ItemTemplate="{StaticResource ComboboxLogLevelDataTemplate}"
+            <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120"
+                      ItemTemplate="{StaticResource ComboboxLogLevelDataTemplate}"
                       VerticalAlignment="Center">
                 <log:LogLevel>Trace</log:LogLevel>
                 <log:LogLevel>Debug</log:LogLevel>
@@ -163,35 +143,13 @@
                         </Style>
                     </controls:MetroTabControl.Resources>
                     <TabControl.ContentTemplate>
-                        <DataTemplate DataType="viewModels:LogPaneViewModel">
-                            <DataGrid ItemsSource="{Binding Path=CollectionViewSource.View}"
-                                      SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
-                                      CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
-                                      CanUserResizeRows="False" SelectionMode="Single"
-                                      FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=GridFontSize}"
-                                      CellStyle="{StaticResource CellStyle}" RowStyle="{StaticResource RowStyle}">
-                                <DataGrid.Resources>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="Red" />
-                                    </Style>
-                                </DataGrid.Resources>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn IsReadOnly="True" Header="Time"
-                                                        Binding="{Binding Path=TimeStamp, ConverterCulture={x:Static glob:CultureInfo.CurrentUICulture}}" />
-                                    <DataGridTextColumn IsReadOnly="True" Header="Level"
-                                                        Binding="{Binding Path=LogLevel}" />
-                                    <DataGridTextColumn IsReadOnly="True" Header="Logger"
-                                                        Binding="{Binding Path=LastLoggerName}" />
-                                    <DataGridTextColumn IsReadOnly="True" Header="Thread"
-                                                        Binding="{Binding Path=ThreadName}" />
-                                    <DataGridTextColumn IsReadOnly="True" Header="Message" Width="*"
-                                                        Binding="{Binding Path=MessageSingleLine}" />
-                                </DataGrid.Columns>
-                            </DataGrid>
+                        <DataTemplate>
+                            <ContentControl cal:View.Model="{Binding}" />
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </controls:MetroTabControl>
-                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Text="Add at least one tab.">
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
+                           Text="Add at least one tab.">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed" />

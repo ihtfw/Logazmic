@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="Logazmic.Views.LogPaneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:settings="clr-namespace:Logazmic.Settings"
+             xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
+             xmlns:log="clr-namespace:Logazmic.Core.Log"
+             xmlns:controls="clr-namespace:Logazmic.Controls"
+             xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewModels:LogPaneViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <!--        Styles to ovveride grid foreground-->
+        <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}">
+            <Setter Property="Foreground"
+                    Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor,AncestorType=DataGridRow}}" />
+        </Style>
+
+        <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MetroDataGridRow}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Trace}">
+                    <Setter Property="Foreground" Value="{DynamicResource TraceColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
+                    <Setter Property="Foreground" Value="{DynamicResource DebugColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Warn}">
+                    <Setter Property="Foreground" Value="{DynamicResource WarnColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Error}">
+                    <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
+                    <Setter Property="FontWeight" Value="DemiBold" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Fatal}">
+                    <Setter Property="Foreground" Value="{DynamicResource FatalColor}" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <DataGrid ItemsSource="{Binding Path=CollectionViewSource.View}"
+              SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
+              CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
+              CanUserResizeRows="False" SelectionMode="Single"
+              FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=GridFontSize}"
+              CellStyle="{StaticResource CellStyle}" RowStyle="{StaticResource RowStyle}"
+              controls:DataGridBehavior.Autoscroll="{Binding AutoScroll}">
+        <DataGrid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Red" />
+            </Style>
+        </DataGrid.Resources>
+        <DataGrid.Columns>
+            <DataGridTextColumn IsReadOnly="True" Header="Time"
+                                Binding="{Binding Path=TimeStamp, ConverterCulture={x:Static glob:CultureInfo.CurrentUICulture}}" />
+            <DataGridTextColumn IsReadOnly="True" Header="Level"
+                                Binding="{Binding Path=LogLevel}" />
+            <DataGridTextColumn IsReadOnly="True" Header="Logger"
+                                Binding="{Binding Path=LastLoggerName}" />
+            <DataGridTextColumn IsReadOnly="True" Header="Thread"
+                                Binding="{Binding Path=ThreadName}" />
+            <DataGridTextColumn IsReadOnly="True" Header="Message" Width="*"
+                                Binding="{Binding Path=MessageSingleLine}" />
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>
