@@ -22,8 +22,7 @@ namespace Logazmic.Controls
                 throw new InvalidOperationException("Dependency object is not DataGrid.");
             }
 
-            dataGrid.Unloaded += DataGridOnUnloaded;
-            dataGrid.Loaded += DataGridOnLoaded;
+            SubscribeToLoadUnload(dataGrid);
 
             if ((bool)args.NewValue)
             {
@@ -33,6 +32,16 @@ namespace Logazmic.Controls
             {   
                 Unsubscribe(dataGrid);
             }
+        }
+
+        private static void SubscribeToLoadUnload(DataGrid dataGrid)
+        {
+            // Make shure that there will never suscribe twice
+            dataGrid.Unloaded -= DataGridOnUnloaded;
+            dataGrid.Loaded -= DataGridOnLoaded;
+
+            dataGrid.Unloaded += DataGridOnUnloaded;
+            dataGrid.Loaded += DataGridOnLoaded;
         }
 
         private static void Subscribe(DataGrid dataGrid)
