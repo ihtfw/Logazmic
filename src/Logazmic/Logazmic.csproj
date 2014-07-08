@@ -116,9 +116,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\CircleMenuButton.xaml.cs">
-      <DependentUpon>CircleMenuButton.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\DataGridBehavior.cs" />
     <Compile Include="Controls\TwoColumnGrid.cs" />
     <Compile Include="Controls\MetroButton.xaml.cs">
       <DependentUpon>MetroButton.xaml</DependentUpon>
@@ -135,6 +133,9 @@
     <Compile Include="Settings\LogazmicSettings.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
     <Compile Include="ViewModels\UpdatableScreen.cs" />
+    <Compile Include="Views\LogPaneView.xaml.cs">
+      <DependentUpon>LogPaneView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>
     </Compile>
@@ -146,10 +147,6 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\CircleMenuButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MetroButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -167,6 +164,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\DarkTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LogPaneView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

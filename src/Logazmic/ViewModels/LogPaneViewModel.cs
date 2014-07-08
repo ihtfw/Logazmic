@@ -44,6 +44,8 @@ namespace Logazmic.ViewModels
             Task.Factory.StartNew(Init);
         }
 
+        public bool ScrollToEnd { get; set; }
+
         public override string DisplayName
         {
             get
