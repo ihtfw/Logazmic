@@ -116,6 +116,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\CircleMenuButton.xaml.cs">
+      <DependentUpon>CircleMenuButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataGridBehavior.cs" />
     <Compile Include="Controls\TwoColumnGrid.cs" />
     <Compile Include="Controls\MetroButton.xaml.cs">
@@ -147,6 +150,10 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\CircleMenuButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MetroButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
