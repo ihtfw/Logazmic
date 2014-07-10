@@ -4,6 +4,7 @@
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class TcpReceiver : AReceiver
@@ -41,8 +42,10 @@
         void AcceptAsyncCompleted(object sender, SocketAsyncEventArgs e)
         {
             if (socket == null || e.SocketError != SocketError.Success) return;
-            var newSocket = e.AcceptSocket;
-            Task.Factory.StartNew(() => Start(newSocket));
+            //This is original from Log2Console source
+            new Thread(Start) { IsBackground = true }.Start(e.AcceptSocket);
+//            var newSocket = e.AcceptSocket;
+//            Task.Factory.StartNew(() => Start(newSocket));
 
             e.AcceptSocket = null;
             socket.AcceptAsync(e);
@@ -53,14 +56,18 @@
             try
             {
                 using (var socket = (Socket)newSocket)
-                using (var ns = new NetworkStream(socket, FileAccess.Read, false))
-                    while (this.socket != null)
+                {
+                    using (var ns = new NetworkStream(socket, FileAccess.Read, false))
                     {
-                        var logMsg = ReceiverUtils.ParseLog4JXmlLogEvent(ns, "TcpLogger");
-                        logMsg.LoggerName = string.Format(":{1}.{0}", logMsg.LoggerName, Port);
+                        while (this.socket != null)
+                        {
+                            var logMsg = ReceiverUtils.ParseLog4JXmlLogEvent(ns, "TcpLogger");
+                            logMsg.LoggerName = string.Format(":{1}.{0}", logMsg.LoggerName, Port);
 
-                        OnNewMessage(logMsg);
+                            OnNewMessage(logMsg);
+                        }
                     }
+                }
             }
             catch (IOException)
             {

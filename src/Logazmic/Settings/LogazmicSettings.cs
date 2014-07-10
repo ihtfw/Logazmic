@@ -5,6 +5,7 @@ namespace Logazmic.Settings
     using System.Collections.ObjectModel;
     using System.IO;
 
+    using Logazmic.Behaviours;
     using Logazmic.Core.Reciever;
 
     public class LogazmicSettings : JsonSettingsBase
@@ -29,6 +30,8 @@ namespace Logazmic.Settings
 
         [DefaultValue(false)]
         public bool UseDarkTheme { get; set; }
+
+        public GridSplitterData DescriptionSize { get; set; }
 
         protected override void SetDefaults()
         {

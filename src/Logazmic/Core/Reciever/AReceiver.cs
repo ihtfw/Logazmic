@@ -4,8 +4,10 @@
 
     using Logazmic.Core.Log;
 
-    public abstract class AReceiver
+    public abstract class AReceiver : IDisposable
     {
+        private bool isInitilized;
+
         public string DisplayName { get; set; }
 
         public void Initialize()
@@ -17,8 +19,6 @@
             DoInitilize();
             isInitilized = true;
         }
-
-        protected bool isInitilized;
 
         public abstract void Terminate();
 
@@ -55,5 +55,9 @@
 
         #endregion
 
+        public void Dispose()
+        {
+            Terminate();
+        }
     }
 }
