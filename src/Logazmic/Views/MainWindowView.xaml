@@ -75,7 +75,7 @@
             <controls:MetroButton cal:Message.Attach="Open" ToolTip="Open File"
                                   Visual="{DynamicResource appbar_folder_open}" />
 
-            <controls:CircleMenuButton Visual="{DynamicResource appbar_add}">
+            <controls:CircleMenuButton Visual="{DynamicResource appbar_add}" ToolTip="Add reciever">
                 <controls:CircleMenuButton.ItemsSource>
                     <CompositeCollection> <!--TODO: why does just the content property doesn't work?-->
                         <MenuItem Header="TCP" cal:Message.Attach="AddTCPReciever" />
@@ -91,12 +91,12 @@
 
 
             <controls:MetroToggleButton IsChecked="{Binding ActiveItem.AutoScroll}"
-                                        Visual="{DynamicResource appbar_arrow_down}" />
+                                        Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll"/>
 
             <Rectangle Width="15" />
 
             <controls:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"
-                                        Visual="{DynamicResource appbar_settings}" />
+                                        Visual="{DynamicResource appbar_settings}" ToolTip="Settings"/>
 
 
             <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120"
