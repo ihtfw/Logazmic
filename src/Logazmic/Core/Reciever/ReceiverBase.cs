@@ -12,7 +12,7 @@
 
         public string DisplayName { get; set; }
 
-        [JsonPropertyAttribute(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonIgnore]
         public virtual string Description { get { return null; } }
 
         public void Dispose()

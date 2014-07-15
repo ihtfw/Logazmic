@@ -31,8 +31,6 @@ namespace Logazmic.Settings
         [DefaultValue(false)]
         public bool UseDarkTheme { get; set; }
 
-        public GridSplitterData DescriptionSize { get; set; }
-
         protected override void SetDefaults()
         {
             base.SetDefaults();

@@ -40,9 +40,9 @@
                                 <Setter Property="Control.Foreground" Value="{DynamicResource TraceColor}" />
                                 <Setter Property="Control.FontWeight" Value="Thin" />
                             </DataTrigger>
-<!--                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">-->
-<!--                                <Setter Property="Control.Foreground" Value="{DynamicResource DebugColor}" />-->
-<!--                            </DataTrigger>-->
+                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource DebugColor}" />
+                            </DataTrigger>
                             <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Info}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource InfoColor}" />
                             </DataTrigger>

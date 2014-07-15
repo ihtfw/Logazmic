@@ -5,6 +5,7 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <SolidColorBrush x:Key="TraceColor" Color="DarkGray"/>
+    <SolidColorBrush x:Key="DebugColor" Color="Black"/>
     <SolidColorBrush x:Key="InfoColor" Color="Green"/>
     <SolidColorBrush x:Key="WarnColor" Color="Orange"/>
     <SolidColorBrush x:Key="ErrorColor" Color="Red"/>

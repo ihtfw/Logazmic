@@ -7,7 +7,7 @@
                  xmlns:controls1="clr-namespace:Logazmic.Controls"
                  xmlns:settings="clr-namespace:Logazmic.Settings"
                  mc:Ignorable="d"
-                 Theme="Inverse"
+                 Theme=""
                  d:DesignHeight="300" d:DesignWidth="300"
                  Position="Right" Header="Settings" IsOpen="{Binding IsSettingsOpen}" Padding="10">
     <controls:Flyout.Resources>

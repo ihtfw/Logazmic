@@ -4,9 +4,10 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Cyan.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <SolidColorBrush x:Key="TraceColor" Color="DarkGray"/>
-    <SolidColorBrush x:Key="InfoColor" Color="Green"/>
-    <SolidColorBrush x:Key="WarnColor" Color="Orange"/>
-    <SolidColorBrush x:Key="ErrorColor" Color="Red"/>
-    <SolidColorBrush x:Key="FatalColor" Color="Purple"/>
+    <SolidColorBrush x:Key="TraceColor" Color="LightGray"/>
+    <SolidColorBrush x:Key="DebugColor" Color="White"/>
+    <SolidColorBrush x:Key="InfoColor" Color="LightGreen"/>
+    <SolidColorBrush x:Key="WarnColor" Color="LightSalmon"/>
+    <SolidColorBrush x:Key="ErrorColor" Color="OrangeRed"/>
+    <SolidColorBrush x:Key="FatalColor" Color="Magenta"/>
 </ResourceDictionary>
