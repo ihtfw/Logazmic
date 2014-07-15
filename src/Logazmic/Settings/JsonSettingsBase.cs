@@ -36,7 +36,8 @@
         private static readonly JsonSerializerSettings serilizerSettings = new JsonSerializerSettings
                                                                            {
                                                                                TypeNameHandling = TypeNameHandling.Auto,
-                                                                               TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple
+                                                                               TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
+                                                                               
                                                                            };
 
         protected JsonSettingsBase()

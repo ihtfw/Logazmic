@@ -11,7 +11,7 @@
     ///     This receiver watch a given file, like a 'tail' program, with one log event by line.
     ///     Ideally the log events should use the log4j XML Schema layout.
     /// </summary>
-    public class FileReceiver : AReceiver
+    public class FileReceiver : ReceiverBase
     {
         public enum FileFormatEnums
         {
@@ -32,6 +32,7 @@
 
         private long lastFileLength;
 
+    
         public string FileToWatch
         {
             get { return fileToWatch; }
@@ -42,6 +43,8 @@
             }
         }
 
+        public override string Description { get { return FileToWatch; } }
+
         public FileFormatEnums FileFormat { get { return fileFormat; } set { fileFormat = value; } }
 
         #region AReceiver Members
@@ -49,7 +52,9 @@
         protected override void DoInitilize()
         {
             if (!File.Exists(FileToWatch))
-                throw new ApplicationException("File does not exist.");
+            {
+                throw new ApplicationException(string.Format("File \"{0}\" does not exist.", FileToWatch));
+            }
 
             fileReader = new StreamReader(new FileStream(FileToWatch, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 

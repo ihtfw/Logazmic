@@ -24,11 +24,11 @@ namespace Logazmic.ViewModels
 
         private LogLevel minLogLevel;
 
-        private string searchString;
-
         private bool scrollToEnd;
 
-        public LogPaneViewModel([NotNull] AReceiver receiver)
+        private string searchString;
+
+        public LogPaneViewModel([NotNull] ReceiverBase receiver)
         {
             if (receiver == null)
             {
@@ -43,8 +43,6 @@ namespace Logazmic.ViewModels
                                 Name = "Root"
                             };
             Messaging.Subscribe(this);
-
-            Task.Factory.StartNew(Init);
         }
 
         public bool AutoScroll { get; set; }
@@ -75,13 +73,13 @@ namespace Logazmic.ViewModels
 
         public LogSource LogSourceRoot { get; private set; }
 
-        public AReceiver Receiver { get; private set; }
+        public ReceiverBase Receiver { get; private set; }
 
         public BindableCollection<LogMessage> LogMessages { get; private set; }
 
         public LogMessage SelectedLogMessage { get; set; }
 
-        public string ToolTip { get; set; }
+        public string ToolTip { get { return Receiver.Description; } }
 
         public LogLevel MinLogLevel
         {
@@ -91,17 +89,6 @@ namespace Logazmic.ViewModels
                 minLogLevel = value;
                 Messaging.Publish(new RefreshEvent());
             }
-        }
-
-        public async void Rename()
-        {
-            var newName = await DialogService.Current.ShowInputDialog("Rename","Enter new name:");
-            if (string.IsNullOrEmpty(newName))
-            {
-                return;
-            }
-            DisplayName = newName;
-            LogazmicSettings.Instance.Save();
         }
 
         public CollectionViewSource CollectionViewSource
@@ -133,8 +120,6 @@ namespace Logazmic.ViewModels
                 Receiver.NewMessage -= OnNewMessage;
                 Receiver.NewMessages -= OnNewMessages;
                 Receiver.Terminate();
-
-                Receiver = null;
             }
         }
 
@@ -148,13 +133,24 @@ namespace Logazmic.ViewModels
             Update();
         }
 
+        public async void Rename()
+        {
+            var newName = await DialogService.Current.ShowInputDialog("Rename", "Enter new name:");
+            if (string.IsNullOrEmpty(newName))
+            {
+                return;
+            }
+            DisplayName = newName;
+            LogazmicSettings.Instance.Save();
+        }
+
         public void Clear()
         {
             LogMessages.Clear();
             Update();
         }
 
-        private void Init()
+        public void Initialize()
         {
             try
             {
@@ -167,6 +163,7 @@ namespace Logazmic.ViewModels
             catch (Exception e)
             {
                 DialogService.Current.ShowErrorMessageBox(e);
+                TryClose();
             }
         }
 

@@ -11,11 +11,7 @@
         public Bootstrapper()
         {
             Initialize();
-        }
-
-        protected override void OnStartup(object sender, StartupEventArgs e)
-        {
-            DisplayRootViewFor<MainWindowViewModel>();
+            IoC.Get<IWindowManager>().ShowWindow(MainWindowViewModel.Instance);
         }
     }
 }

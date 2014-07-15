@@ -4,11 +4,21 @@
 
     using Logazmic.Core.Log;
 
-    public abstract class AReceiver : IDisposable
+    using Newtonsoft.Json;
+
+    public abstract class ReceiverBase : IDisposable
     {
         private bool isInitilized;
 
         public string DisplayName { get; set; }
+
+        [JsonPropertyAttribute(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public virtual string Description { get { return null; } }
+
+        public void Dispose()
+        {
+            Terminate();
+        }
 
         public void Initialize()
         {
@@ -52,12 +62,6 @@
 
         #endregion
 
-
         #endregion
-
-        public void Dispose()
-        {
-            Terminate();
-        }
     }
 }

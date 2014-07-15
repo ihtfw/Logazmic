@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
 
     using Caliburn.Micro;
@@ -13,34 +14,62 @@
 
     using MahApps.Metro.Controls;
 
-    public class MainWindowViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
+    public sealed class MainWindowViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
     {
-        private static int i;
+        #region Singleton
 
-        public MainWindowViewModel()
+        private static readonly Lazy<MainWindowViewModel> instance = new Lazy<MainWindowViewModel>(() => new MainWindowViewModel());
+
+        public static MainWindowViewModel Instance { get { return instance.Value; } }
+
+        #endregion
+
+        private MainWindowViewModel()
         {
             DisplayName = "Logazmic";
-            LoadRecivers();
+            LoadReciversFromSettings();
         }
 
         public bool IsSettingsOpen { get; set; }
-        
 
-        private void LoadRecivers()
+        public void Dispose()
+        {
+            foreach (var item in Items)
+            {
+                item.Dispose();
+            }
+        }
+
+        private void LoadReciversFromSettings()
         {
             foreach (var receiver in LogazmicSettings.Instance.Receivers)
             {
-                Items.Add(new LogPaneViewModel(receiver));
+                AddReceiver(receiver);
             }
         }
-        
-        public void AddReceiver(AReceiver receiver, string tooltip = null)
+
+        public void AddReceiver(ReceiverBase receiver, string tooltip = null)
         {
-            if(!LogazmicSettings.Instance.Receivers.Contains(receiver))
+            if (!LogazmicSettings.Instance.Receivers.Contains(receiver))
+            {
                 LogazmicSettings.Instance.Receivers.Add(receiver);
-            Items.Add(new LogPaneViewModel(receiver) { ToolTip = tooltip });
-            if(ActiveItem == null)
-                ActivateItem(Items.First());
+            }
+            var logPaneViewModel = new LogPaneViewModel(receiver);
+            logPaneViewModel.Deactivated += OnTabDeactivated;
+            Items.Add(logPaneViewModel);
+            ActivateItem(logPaneViewModel);
+            Task.Factory.StartNew(logPaneViewModel.Initialize);
+        }
+
+        private void OnTabDeactivated(object sender, DeactivationEventArgs args)
+        {
+            if (args.WasClosed)
+            {
+                var pane = (LogPaneViewModel)sender;
+                LogazmicSettings.Instance.Receivers.Remove(pane.Receiver);
+                pane.Dispose();
+                Items.Remove(pane);
+            }
         }
 
         protected override void OnViewLoaded(object view)
@@ -77,29 +106,7 @@
             }
         }
 
-
-        protected override void OnActivate()
-        {
-            base.OnActivate();
-            if (Items.Any())
-            {
-                ActivateItem(Items.First());
-            }
-        }
-
-
-        protected override void OnDeactivate(bool close)
-        {
-            if (close)
-            {
-                Dispose();
-            }
-            base.OnDeactivate(close);
-        }
-
         #region Actions
-
-
 
         public async void AddTCPReciever()
         {
@@ -131,7 +138,6 @@
             }
         }
 
-
         public void LoadFile(string path)
         {
             try
@@ -146,30 +152,11 @@
                     return;
                 }
 
-
                 AddReceiver(new FileReceiver
-                {
-                    FileToWatch = path,
-                    FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
-                }, path);
-                i++;
-            }
-            catch (Exception e)
-            {
-                DialogService.Current.ShowErrorMessageBox(e);
-            }
-        }
-
-        public void Clear()
-        {
-            try
-            {
-                if (ActiveItem == null)
-                {
-                    return;
-                }
-
-                ActiveItem.Clear();
+                            {
+                                FileToWatch = path,
+                                FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
+                            }, path);
             }
             catch (Exception e)
             {
@@ -192,25 +179,10 @@
         public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
         {
             var pane = (LogPaneViewModel)args.ClosingTabItem.Content;
-            LogazmicSettings.Instance.Receivers.Remove(pane.Receiver);
-            pane.Dispose();
-            Items.Remove(pane);
-        }
-
-        public void Test()
-        {
-            DialogService.Current.ShowErrorMessageBox(new ApplicationException("123"));
+            pane.TryClose();
+            
         }
 
         #endregion
-
-
-        public void Dispose()
-        {
-            foreach (var item in Items)
-            {
-                item.Dispose();
-            }
-        }
     }
 }

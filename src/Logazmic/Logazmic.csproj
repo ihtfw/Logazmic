@@ -92,6 +92,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\MahApps.Metro.0.13.1.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -135,6 +136,7 @@
     <Compile Include="Services\MetroDialogService.cs" />
     <Compile Include="Settings\JsonSettingsBase.cs" />
     <Compile Include="Settings\LogazmicSettings.cs" />
+    <Compile Include="Utils\SingleInstance.cs" />
     <Compile Include="Utils\DependencyPropertyHelpers.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
     <Compile Include="ViewModels\UpdatableScreen.cs" />
@@ -196,7 +198,7 @@
   <ItemGroup>
     <Compile Include="Core\Log\LogLevel.cs" />
     <Compile Include="Core\Log\LogMessage.cs" />
-    <Compile Include="Core\Reciever\AReceiver.cs" />
+    <Compile Include="Core\Reciever\ReceiverBase.cs" />
     <Compile Include="Core\Reciever\FileReceiver.cs" />
     <Compile Include="Core\Reciever\ReceiverUtils.cs" />
     <Compile Include="Core\Reciever\TcpReceiver.cs" />

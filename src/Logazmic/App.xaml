@@ -5,9 +5,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-                    <logazmic:Bootstrapper x:Key="LogViewerBootstrapper" />
-                </ResourceDictionary>
                 <ResourceDictionary Source="Styles/Common.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

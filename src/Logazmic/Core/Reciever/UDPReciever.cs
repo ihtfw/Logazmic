@@ -7,7 +7,7 @@
 
     using Logazmic.Core.Log;
 
-    public class UdpReceiver : AReceiver
+    public class UdpReceiver : ReceiverBase
     {
         private IPEndPoint remoteEndPoint;
 

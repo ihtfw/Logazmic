@@ -7,7 +7,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class TcpReceiver : AReceiver
+    public class TcpReceiver : ReceiverBase
     {
         Socket socket;
 
