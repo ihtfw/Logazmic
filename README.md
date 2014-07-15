@@ -68,12 +68,12 @@ config.LoggingRules.Add(tcpNetworkRule);
 
 LogManager.Configuration = config;
 ```
-###Log4net
-```xml
-<appender name=\"FileAppender\" type=\"log4net.Appender.FileAppender\">
-    <file value=\"log-file.txt\" />
-    <appendToFile value=\"true\" />
-    <lockingModel type=\"log4net.Appender.FileAppender+MinimalLock\" />
-    <layout type=\"log4net.Layout.XmlLayoutSchemaLog4j\" />
-</appender>
-```
+> ###Log4net
+> ```xml
+> <appender name=\"FileAppender\" type=\"log4net.Appender.FileAppender\">
+>     <file value=\"log-file.txt\" />
+>     <appendToFile value=\"true\" />
+>     <lockingModel type=\"log4net.Appender.FileAppender+MinimalLock\" />
+>     <layout type=\"log4net.Layout.XmlLayoutSchemaLog4j\" />
+> </appender>
+> ```
