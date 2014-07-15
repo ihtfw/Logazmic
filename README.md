@@ -68,6 +68,7 @@ config.LoggingRules.Add(tcpNetworkRule);
 
 LogManager.Configuration = config;
 ```
+<!---
 ###Log4net
 ```xml
 <appender name=\"FileAppender\" type=\"log4net.Appender.FileAppender\">
@@ -77,3 +78,4 @@ LogManager.Configuration = config;
     <layout type=\"log4net.Layout.XmlLayoutSchemaLog4j\" />
 </appender>
 ```
+-->
