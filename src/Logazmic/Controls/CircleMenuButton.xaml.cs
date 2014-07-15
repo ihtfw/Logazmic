@@ -34,8 +34,7 @@ namespace Logazmic.Controls
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Bindable(true)]
-        public new ItemCollection Items
-        {
+        public new ItemCollection Items{
             get
             {
                 return toggleButton.ContextMenu.Items;

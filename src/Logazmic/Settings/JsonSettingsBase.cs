@@ -71,7 +71,7 @@
             }
         }
 
-        protected abstract void Save();
+        public abstract void Save();
 
         protected static T Load<T>(string path) where T : JsonSettingsBase
         {

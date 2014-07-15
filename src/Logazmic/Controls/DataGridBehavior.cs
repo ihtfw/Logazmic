@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Logazmic.Controls
+﻿namespace Logazmic.Controls
 {
+    using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Windows;
     using System.Windows.Controls;
@@ -22,7 +21,7 @@ namespace Logazmic.Controls
             public DispatcherTimer Timer { get; set; }
         }
         public static readonly DependencyProperty AutoscrollProperty = DependencyProperty.RegisterAttached(
-            "Autoscroll", typeof(bool), typeof(DataGridBehavior), new PropertyMetadata(default(bool),AutoscrollChangedCallback));
+            "Autoscroll", typeof(bool), typeof(DataGridBehavior), new PropertyMetadata(default(bool), AutoscrollChangedCallback));
 
         private static readonly Dictionary<DataGrid, DataGridInfo> infoDict = new Dictionary<DataGrid, DataGridInfo>();
 
@@ -34,26 +33,18 @@ namespace Logazmic.Controls
                 throw new InvalidOperationException("Dependency object is not DataGrid.");
             }
 
-            SubscribeToLoadUnload(dataGrid);
-
             if ((bool)args.NewValue)
             {
                 Subscribe(dataGrid);
+                dataGrid.Unloaded += DataGridOnUnloaded;
+                dataGrid.Loaded += DataGridOnLoaded;
             }
             else
             {   
                 Unsubscribe(dataGrid);
-            }
-        }
-
-        private static void SubscribeToLoadUnload(DataGrid dataGrid)
-        {
-            // Make shure that there will never suscribe twice
             dataGrid.Unloaded -= DataGridOnUnloaded;
             dataGrid.Loaded -= DataGridOnLoaded;
-
-            dataGrid.Unloaded += DataGridOnUnloaded;
-            dataGrid.Loaded += DataGridOnLoaded;
+            }
         }
 
         private static void Subscribe(DataGrid dataGrid)
@@ -82,7 +73,6 @@ namespace Logazmic.Controls
 
                 info.Timer.Stop();
             }
-        }
 
         private static void DataGridOnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
@@ -101,13 +91,15 @@ namespace Logazmic.Controls
                 Unsubscribe(dataGrid);
             }
         }
-        
+
         private static void ScrollToEnd(DataGrid datagrid)
         {
             infoDict[datagrid].Timer.Stop();
 
             if (datagrid.Items.Count == 0)
+            {
                 return;
+            }
             datagrid.ScrollIntoView(datagrid.Items[datagrid.Items.Count - 1]);
         }
 
