@@ -48,6 +48,7 @@
               SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
               CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
               CanUserResizeRows="False" SelectionMode="Single"
+              GridLinesVisibility="{Binding  Source={x:Static settings:LogazmicSettings.Instance}, Path=GridLinesVisibility}"
               FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=GridFontSize}"
               CellStyle="{StaticResource CellStyle}" RowStyle="{StaticResource RowStyle}"
               controls:DataGridBehavior.Autoscroll="{Binding AutoScroll}">

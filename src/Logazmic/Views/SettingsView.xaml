@@ -7,7 +7,7 @@
                  xmlns:controls1="clr-namespace:Logazmic.Controls"
                  xmlns:settings="clr-namespace:Logazmic.Settings"
                  mc:Ignorable="d"
-                 Theme=""
+                 Theme="Inverse"
                  d:DesignHeight="300" d:DesignWidth="300"
                  Position="Right" Header="Settings" IsOpen="{Binding IsSettingsOpen}" Padding="10">
     <controls:Flyout.Resources>
@@ -25,6 +25,7 @@
             <controls1:TwoColumnGrid.Resources>
                 <Style x:Key="Default" TargetType="FrameworkElement">
                     <Setter Property="Margin" Value="25,3" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
                     <Setter Property="VerticalAlignment" Value="Center" />
                 </Style>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource Default}" />
@@ -36,7 +37,7 @@
             </controls1:TwoColumnGrid.Resources>
 
             <TextBlock>Grid font size:</TextBlock>
-            <controls:NumericUpDown Value="{Binding GridFontSize}"
+            <controls:NumericUpDown Value="{Binding GridFontSize}" HorizontalAlignment="Left"
                                     Minimum="5"
                                     Maximum="30" />
 
@@ -46,8 +47,16 @@
                                     Maximum="30" />
 
             <TextBlock>Dark theme:</TextBlock>
-            <controls:ToggleSwitch HorizontalAlignment="Left" HorizontalContentAlignment="Center"
+            <controls:ToggleSwitch HorizontalAlignment="Left" 
                                    IsChecked="{Binding UseDarkTheme}" />
+
+            <TextBlock>Grid lines visibility</TextBlock>
+            <ComboBox SelectedItem="{Binding GridLinesVisibility}" HorizontalAlignment="Left" Margin="25,3">
+                <DataGridGridLinesVisibility>All</DataGridGridLinesVisibility>
+                <DataGridGridLinesVisibility>Horizontal</DataGridGridLinesVisibility>
+                <DataGridGridLinesVisibility>Vertical</DataGridGridLinesVisibility>
+                <DataGridGridLinesVisibility>None</DataGridGridLinesVisibility>
+            </ComboBox>
 
         </controls1:TwoColumnGrid>
     </StackPanel>

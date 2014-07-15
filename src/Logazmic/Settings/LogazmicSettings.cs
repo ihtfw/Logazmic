@@ -4,6 +4,7 @@ namespace Logazmic.Settings
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
+    using System.Windows.Controls;
 
     using Logazmic.Behaviours;
     using Logazmic.Core.Reciever;
@@ -30,6 +31,9 @@ namespace Logazmic.Settings
 
         [DefaultValue(false)]
         public bool UseDarkTheme { get; set; }
+
+        [DefaultValue(DataGridGridLinesVisibility.None)]
+        public DataGridGridLinesVisibility GridLinesVisibility { get; set; }
 
         protected override void SetDefaults()
         {
