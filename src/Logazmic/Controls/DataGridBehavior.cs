@@ -6,13 +6,25 @@ namespace Logazmic.Controls
     using System.Collections.Specialized;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Threading;
 
     public static class DataGridBehavior
     {
+        class DataGridInfo
+        {
+            public DataGridInfo(NotifyCollectionChangedEventHandler handler, DispatcherTimer timer)
+            {
+                Handler = handler;
+                Timer = timer;
+            }
+
+            public NotifyCollectionChangedEventHandler Handler { get; set; }
+            public DispatcherTimer Timer { get; set; }
+        }
         public static readonly DependencyProperty AutoscrollProperty = DependencyProperty.RegisterAttached(
             "Autoscroll", typeof(bool), typeof(DataGridBehavior), new PropertyMetadata(default(bool),AutoscrollChangedCallback));
 
-        private static readonly Dictionary<DataGrid, NotifyCollectionChangedEventHandler> handlersDict = new Dictionary<DataGrid, NotifyCollectionChangedEventHandler>();
+        private static readonly Dictionary<DataGrid, DataGridInfo> infoDict = new Dictionary<DataGrid, DataGridInfo>();
 
         private static void AutoscrollChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
@@ -46,20 +58,29 @@ namespace Logazmic.Controls
 
         private static void Subscribe(DataGrid dataGrid)
         {
-            var handler = new NotifyCollectionChangedEventHandler((sender, eventArgs) => ScrollToEnd(dataGrid));
-            handlersDict.Add(dataGrid, handler);
+            if (infoDict.ContainsKey(dataGrid))
+                return;
+
+            var timer = new DispatcherTimer(DispatcherPriority.Background);
+            var handler = new NotifyCollectionChangedEventHandler((sender, eventArgs) => timer.Start());
+
+            infoDict.Add(dataGrid, new DataGridInfo(handler, timer));
+
+            timer.Tick += (sender, args) => ScrollToEnd(dataGrid);
             ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged += handler;
-            ScrollToEnd(dataGrid);
+            
+            timer.Start();
         }
 
         private static void Unsubscribe(DataGrid dataGrid)
         {
-            NotifyCollectionChangedEventHandler handler;
-            handlersDict.TryGetValue(dataGrid, out handler);
-            if (handler != null)
+            DataGridInfo info;
+            if (infoDict.TryGetValue(dataGrid, out info))
             {
-                ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged -= handler;
-                handlersDict.Remove(dataGrid);
+                ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged -= info.Handler;
+                infoDict.Remove(dataGrid);
+
+                info.Timer.Stop();
             }
         }
 
@@ -80,9 +101,11 @@ namespace Logazmic.Controls
                 Unsubscribe(dataGrid);
             }
         }
-
+        
         private static void ScrollToEnd(DataGrid datagrid)
         {
+            infoDict[datagrid].Timer.Stop();
+
             if (datagrid.Items.Count == 0)
                 return;
             datagrid.ScrollIntoView(datagrid.Items[datagrid.Items.Count - 1]);

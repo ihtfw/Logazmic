@@ -1,8 +1,11 @@
 namespace Logazmic.ViewModels
 {
+    using System.Threading;
     using System.Timers;
 
     using Caliburn.Micro;
+
+    using Timer = System.Timers.Timer;
 
     /// <summary>
     /// Makes throttling on method update
@@ -13,13 +16,16 @@ namespace Logazmic.ViewModels
 
         private bool fullUpdate;
 
-        private bool isUpdating;
+        private readonly object updateLock = new object();
 
         private readonly Timer timer = new Timer(150);
+        private readonly Timer forceTimer = new Timer(1500);
 
         public UpdatableScreen()
         {
             timer.Elapsed += TimerOnElapsed;
+            forceTimer.Elapsed += TimerOnElapsed;
+            forceTimer.Start();
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -30,22 +36,29 @@ namespace Logazmic.ViewModels
                 timer.Stop();
 
                 if (!needToUpdate)
+                {
                     return;
+                }
 
                 l = fullUpdate;
 
                 needToUpdate = false;
                 fullUpdate = false;
             }
-
-            isUpdating = true;
-            try
+            if (Monitor.TryEnter(updateLock))
             {
-                DoUpdate(l);
+                try
+                {
+                    DoUpdate(l);
+                }
+                finally
+                {
+                    Monitor.Exit(updateLock);
+                }
             }
-            finally
+            else
             {
-                isUpdating = false;
+                Update(l);   
             }
         }
 
@@ -53,18 +66,20 @@ namespace Logazmic.ViewModels
         {
             lock (timer)
             {
+                timer.Stop();
+
                 needToUpdate = true;
                 if (!fullUpdate)
                 {
                     fullUpdate = full;
                 }
+
                 timer.Start();
             }
         }
 
         protected virtual void DoUpdate(bool full)
         {
-
         }
     }
 }

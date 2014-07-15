@@ -5,11 +5,14 @@
     using System.IO;
     using System.Text;
     using System.Xml;
+    using System.Xml.Linq;
 
     using Logazmic.Core.Log;
 
     public static class ReceiverUtils
     {
+        private const string log4jNamespace = "http://jakarta.apache.org/log4j/";
+        private const string nlogNamespace = "http://nlog-project.org";
         static readonly DateTime s1970 = new DateTime(1970, 1, 1);
 
         public static string GetTypeDescription(Type type)
@@ -37,8 +40,8 @@
         {
             var nt = new NameTable();
             var nsmanager = new XmlNamespaceManager(nt);
-            nsmanager.AddNamespace("log4j", "http://jakarta.apache.org/log4j/");
-            nsmanager.AddNamespace("nlog", "http://nlog-project.org");
+            nsmanager.AddNamespace("log4j", log4jNamespace);
+            nsmanager.AddNamespace("nlog", nlogNamespace);
             return new XmlParserContext(nt, nsmanager, "elem", XmlSpace.None, Encoding.UTF8);
         }
 
@@ -98,8 +101,22 @@
         public static LogMessage ParseLog4JXmlLogEvent(XmlReader reader, string defaultLogger)
         {
             var logMsg = new LogMessage();
-
+           
             reader.Read();
+//            try
+//            {
+//                
+//            }
+//            catch(Exception e)
+//            {
+//                logMsg.LoggerName = "Logazmic";
+//                logMsg.ThreadName = "Logazmic";
+//                logMsg.LogLevel = LogLevel.Fatal;
+//                logMsg.Message = e.ToString();
+//                logMsg.TimeStamp = DateTime.Now;
+//                return logMsg;
+//            }
+
             if ((reader.MoveToContent() != XmlNodeType.Element) || (reader.Name != "log4j:event"))
                 throw new Exception("The Log Event is not a valid log4j Xml block.");
 

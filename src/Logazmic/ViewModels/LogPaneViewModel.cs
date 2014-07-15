@@ -209,16 +209,28 @@ namespace Logazmic.ViewModels
 
         private void OnNewMessages(object sender, LogMessage[] logMsgs)
         {
-            LogMessages.AddRange(logMsgs);
-            Array.ForEach(logMsgs, m => LogSourceRoot.Find(m.LoggerNames));
-            Update(true);
+            Task.Factory.StartNew(() =>
+            {
+                lock (LogMessages)
+                {
+                    LogMessages.AddRange(logMsgs);
+                    Array.ForEach(logMsgs, m => LogSourceRoot.Find(m.LoggerNames));
+                    Update(true);
+                }
+            });
         }
 
         private void OnNewMessage(object sender, LogMessage logMsg)
         {
-            LogMessages.Add(logMsg);
-            LogSourceRoot.Find(logMsg.LoggerNames);
-            Update(true);
+            Task.Factory.StartNew(() =>
+            {
+                lock (LogMessages)
+                {
+                    LogMessages.Add(logMsg);
+                    LogSourceRoot.Find(logMsg.LoggerNames);
+                    Update(true);
+                }
+            });
         }
 
         #endregion
