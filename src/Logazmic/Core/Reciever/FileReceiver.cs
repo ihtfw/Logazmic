@@ -24,19 +24,23 @@
 
         private StreamReader fileReader;
 
+        private string fileToWatch;
+
         private FileSystemWatcher fileWatcher;
 
         private string filename;
 
         private long lastFileLength;
 
-        public FileReceiver(string path)
+        public string FileToWatch
         {
-            FileToWatch = path;
-            DisplayName = Path.GetFileNameWithoutExtension(path);;
+            get { return fileToWatch; }
+            set
+            {
+                fileToWatch = value;
+                DisplayName = Path.GetFileNameWithoutExtension(fileToWatch);
+            }
         }
-
-        public string FileToWatch { get; private set; }
 
         public FileFormatEnums FileFormat { get { return fileFormat; } set { fileFormat = value; } }
 
@@ -44,6 +48,9 @@
 
         protected override void DoInitilize()
         {
+            if (!File.Exists(FileToWatch))
+                throw new ApplicationException("File does not exist.");
+
             fileReader = new StreamReader(new FileStream(FileToWatch, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
             lastFileLength = 0;
@@ -79,7 +86,7 @@
         }
 
         #endregion
-        
+
         private void OnFileChanged(object sender, FileSystemEventArgs e)
         {
             if (e.ChangeType != WatcherChangeTypes.Changed)
@@ -112,7 +119,7 @@
                     var logMsg = new LogMessage
                                  {
                                      ThreadName = "NA",
-                                     Message = line, 
+                                     Message = line,
                                      TimeStamp = DateTime.Now,
                                      LogLevel = LogLevel.Info
                                  };

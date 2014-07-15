@@ -14,6 +14,7 @@ namespace Logazmic.ViewModels
     using Logazmic.Core.Log;
     using Logazmic.Core.Reciever;
     using Logazmic.Services;
+    using Logazmic.Settings;
 
     public class LogPaneViewModel : UpdatableScreen, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>, IDisposable
     {
@@ -90,6 +91,17 @@ namespace Logazmic.ViewModels
                 minLogLevel = value;
                 Messaging.Publish(new RefreshEvent());
             }
+        }
+
+        public async void Rename()
+        {
+            var newName = await DialogService.Current.ShowInputDialog("Rename","Enter new name:");
+            if (string.IsNullOrEmpty(newName))
+            {
+                return;
+            }
+            DisplayName = newName;
+            LogazmicSettings.Instance.Save();
         }
 
         public CollectionViewSource CollectionViewSource

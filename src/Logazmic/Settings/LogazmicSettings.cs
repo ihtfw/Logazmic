@@ -36,7 +36,7 @@ namespace Logazmic.Settings
             Receivers = new ObservableCollection<AReceiver>();
         }
 
-        protected override void Save()
+        public override void Save()
         {
             Save(path);
         }

@@ -17,7 +17,7 @@
     {
         private static int i;
 
-        public MainWindowViewModel()
+        protected MainWindowViewModel()
         {
             DisplayName = "Logazmic";
             LoadRecivers();
@@ -34,11 +34,11 @@
             }
         }
         
-        public void AddReceiver(AReceiver receiver)
+        public void AddReceiver(AReceiver receiver, string tooltip = null)
         {
             if(!LogazmicSettings.Instance.Receivers.Contains(receiver))
                 LogazmicSettings.Instance.Receivers.Add(receiver);
-            Items.Add(new LogPaneViewModel(receiver));
+            Items.Add(new LogPaneViewModel(receiver) { ToolTip = tooltip });
             if(ActiveItem == null)
                 ActivateItem(Items.First());
         }
@@ -147,17 +147,12 @@
                 }
 
 
-                var paneViewModel = new LogPaneViewModel(new FileReceiver(path)
+                AddReceiver(new FileReceiver
                 {
+                    FileToWatch = path,
                     FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
-                })
-                {
-                    ToolTip = path,
-                };
+                }, path);
                 i++;
-                Items.Add(paneViewModel);
-
-                ActivateItem(paneViewModel);
             }
             catch (Exception e)
             {

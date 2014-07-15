@@ -141,6 +141,13 @@
                         <Style TargetType="metro:MetroTabItem">
                             <Setter Property="ToolTip" Value="{Binding ToolTip}" />
                             <Setter Property="CloseButtonEnabled" Value="True" />
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu>
+                                        <MenuItem Header="Rename" cal:Message.Attach="Rename"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
                         </Style>
                     </metro:MetroTabControl.Resources>
                     <TabControl.ContentTemplate>
