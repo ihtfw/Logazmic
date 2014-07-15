@@ -96,14 +96,9 @@
         
         public Dictionary<string, GridSplitterData> GridSplitters { get { return gridSplitters ?? (gridSplitters = new Dictionary<string, GridSplitterData>()); } set { gridSplitters = value; } }
 
-        protected override void Save()
+        public override void Save()
         {
             Save(path);
-        }
-
-        public void ManualSave()
-        {
-            Save();
         }
     }
 
@@ -143,7 +138,7 @@
                 {
                     values.Update(gs, grid);
 
-                    GridSplitterSizes.Instance.ManualSave();
+                    GridSplitterSizes.Instance.Save();
                 }
                 catch
                 {

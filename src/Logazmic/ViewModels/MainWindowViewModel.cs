@@ -17,7 +17,7 @@
     {
         private static int i;
 
-        protected MainWindowViewModel()
+        public MainWindowViewModel()
         {
             DisplayName = "Logazmic";
             LoadRecivers();

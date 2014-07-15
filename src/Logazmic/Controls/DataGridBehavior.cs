@@ -73,6 +73,7 @@
 
                 info.Timer.Stop();
             }
+        }
 
         private static void DataGridOnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
