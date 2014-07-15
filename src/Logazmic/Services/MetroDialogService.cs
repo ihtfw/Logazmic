@@ -15,15 +15,21 @@
     {
         private MetroWindow GetActiveWindow()
         {
-            var window = Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault(w => w.IsActive);
-            if (window == null)
-                window = Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault();
+            MetroWindow window = null;
+
+            Execute.OnUIThread(() =>
+            {
+                window = Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault(w => w.IsActive);
+                if (window == null)
+                    window = Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault();
+            });
+            
             return window;
         }
 
         public override void ShowMessageBox(string title, string message)
         {
-            GetActiveWindow().ShowMessageAsync(title, message);
+            Execute.OnUIThread(() => GetActiveWindow().ShowMessageAsync(title, message));
         }
 
         public override Task<string> ShowInputDialog(string title, string message)

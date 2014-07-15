@@ -116,6 +116,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Behaviours\GridSplitterBehaviour.cs" />
     <Compile Include="Controls\CircleMenuButton.xaml.cs">
       <DependentUpon>CircleMenuButton.xaml</DependentUpon>
     </Compile>
@@ -127,13 +128,14 @@
     <Compile Include="Controls\MetroToggleButton.xaml.cs">
       <DependentUpon>MetroToggleButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\Reciever\UDPReciever.cs" />
+    <Compile Include="Core\Reciever\UdpReciever.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Messaging.cs" />
     <Compile Include="Services\MetroDialogService.cs" />
     <Compile Include="Settings\JsonSettingsBase.cs" />
     <Compile Include="Settings\LogazmicSettings.cs" />
+    <Compile Include="Utils\DependencyPropertyHelpers.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
     <Compile Include="ViewModels\UpdatableScreen.cs" />
     <Compile Include="Views\LogPaneView.xaml.cs">

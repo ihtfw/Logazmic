@@ -12,6 +12,7 @@
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:settings="clr-namespace:Logazmic.Settings"
                    xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
+                   xmlns:behaviours="clr-namespace:Logazmic.Behaviours"
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
                    AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];"
@@ -39,21 +40,20 @@
                                 <Setter Property="Control.Foreground" Value="{DynamicResource TraceColor}" />
                                 <Setter Property="Control.FontWeight" Value="Thin" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}"
-                                         Value="{x:Static log:LogLevel.Debug}">
-                                <Setter Property="Control.Foreground" Value="{DynamicResource DebugColor}" />
+<!--                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">-->
+<!--                                <Setter Property="Control.Foreground" Value="{DynamicResource DebugColor}" />-->
+<!--                            </DataTrigger>-->
+                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Info}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource InfoColor}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}"
-                                         Value="{x:Static log:LogLevel.Warn}">
+                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Warn}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource WarnColor}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}"
-                                         Value="{x:Static log:LogLevel.Error}">
+                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Error}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource ErrorColor}" />
                                 <Setter Property="Control.FontWeight" Value="DemiBold" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}"
-                                         Value="{x:Static log:LogLevel.Fatal}">
+                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Fatal}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource FatalColor}" />
                                 <Setter Property="Control.FontWeight" Value="Bold" />
                             </DataTrigger>
@@ -75,7 +75,7 @@
             <controls:MetroButton cal:Message.Attach="Open" ToolTip="Open File"
                                   Visual="{DynamicResource appbar_folder_open}" />
 
-            <controls:CircleMenuButton Visual="{DynamicResource appbar_add}">
+            <controls:CircleMenuButton Visual="{DynamicResource appbar_add}" ToolTip="Add reciever">
                 <controls:CircleMenuButton.ItemsSource>
                     <CompositeCollection> <!--TODO: why does just the content property doesn't work?-->
                         <MenuItem Header="TCP" cal:Message.Attach="AddTCPReciever" />
@@ -91,12 +91,12 @@
 
 
             <controls:MetroToggleButton IsChecked="{Binding ActiveItem.AutoScroll}"
-                                        Visual="{DynamicResource appbar_arrow_down}" />
+                                        Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll"/>
 
             <Rectangle Width="15" />
 
             <controls:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"
-                                        Visual="{DynamicResource appbar_settings}" />
+                                        Visual="{DynamicResource appbar_settings}" ToolTip="Settings"/>
 
 
             <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120"
@@ -194,7 +194,7 @@
             </Grid>
 
             <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" Height="3" VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch" />
+                          HorizontalAlignment="Stretch" behaviours:GridSplitterBehaviour.SaveSizeWithName="MainWindow.Description"/>
 
             <Grid x:Name="Details" Grid.Row="2" Grid.ColumnSpan="3">
                 <TextBox FontFamily="Courier New" Style="{StaticResource DetailsTextBlock}"
