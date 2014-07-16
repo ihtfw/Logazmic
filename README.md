@@ -3,10 +3,10 @@ Logazmic
 <img src="https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/appbar.flag.bear.png" alt="Icon" width="64px" height="64px" />
 
 
-Minimalistic log viewer for Windows. Supports only log4j xml layout yet. Core is based on [Log2console](https://log2console.codeplex.com/). UI is rewritten in WPF with usage of [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
+Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is based on [Log2console](https://log2console.codeplex.com/). UI is rewritten in WPF with usage of [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
 
 ##Supports:
-* Listening on tcp port(4505)
+* Listening on tcp/udp
 * Opening *.log4j files 
 * Drag-and-drop files
 
