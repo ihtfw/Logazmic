@@ -58,7 +58,8 @@ namespace Logazmic
            
             if (args.Count > 1)
                 MainWindowViewModel.Instance.LoadFile(args[1]);
-            ActivateWindow(MainWindow);
+            if(MainWindow != null)
+                ActivateWindow(MainWindow);
             return true;
         }
 

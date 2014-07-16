@@ -73,17 +73,6 @@
             }
         }
 
-        protected override void OnViewLoaded(object view)
-        {
-            base.OnViewLoaded(view);
-            
-            var coa = ClickOnceUtils.StartUpArg;
-            if (!string.IsNullOrEmpty(coa))
-            {
-                LoadFile(coa);
-            }
-        }
-
         public void OnDrop(DragEventArgs e)
         {
             var dataObject = e.Data as DataObject;
