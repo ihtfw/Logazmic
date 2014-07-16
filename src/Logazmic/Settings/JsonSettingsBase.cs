@@ -74,11 +74,11 @@
 
         public abstract void Save();
 
-        protected static T Load<T>(string path) where T : JsonSettingsBase
+        protected static T Load<T>(string path) where T : JsonSettingsBase, new()
         {
             if (!File.Exists(path))
             {
-                return Activator.CreateInstance<T>();
+                return new T();
             }
             var json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<T>(json, serilizerSettings);
