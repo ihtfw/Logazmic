@@ -69,8 +69,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Resources\appbar.flag.bear.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro">
