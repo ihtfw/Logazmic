@@ -4,6 +4,7 @@ namespace Logazmic
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
 
     using Logazmic.Core.Reciever;
@@ -54,6 +55,7 @@ namespace Logazmic
 
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
+           
             if (args.Count > 1)
                 MainWindowViewModel.Instance.LoadFile(args[1]);
             ActivateWindow(MainWindow);

@@ -14,6 +14,7 @@ namespace Microsoft.Shell
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Runtime.Remoting;
     using System.Runtime.Remoting.Channels;
     using System.Runtime.Remoting.Channels.Ipc;
@@ -25,6 +26,8 @@ namespace Microsoft.Shell
     using System.Security;
     using System.Runtime.InteropServices;
     using System.ComponentModel;
+
+    using Logazmic.Utils;
 
     internal enum WM
     {
@@ -442,7 +445,20 @@ namespace Microsoft.Shell
                 return;
             }
 
-            ((TApplication)Application.Current).SignalExternalCommandLineArgs(args);
+            var coa = ClickOnceUtils.StartUpArg;
+            if (string.IsNullOrEmpty(coa))
+            {
+                File.AppendAllText(@"D:\Temp\Logazmic\args.txt", "coa!=null");
+                ((TApplication)Application.Current).SignalExternalCommandLineArgs(args);    
+            }
+            else
+            {
+                File.AppendAllText(@"D:\Temp\Logazmic\args.txt", "coa===null");
+                File.AppendAllText(@"D:\Temp\Logazmic\args.txt", coa);
+                File.AppendAllText(@"D:\Temp\Logazmic\args.txt", "args");
+                File.AppendAllLines(@"D:\Temp\Logazmic\args.txt", args);
+                ((TApplication)Application.Current).SignalExternalCommandLineArgs(args.Concat(new []{coa}).ToList());    
+            }
         }
 
         #endregion

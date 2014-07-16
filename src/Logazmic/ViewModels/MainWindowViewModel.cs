@@ -11,6 +11,7 @@
     using Logazmic.Core.Reciever;
     using Logazmic.Services;
     using Logazmic.Settings;
+    using Logazmic.Utils;
 
     using MahApps.Metro.Controls;
 
@@ -75,15 +76,11 @@
         protected override void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
-
-            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments != null &&
-                AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null &&
-                AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData.Any())
+            
+            var coa = ClickOnceUtils.StartUpArg;
+            if (!string.IsNullOrEmpty(coa))
             {
-                string[] activationData = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
-                var uri = new Uri(activationData[0]);
-
-                LoadFile(uri.LocalPath);
+                LoadFile(coa);
             }
         }
 

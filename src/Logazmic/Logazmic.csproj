@@ -17,7 +17,7 @@
     <RestorePackages>true</RestorePackages>
     <NuGetPackageImportStamp>97664a29</NuGetPackageImportStamp>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>ftp://waws-prod-blu-015.ftp.azurewebsites.windows.net/site/wwwroot/</PublishUrl>
+    <PublishUrl>D:\Temp\Logazmic\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -31,8 +31,8 @@
     <ProductName>Logazmic</ProductName>
     <WebPage>publish.htm</WebPage>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>8</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>11</ApplicationRevision>
+    <ApplicationVersion>1.0.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -136,6 +136,7 @@
     <Compile Include="Services\MetroDialogService.cs" />
     <Compile Include="Settings\JsonSettingsBase.cs" />
     <Compile Include="Settings\LogazmicSettings.cs" />
+    <Compile Include="Utils\ClickOnceUtils.cs" />
     <Compile Include="Utils\SingleInstance.cs" />
     <Compile Include="Utils\DependencyPropertyHelpers.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
