@@ -276,7 +276,7 @@ namespace Microsoft.Shell
         public static bool InitializeAsFirstInstance(string uniqueName)
         {
             commandLineArgs = GetCommandLineArgs(uniqueName);
-            File.WriteAllLines(@"D:\Temp\Logazmic\args.txt",commandLineArgs);
+//            File.WriteAllLines(@"D:\Temp\Logazmic\args.txt",commandLineArgs);
             // Build unique application Id and the IPC channel name.
             string applicationIdentifier = uniqueName + Environment.UserName;
 

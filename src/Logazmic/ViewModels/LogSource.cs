@@ -11,8 +11,11 @@ namespace Logazmic.ViewModels
     {
         private bool isChecked;
 
+        private string fullName;
+
         public LogSource(LogSource parent = null)
         {
+            fullName = null;
             Parent = parent;
             Children = new BindableCollection<LogSource>();
             isChecked = true;
@@ -34,6 +37,39 @@ namespace Logazmic.ViewModels
         }
 
         public string Name { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                if (fullName == null)
+                {
+                    if (Parent != null)
+                    {
+                        if (string.IsNullOrEmpty(Parent.FullName))
+                        {
+                            fullName = Name;
+                        }
+                        else
+                        {
+                            fullName += Parent.FullName + "." + Name;    
+                        }
+                    }
+                    else
+                    {
+                        if (Name == "Root")
+                        {
+                            fullName = string.Empty;
+                        }
+                        else
+                        {
+                            fullName = Name;    
+                        }
+                    }
+                }
+                return fullName;
+            }
+        }
 
         public LogSource Parent { get; private set; }
 

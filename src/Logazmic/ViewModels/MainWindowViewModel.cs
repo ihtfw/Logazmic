@@ -62,6 +62,15 @@
             Task.Factory.StartNew(logPaneViewModel.Initialize);
         }
 
+        protected override void OnDeactivate(bool close)
+        {
+            foreach (var item in Items)
+            {
+                item.Deactivated -= OnTabDeactivated;
+            }
+            base.OnDeactivate(close);
+        }
+
         private void OnTabDeactivated(object sender, DeactivationEventArgs args)
         {
             if (args.WasClosed)

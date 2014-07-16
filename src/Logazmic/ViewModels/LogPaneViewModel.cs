@@ -190,7 +190,7 @@ namespace Logazmic.ViewModels
                 }
             }
 
-            if (!logSourceLeaves.Contains(resultRow.LastLoggerName))
+            if (!logSourceLeaves.Any(l => l == resultRow.LoggerName))
             {
                 return;
             }
@@ -202,7 +202,7 @@ namespace Logazmic.ViewModels
         {
             if (full)
             {
-                logSourceLeaves = LogSourceRoot.Leaves().Where(l => l.IsChecked).Select(c => c.Name).Distinct().ToList();
+                logSourceLeaves = LogSourceRoot.Leaves().Where(l => l.IsChecked).Select(c => c.FullName).Distinct().ToList();
             }
 
             Execute.OnUIThread(() =>
