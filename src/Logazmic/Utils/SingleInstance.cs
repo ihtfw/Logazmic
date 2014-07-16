@@ -13,7 +13,9 @@ namespace Microsoft.Shell
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Deployment.Application;
     using System.IO;
+    using System.Linq;
     using System.Runtime.Remoting;
     using System.Runtime.Remoting.Channels;
     using System.Runtime.Remoting.Channels.Ipc;
@@ -25,6 +27,8 @@ namespace Microsoft.Shell
     using System.Security;
     using System.Runtime.InteropServices;
     using System.ComponentModel;
+
+    using Logazmic.Utils;
 
     internal enum WM
     {
@@ -272,7 +276,7 @@ namespace Microsoft.Shell
         public static bool InitializeAsFirstInstance(string uniqueName)
         {
             commandLineArgs = GetCommandLineArgs(uniqueName);
-
+            File.WriteAllLines(@"D:\Temp\Logazmic\args.txt",commandLineArgs);
             // Build unique application Id and the IPC channel name.
             string applicationIdentifier = uniqueName + Environment.UserName;
 
@@ -283,6 +287,7 @@ namespace Microsoft.Shell
             singleInstanceMutex = new Mutex(true, applicationIdentifier, out firstInstance);
             if (firstInstance)
             {
+                ((ISingleInstanceApp)(Application.Current)).SignalExternalCommandLineArgs(commandLineArgs);
                 CreateRemoteService(channelName);
             }
             else
@@ -322,7 +327,7 @@ namespace Microsoft.Shell
         private static IList<string> GetCommandLineArgs(string uniqueApplicationName)
         {
             string[] args = null;
-            if (AppDomain.CurrentDomain.ActivationContext == null)
+            if (!ApplicationDeployment.IsNetworkDeployed)
             {
                 // The application was not clickonce deployed, get args from standard API's
                 args = Environment.GetCommandLineArgs();
@@ -334,25 +339,27 @@ namespace Microsoft.Shell
                 // As a workaround commandline arguments can be written to a shared location before 
                 // the app is launched and the app can obtain its commandline arguments from the 
                 // shared location               
-                string appFolderPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), uniqueApplicationName);
+//                string appFolderPath = Path.Combine(
+//                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), uniqueApplicationName);
+//
+//                string cmdLinePath = Path.Combine(appFolderPath, "cmdline.txt");
+//                if (File.Exists(cmdLinePath))
+//                {
+//                    try
+//                    {
+//                        using (TextReader reader = new StreamReader(cmdLinePath, System.Text.Encoding.Unicode))
+//                        {
+//                            args = NativeMethods.CommandLineToArgvW(reader.ReadToEnd());
+//                        }
+//
+//                        File.Delete(cmdLinePath);
+//                    }
+//                    catch (IOException)
+//                    {
+//                    }
+//                }
 
-                string cmdLinePath = Path.Combine(appFolderPath, "cmdline.txt");
-                if (File.Exists(cmdLinePath))
-                {
-                    try
-                    {
-                        using (TextReader reader = new StreamReader(cmdLinePath, System.Text.Encoding.Unicode))
-                        {
-                            args = NativeMethods.CommandLineToArgvW(reader.ReadToEnd());
-                        }
-
-                        File.Delete(cmdLinePath);
-                    }
-                    catch (IOException)
-                    {
-                    }
-                }
+                args = new[] { "", ClickOnceUtils.StartUpArg };
             }
 
             if (args == null)
@@ -441,8 +448,7 @@ namespace Microsoft.Shell
             {
                 return;
             }
-
-            ((TApplication)Application.Current).SignalExternalCommandLineArgs(args);
+            ((TApplication)Application.Current).SignalExternalCommandLineArgs(args);    
         }
 
         #endregion

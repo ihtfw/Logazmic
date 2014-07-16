@@ -11,6 +11,7 @@
     using Logazmic.Core.Reciever;
     using Logazmic.Services;
     using Logazmic.Settings;
+    using Logazmic.Utils;
 
     using MahApps.Metro.Controls;
 
@@ -69,21 +70,6 @@
                 LogazmicSettings.Instance.Receivers.Remove(pane.Receiver);
                 pane.Dispose();
                 Items.Remove(pane);
-            }
-        }
-
-        protected override void OnViewLoaded(object view)
-        {
-            base.OnViewLoaded(view);
-
-            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments != null &&
-                AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null &&
-                AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData.Any())
-            {
-                string[] activationData = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
-                var uri = new Uri(activationData[0]);
-
-                LoadFile(uri.LocalPath);
             }
         }
 
