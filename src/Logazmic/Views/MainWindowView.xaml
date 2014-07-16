@@ -86,7 +86,7 @@
 
             <Rectangle Width="15" />
 
-            <controls:MetroButton cal:Message.Handler="{Binding ActiveItem}" cal:Message.Attach="Clear" ToolTip="Clear log"
+            <controls:MetroButton cal:Action.TargetWithoutContext="{Binding ActiveItem}" cal:Message.Attach="Clear" ToolTip="Clear log"
                                   Visual="{DynamicResource appbar_close}" />
 
 

@@ -1,63 +1,77 @@
-﻿<controls:Flyout x:Class="Logazmic.Views.SettingsView"
-                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                 xmlns:controls1="clr-namespace:Logazmic.Controls"
-                 xmlns:settings="clr-namespace:Logazmic.Settings"
-                 mc:Ignorable="d"
-                 Theme="Inverse"
-                 d:DesignHeight="300" d:DesignWidth="300"
-                 Position="Right" Header="Settings" IsOpen="{Binding IsSettingsOpen}" Padding="10">
-    <controls:Flyout.Resources>
+﻿<ma:Flyout x:Class="Logazmic.Views.SettingsView"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:ma="http://metro.mahapps.com/winfx/xaml/controls"
+           xmlns:controls="clr-namespace:Logazmic.Controls"
+           xmlns:settings="clr-namespace:Logazmic.Settings"
+           mc:Ignorable="d"
+           Theme="Inverse"
+           d:DesignHeight="300" d:DesignWidth="300"
+           Position="Right" Header="Settings" IsOpen="{Binding IsSettingsOpen}" Padding="10">
+    <ma:Flyout.Resources>
         <Style x:Key="DescriptionHeaderStyle"
-                   TargetType="Label">
+               TargetType="Label">
             <Setter Property="FontSize"
-                        Value="22" />
+                    Value="22" />
             <Setter Property="HorizontalAlignment"
-                        Value="Center" />
+                    Value="Center" />
         </Style>
-    </controls:Flyout.Resources>
+        <Style x:Key="DescriptionSubHeaderStyle"
+               TargetType="Label">
+            <Setter Property="FontSize"
+                    Value="16" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
+        </Style>
+
+        <Style x:Key="Default" TargetType="FrameworkElement">
+            <Setter Property="Margin" Value="25,3" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource Default}" />
+        <Style TargetType="ma:NumericUpDown" BasedOn="{StaticResource Default}" />
+        <Style TargetType="ma:ToggleSwitch" BasedOn="{StaticResource Default}">
+            <Setter Property="OffLabel" Value="" />
+            <Setter Property="OnLabel" Value="" />
+        </Style>
+
+    </ma:Flyout.Resources>
     <StackPanel DataContext="{x:Static settings:LogazmicSettings.Instance}">
         <Label Style="{StaticResource DescriptionHeaderStyle}">Appearance</Label>
-        <controls1:TwoColumnGrid>
-            <controls1:TwoColumnGrid.Resources>
-                <Style x:Key="Default" TargetType="FrameworkElement">
-                    <Setter Property="Margin" Value="25,3" />
-                    <Setter Property="HorizontalAlignment" Value="Left" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                </Style>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource Default}" />
-                <Style TargetType="controls:NumericUpDown" BasedOn="{StaticResource Default}" />
-                <Style TargetType="controls:ToggleSwitch" BasedOn="{StaticResource Default}">
-                    <Setter Property="OffLabel" Value="" />
-                    <Setter Property="OnLabel" Value="" />
-                </Style>
-            </controls1:TwoColumnGrid.Resources>
+        <controls:TwoColumnGrid>
 
             <TextBlock>Grid font size:</TextBlock>
-            <controls:NumericUpDown Value="{Binding GridFontSize}" HorizontalAlignment="Left"
-                                    Minimum="5"
-                                    Maximum="30" />
+            <ma:NumericUpDown Value="{Binding GridFontSize}" HorizontalAlignment="Left"
+                              Minimum="5"
+                              Maximum="30" />
 
             <TextBlock>Description font size:</TextBlock>
-            <controls:NumericUpDown Value="{Binding DescriptionFontSize}"
-                                    Minimum="5"
-                                    Maximum="30" />
-
-            <TextBlock>Dark theme:</TextBlock>
-            <controls:ToggleSwitch HorizontalAlignment="Left" 
-                                   IsChecked="{Binding UseDarkTheme}" />
-
-            <TextBlock>Grid lines visibility</TextBlock>
-            <ComboBox SelectedItem="{Binding GridLinesVisibility}" HorizontalAlignment="Left" Margin="25,3">
+            <ma:NumericUpDown Value="{Binding DescriptionFontSize}"
+                              Minimum="5"
+                              Maximum="30" />
+        </controls:TwoColumnGrid>
+        <Grid Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Style="{StaticResource DescriptionSubHeaderStyle}" Grid.Column="0" Grid.Row="0">Dark theme:</Label>
+            <ma:ToggleSwitch Grid.Column="0" Grid.Row="1"
+                             IsChecked="{Binding UseDarkTheme}" />
+            <Label Style="{StaticResource DescriptionSubHeaderStyle}" Grid.Column="1" Grid.Row="0">Grid lines visibility:</Label>
+            <ComboBox Grid.Column="1" Grid.Row="1" SelectedItem="{Binding GridLinesVisibility}" HorizontalAlignment="Center" Margin="25,3">
                 <DataGridGridLinesVisibility>All</DataGridGridLinesVisibility>
                 <DataGridGridLinesVisibility>Horizontal</DataGridGridLinesVisibility>
                 <DataGridGridLinesVisibility>Vertical</DataGridGridLinesVisibility>
                 <DataGridGridLinesVisibility>None</DataGridGridLinesVisibility>
             </ComboBox>
-
-        </controls1:TwoColumnGrid>
+        </Grid>
     </StackPanel>
-</controls:Flyout>
+</ma:Flyout>

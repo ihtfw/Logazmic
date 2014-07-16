@@ -55,11 +55,10 @@ namespace Logazmic
 
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
-           
-            if (args.Count > 1)
-                MainWindowViewModel.Instance.LoadFile(args[1]);
             if(MainWindow != null)
                 ActivateWindow(MainWindow);
+            if (args.Count > 1)
+                MainWindowViewModel.Instance.LoadFile(args[1]);
             return true;
         }
 
