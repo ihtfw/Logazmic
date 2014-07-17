@@ -142,8 +142,10 @@
                     return;
                 }
 
-                if (Items.Any(it => it.ToolTip == path))
+                var alreadyOpened = Items.FirstOrDefault(it => it.ToolTip == path);
+                if (alreadyOpened != null)
                 {
+                    ActivateItem(alreadyOpened);
                     return;
                 }
 
