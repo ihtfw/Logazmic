@@ -1,6 +1,7 @@
 ﻿namespace Logazmic.Utils
 {
     using System;
+    using System.Deployment.Application;
     using System.Linq;
 
     public static class ClickOnceUtils
@@ -18,7 +19,10 @@
 
                     return uri.LocalPath;
                 }
-
+                if (ApplicationDeployment.IsNetworkDeployed)
+                {
+                    return ApplicationDeployment.CurrentDeployment.ActivationUri.Query;
+                }
                 return null;
             }
         }
