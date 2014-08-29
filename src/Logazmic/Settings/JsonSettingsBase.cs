@@ -14,6 +14,7 @@
     using Logazmic.Annotations;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
 
     public abstract class JsonSettingsBase : INotifyPropertyChanged
     {
@@ -37,8 +38,12 @@
                                                                            {
                                                                                TypeNameHandling = TypeNameHandling.Auto,
                                                                                TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
-                                                                               
                                                                            };
+
+        static JsonSettingsBase()
+        {
+            serilizerSettings.Converters.Add(new StringEnumConverter());
+        }
 
         protected JsonSettingsBase()
         {
@@ -71,7 +76,7 @@
                 propertyInfo.SetValue(this, value);
             }
         }
-
+            
         public abstract void Save();
 
         protected static T Load<T>(string path) where T : JsonSettingsBase, new()

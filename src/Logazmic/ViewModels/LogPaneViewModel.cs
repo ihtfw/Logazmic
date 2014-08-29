@@ -24,8 +24,6 @@ namespace Logazmic.ViewModels
 
         private LogLevel minLogLevel;
 
-        private bool scrollToEnd;
-
         private string searchString;
 
         public LogPaneViewModel([NotNull] ReceiverBase receiver)

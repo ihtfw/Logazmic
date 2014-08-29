@@ -17,7 +17,7 @@
     <RestorePackages>true</RestorePackages>
     <NuGetPackageImportStamp>97664a29</NuGetPackageImportStamp>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>ftp://waws-prod-blu-015.ftp.azurewebsites.windows.net/site/wwwroot/</PublishUrl>
+    <PublishUrl>../../Deploy/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -34,8 +34,8 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>20</ApplicationRevision>
-    <ApplicationVersion>1.0.3.%2a</ApplicationVersion>
+    <ApplicationRevision>24</ApplicationRevision>
+    <ApplicationVersion>1.0.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>

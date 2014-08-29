@@ -7,6 +7,7 @@ namespace Logazmic.Settings
 
     using Logazmic.Core.Reciever;
 
+    
     public class LogazmicSettings : JsonSettingsBase
     {
         #region Singleton

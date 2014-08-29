@@ -62,7 +62,7 @@
                     logMsg.LoggerName = string.Format("{0}_{1}", remoteEndPoint.Address.ToString().Replace(".", "-"), logMsg.LoggerName);
                     OnNewMessage(logMsg);
                 }
-                catch (SocketException was)
+                catch (SocketException)
                 {
                     return;
                 }
@@ -72,7 +72,6 @@
                     return;
                 }
             }
-            udpClient.Close();
         }
     }
 }
