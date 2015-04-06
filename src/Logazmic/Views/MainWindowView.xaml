@@ -11,11 +11,10 @@
                    xmlns:views="clr-namespace:Logazmic.Views"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:settings="clr-namespace:Logazmic.Settings"
-                   xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
                    xmlns:behaviours="clr-namespace:Logazmic.Behaviours"
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-                   AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];"
+                   AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];[Shortcut Control+O] = [Action Open];"
                    WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
                    Icon="../Resources/appbar.flag.bear.ico"
                    ShowIconOnTitleBar="True">
@@ -93,6 +92,10 @@
             <controls:MetroToggleButton IsChecked="{Binding ActiveItem.AutoScroll}"
                                         Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll"/>
 
+
+            <controls:MetroButton cal:Message.Attach="SyncWithSelectedItem" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Try to locate selected item"
+                                  Visual="{DynamicResource appbar_radar}" />
+            
             <Rectangle Width="15" />
 
             <controls:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"

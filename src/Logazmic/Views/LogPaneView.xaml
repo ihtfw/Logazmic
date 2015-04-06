@@ -9,7 +9,7 @@
              xmlns:controls="clr-namespace:Logazmic.Controls"
              xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
              mc:Ignorable="d"
-             Focusable="False"
+             Focusable="False" 
              d:DataContext="{d:DesignInstance viewModels:LogPaneViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -44,7 +44,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <DataGrid ItemsSource="{Binding Path=CollectionViewSource.View}"
+    <DataGrid x:Name="LogDataGrid" ItemsSource="{Binding Path=CollectionViewSource.View}"
               SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
               CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
               CanUserResizeRows="False" SelectionMode="Single"

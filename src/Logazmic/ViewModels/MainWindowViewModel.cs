@@ -164,7 +164,7 @@
         public void Open()
         {
             string path;
-            var res = DialogService.Current.ShowOpenDialog(out path, ".log4jxml", "Nlog log4jxml|*.log4jxml");
+            var res = DialogService.Current.ShowOpenDialog(out path, ".log4j", "Nlog log4jxml|*.log4jxml;*.log4j");
             if (!res)
             {
                 return;
@@ -179,6 +179,7 @@
             pane.TryClose();
             
         }
+                
 
         #endregion
     }

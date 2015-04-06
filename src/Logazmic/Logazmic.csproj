@@ -134,12 +134,14 @@
       <DependentUpon>MetroToggleButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Reciever\UdpReciever.cs" />
+    <Compile Include="InputBindingTrigger.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Messaging.cs" />
     <Compile Include="Services\MetroDialogService.cs" />
     <Compile Include="Settings\JsonSettingsBase.cs" />
     <Compile Include="Settings\LogazmicSettings.cs" />
+    <Compile Include="ShortcutParser.cs" />
     <Compile Include="Utils\ClickOnceUtils.cs" />
     <Compile Include="Utils\SingleInstance.cs" />
     <Compile Include="Utils\DependencyPropertyHelpers.cs" />
@@ -264,8 +266,8 @@
   <ItemGroup>
     <FileAssociation Include=".log4j">
       <Visible>False</Visible>
-      <Description>log4jxml</Description>
-      <Progid>log4jxml</Progid>
+      <Description>log4j</Description>
+      <Progid>log4j</Progid>
       <DefaultIcon>Resources\appbar.flag.bear.ico</DefaultIcon>
     </FileAssociation>
     <FileAssociation Include=".log4jxml">

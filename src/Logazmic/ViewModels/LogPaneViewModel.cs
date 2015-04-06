@@ -89,6 +89,15 @@ namespace Logazmic.ViewModels
             }
         }
 
+        public event EventHandler SyncWithSelectedItemRequired;
+
+        public bool CanSyncWithSelectedItem { get { return SelectedLogMessage != null; } }
+
+        public void SyncWithSelectedItem()
+        {
+            OnSyncWithSelectedItemRequired();
+        }
+
         public CollectionViewSource CollectionViewSource
         {
             get
@@ -241,5 +250,14 @@ namespace Logazmic.ViewModels
         }
 
         #endregion
+
+        protected virtual void OnSyncWithSelectedItemRequired()
+        {
+            var handler = SyncWithSelectedItemRequired;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
     }
 }

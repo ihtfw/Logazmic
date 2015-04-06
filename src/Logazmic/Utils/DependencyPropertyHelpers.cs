@@ -22,5 +22,23 @@ namespace Logazmic.Utils
             var parent = parentObject as T;
             return parent ?? FindParent<T>(parentObject);
         }
+
+        public static TChildItem FindVisualChild<TChildItem>(this DependencyObject obj) where TChildItem : DependencyObject
+        {
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is TChildItem)
+                {
+                    return (TChildItem)child;
+                }
+                var childOfChild = FindVisualChild<TChildItem>(child);
+                if (childOfChild != null)
+                {
+                    return childOfChild;
+                }
+            }
+            return null;
+        }
     }
 }
