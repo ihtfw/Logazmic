@@ -17,7 +17,7 @@
         public string LoggerName { get { return loggerName; }
             set
             {
-                loggerName = value;
+                loggerName = value ?? string.Empty;
                 LoggerNames = loggerName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 LastLoggerName = LoggerNames.LastOrDefault();
             } }
