@@ -116,7 +116,7 @@
             <TextBox
                 Text="{Binding Path=ActiveItem.SearchString, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Width="200"
-                metro:TextboxHelper.Watermark="Search"
+                metro:TextBoxHelper.Watermark="Search"
                 Style="{DynamicResource SearchMetroTextBox}" VerticalAlignment="Center" />
         </StackPanel>
         <Grid>
