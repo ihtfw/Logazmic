@@ -15,7 +15,8 @@
     <WarningLevel>4</WarningLevel>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>97664a29</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>../../Deploy/</PublishUrl>
     <Install>true</Install>
@@ -61,10 +62,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>B05F36FDB1EDC519294A15D34A1AB9ED8E47A29E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>F6C1C846A50F957C89C3FD6F1154C4F728815518</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Logazmic_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -76,21 +78,24 @@
     <ApplicationIcon>Resources\appbar.flag.bear.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>..\packages\Caliburn.Micro.Core.2.0.0\lib\net45\Caliburn.Micro.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform">
-      <HintPath>..\packages\Caliburn.Micro.2.0.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.2.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="MahApps.Metro">
-      <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net45\MahApps.Metro.dll</HintPath>
+    <Reference Include="MahApps.Metro, Version=1.1.2.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="PropertyChanged">
-      <HintPath>..\packages\PropertyChanged.Fody.1.48.2.0\Lib\NET35\PropertyChanged.dll</HintPath>
+    <Reference Include="PropertyChanged, Version=1.50.3.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.1.50.3\lib\dotnet\PropertyChanged.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -98,7 +103,8 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\MahApps.Metro.0.13.1.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -231,12 +237,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\WindowsIcons-license.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Entypo-license.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="FodyWeavers.xml">
       <SubType>Designer</SubType>
     </Resource>
@@ -245,6 +245,8 @@
     <Content Include="Resources\appbar.flag.bear.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Entypo-license.txt" />
+    <Resource Include="Resources\WindowsIcons-license.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -284,9 +286,11 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\packages\Fody.1.24.0\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.24.0\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.1.29.3\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.3\build\dotnet\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets'))" />
   </Target>
-  <Import Project="..\packages\Fody.1.24.0\build\Fody.targets" Condition="Exists('..\packages\Fody.1.24.0\build\Fody.targets')" />
+  <Import Project="..\packages\Fody.1.29.3\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.3\build\dotnet\Fody.targets')" />
+  <Import Project="..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets" Condition="Exists('..\packages\PropertyChanged.Fody.1.50.3\build\dotnet\PropertyChanged.Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
