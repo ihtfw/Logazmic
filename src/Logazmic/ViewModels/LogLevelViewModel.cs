@@ -13,12 +13,15 @@ namespace Logazmic.ViewModels
 
     public class LogLevelViewModel : PropertyChangedBase
     {
+        private readonly LogPaneServices logPaneServices;
+
         private bool isEnabled;
 
         public LogLevel LogLevel { get; private set; }
 
-        public LogLevelViewModel(LogLevel logLevel)
+        public LogLevelViewModel(LogPaneServices logPaneServices, LogLevel logLevel)
         {
+            this.logPaneServices = logPaneServices;
             LogLevel = logLevel;
             IsEnabled = true;
         }
@@ -29,7 +32,7 @@ namespace Logazmic.ViewModels
             set
             {
                 isEnabled = value;
-                Messaging.Publish(new RefreshEvent());
+                logPaneServices.EventAggregator.PublishOnCurrentThread(new RefreshEvent());
             }
         }
     }

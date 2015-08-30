@@ -26,6 +26,8 @@ namespace Logazmic.ViewModels
 
         private string searchString;
 
+        public LogPaneServices LogPaneServices { get; set; } = new LogPaneServices();
+
         public LogPaneViewModel([NotNull] ReceiverBase receiver)
         {
             if (receiver == null)
@@ -35,12 +37,24 @@ namespace Logazmic.ViewModels
 
             Receiver = receiver;
             LogMessages = new BindableCollection<LogMessage>();
-            MinLogLevel = LogLevels.First();
-            LogSourceRoot = new LogSource
+
+            LogSourceRoot = new LogSource(LogPaneServices)
                             {
                                 Name = "Root"
                             };
-            Messaging.Subscribe(this);
+
+            LogLevels = new BindableCollection<LogLevelViewModel>
+                        {
+                            new LogLevelViewModel(LogPaneServices, LogLevel.Trace),
+                            new LogLevelViewModel(LogPaneServices, LogLevel.Debug),
+                            new LogLevelViewModel(LogPaneServices, LogLevel.Info),
+                            new LogLevelViewModel(LogPaneServices, LogLevel.Warn),
+                            new LogLevelViewModel(LogPaneServices, LogLevel.Error),
+                            new LogLevelViewModel(LogPaneServices, LogLevel.Fatal),
+                        };
+            MinLogLevel = LogLevels.First();
+
+            LogPaneServices.EventAggregator.Subscribe(this);
         }
 
         public bool AutoScroll { get; set; }
@@ -65,7 +79,7 @@ namespace Logazmic.ViewModels
             set
             {
                 searchString = value;
-                Messaging.Publish(new RefreshEvent());
+                Update();
             }
         }
 
@@ -79,26 +93,19 @@ namespace Logazmic.ViewModels
 
         public string ToolTip { get { return Receiver.Description; } }
 
-        public BindableCollection<LogLevelViewModel> LogLevels { get; } = new BindableCollection<LogLevelViewModel>
-                                                                          {
-                                                                              new LogLevelViewModel(LogLevel.Trace),
-                                                                              new LogLevelViewModel(LogLevel.Debug),
-                                                                              new LogLevelViewModel(LogLevel.Info),
-                                                                              new LogLevelViewModel(LogLevel.Warn),
-                                                                              new LogLevelViewModel(LogLevel.Error),
-                                                                              new LogLevelViewModel(LogLevel.Fatal),
-                                                                          };
+        public BindableCollection<LogLevelViewModel> LogLevels { get; }
+
         public LogLevelViewModel MinLogLevel
         {
             get { return minLogLevel; }
             set
             {
                 minLogLevel = value;
-                Messaging.Publish(new RefreshEvent());
+                Update();
             }
         }
 
-        public BindableCollection<MessageFilterViewModel> MessageFilters { get; }  = new BindableCollection<MessageFilterViewModel>();
+        public BindableCollection<MessageFilterViewModel> MessageFilters { get; } = new BindableCollection<MessageFilterViewModel>();
 
         public void AddMessageFilter(string messageFilter)
         {
@@ -110,17 +117,20 @@ namespace Logazmic.ViewModels
             {
                 return;
             }
-            MessageFilters.Add(new MessageFilterViewModel(messageFilter));
-            Messaging.Publish(new RefreshEvent());
+            var messageFilterViewModel = new MessageFilterViewModel(LogPaneServices, messageFilter);
+            MessageFilters.Add(messageFilterViewModel);
+            Update();
         }
 
         public void RemoveMessageFilter(MessageFilterViewModel messageFilter)
         {
             if (messageFilter == null)
+            {
                 return;
+            }
 
             MessageFilters.Remove(messageFilter);
-            Messaging.Publish(new RefreshEvent());
+            Update();
         }
 
         public event EventHandler SyncWithSelectedItemRequired;

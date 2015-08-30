@@ -9,12 +9,15 @@ namespace Logazmic.ViewModels
 
     public class LogSource : PropertyChangedBase
     {
+        private readonly LogPaneServices logPaneServices;
+
         private bool isChecked;
 
         private string fullName;
 
-        public LogSource(LogSource parent = null)
+        public LogSource(LogPaneServices logPaneServices, LogSource parent = null)
         {
+            this.logPaneServices = logPaneServices;
             fullName = null;
             Parent = parent;
             Children = new BindableCollection<LogSource>();
@@ -32,7 +35,7 @@ namespace Logazmic.ViewModels
                 }
                 isChecked = value;
 
-                Messaging.Publish(new RefreshCheckEvent());
+                logPaneServices.EventAggregator.PublishOnCurrentThread(new RefreshCheckEvent());
             }
         }
 
@@ -110,7 +113,7 @@ namespace Logazmic.ViewModels
 
             if (logSource == null)
             {
-                logSource = new LogSource(parent)
+                logSource = new LogSource(logPaneServices, parent)
                 {
                     Name = name,
                 };

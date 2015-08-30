@@ -143,7 +143,6 @@
     <Compile Include="InputBindingTrigger.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DialogService.cs" />
-    <Compile Include="Services\Messaging.cs" />
     <Compile Include="Services\MetroDialogService.cs" />
     <Compile Include="Settings\JsonSettingsBase.cs" />
     <Compile Include="Settings\LogazmicSettings.cs" />
@@ -153,6 +152,7 @@
     <Compile Include="Utils\DependencyPropertyHelpers.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
     <Compile Include="ViewModels\LogLevelViewModel.cs" />
+    <Compile Include="ViewModels\LogPaneServices.cs" />
     <Compile Include="ViewModels\MessageFilterViewModel.cs" />
     <Compile Include="ViewModels\UpdatableScreen.cs" />
     <Compile Include="Views\LogPaneView.xaml.cs">

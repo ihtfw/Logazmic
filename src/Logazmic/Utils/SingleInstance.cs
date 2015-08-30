@@ -338,26 +338,7 @@ namespace Microsoft.Shell
                 // Clickonce deployed apps cannot recieve traditional commandline arguments
                 // As a workaround commandline arguments can be written to a shared location before 
                 // the app is launched and the app can obtain its commandline arguments from the 
-                // shared location               
-//                string appFolderPath = Path.Combine(
-//                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), uniqueApplicationName);
-//
-//                string cmdLinePath = Path.Combine(appFolderPath, "cmdline.txt");
-//                if (File.Exists(cmdLinePath))
-//                {
-//                    try
-//                    {
-//                        using (TextReader reader = new StreamReader(cmdLinePath, System.Text.Encoding.Unicode))
-//                        {
-//                            args = NativeMethods.CommandLineToArgvW(reader.ReadToEnd());
-//                        }
-//
-//                        File.Delete(cmdLinePath);
-//                    }
-//                    catch (IOException)
-//                    {
-//                    }
-//                }
+                // shared location         
 
                 args = new[] { "", ClickOnceUtils.StartUpArg };
             }

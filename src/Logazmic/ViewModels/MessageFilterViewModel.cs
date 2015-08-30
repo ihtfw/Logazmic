@@ -12,10 +12,13 @@ namespace Logazmic.ViewModels
 
     public class MessageFilterViewModel : PropertyChangedBase
     {
+        private readonly LogPaneServices logPaneServices;
+
         private bool isEnabled;
 
-        public MessageFilterViewModel(string messageFilter)
+        public MessageFilterViewModel(LogPaneServices logPaneServices, string messageFilter)
         {
+            this.logPaneServices = logPaneServices;
             Filter = messageFilter;
             IsEnabled = true;
         }
@@ -28,7 +31,7 @@ namespace Logazmic.ViewModels
             set
             {
                 isEnabled = value;
-                Messaging.Publish(new RefreshEvent());
+                logPaneServices.EventAggregator.PublishOnCurrentThread(new RefreshEvent());
             }
         }
     }
