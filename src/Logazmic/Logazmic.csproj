@@ -152,6 +152,8 @@
     <Compile Include="Utils\SingleInstance.cs" />
     <Compile Include="Utils\DependencyPropertyHelpers.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
+    <Compile Include="ViewModels\LogLevelViewModel.cs" />
+    <Compile Include="ViewModels\MessageFilterViewModel.cs" />
     <Compile Include="ViewModels\UpdatableScreen.cs" />
     <Compile Include="Views\LogPaneView.xaml.cs">
       <DependentUpon>LogPaneView.xaml</DependentUpon>

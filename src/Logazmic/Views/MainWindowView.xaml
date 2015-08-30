@@ -29,37 +29,37 @@
             <Setter Property="Background" Value="Transparent" />
         </Style>
 
-        <DataTemplate x:Key="ComboboxLogLevelDataTemplate">
-            <TextBlock Text="{Binding}">
-                <TextBlock.Style>
+        <DataTemplate x:Key="ComboboxLogLevelDataTemplate" DataType="viewModels:LogLevelViewModel">
+            <CheckBox Content="{Binding Path=LogLevel}" IsChecked="{Binding Path=IsEnabled}">
+                <CheckBox.Style>
                     <Style>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode=OneTime}"
-                                         Value="{x:Static log:LogLevel.Trace}">
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Trace}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource TraceColor}" />
                                 <Setter Property="Control.FontWeight" Value="Thin" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource DebugColor}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Info}">
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Info}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource InfoColor}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Warn}">
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Warn}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource WarnColor}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Error}">
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Error}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource ErrorColor}" />
                                 <Setter Property="Control.FontWeight" Value="DemiBold" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Mode=OneTime}" Value="{x:Static log:LogLevel.Fatal}">
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Fatal}">
                                 <Setter Property="Control.Foreground" Value="{DynamicResource FatalColor}" />
                                 <Setter Property="Control.FontWeight" Value="Bold" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </TextBlock.Style>
-            </TextBlock>
+                </CheckBox.Style>
+            </CheckBox>
+
         </DataTemplate>
     </metro:MetroWindow.Resources>
     <metro:MetroWindow.Flyouts>
@@ -90,28 +90,63 @@
 
 
             <controls:MetroToggleButton IsChecked="{Binding ActiveItem.AutoScroll}"
-                                        Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll"/>
+                                        Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll" />
 
 
             <controls:MetroButton cal:Message.Attach="SyncWithSelectedItem" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Try to locate selected item"
                                   Visual="{DynamicResource appbar_radar}" />
-            
+
             <Rectangle Width="15" />
 
             <controls:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"
-                                        Visual="{DynamicResource appbar_settings}" ToolTip="Settings"/>
+                                        Visual="{DynamicResource appbar_settings}" ToolTip="Settings" />
 
 
             <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120"
                       ItemTemplate="{StaticResource ComboboxLogLevelDataTemplate}"
-                      VerticalAlignment="Center">
-                <log:LogLevel>Trace</log:LogLevel>
-                <log:LogLevel>Debug</log:LogLevel>
-                <log:LogLevel>Info</log:LogLevel>
-                <log:LogLevel>Warn</log:LogLevel>
-                <log:LogLevel>Error</log:LogLevel>
-                <log:LogLevel>Fatal</log:LogLevel>
-            </ComboBox>
+                      ItemsSource="{Binding Path=ActiveItem.LogLevels}"
+                      VerticalAlignment="Center" />
+
+            <StackPanel Margin="5,0,5,0" VerticalAlignment="Center">
+                <TextBox x:Name="MessageFilterTextBox" Width="120"
+                         KeyUp="MessageFilterTextBox_OnKeyUp"
+                         cal:Message.Attach="[Shortcut Enter] = [AddMessageFilter(MessageFilterTextBox)]"
+                         cal:Action.TargetWithoutContext="{Binding ActiveItem}"
+                         GotFocus="MessageFilterTextBox_OnGotFocus"
+                         LostFocus="MessageFilterTextBox_OnLostFocus"
+                         metro:TextBoxHelper.Watermark="Filter"
+                         ToolTip="Enter text to exclude" />
+                <Popup x:Name="MessageFilterPopup" MinWidth="120" MaxWidth="500" MaxHeight="150" PopupAnimation="Slide">
+                    <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
+                            GotFocus="MessageFilterTextBox_OnGotFocus"
+                            LostFocus="MessageFilterTextBox_OnLostFocus">
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="MessageFilterItemsControl" ItemsSource="{Binding Path=ActiveItem.MessageFilters}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel>
+                                            <Button Margin="2" DockPanel.Dock="Right"
+                                                    cal:Message.Attach="[RemoveMessageFilter($dataContext)]"
+                                                    cal:Action.TargetWithoutContext="{Binding ElementName=MessageFilterPopup, Path=DataContext.ActiveItem}"
+                                                    Width="24" Height="24" Style="{DynamicResource MetroCircleButtonStyle}">
+                                                <Button.Content>
+                                                    <Rectangle Width="8" Height="8" Fill="{DynamicResource ControlBorderBrush}">
+                                                        <Rectangle.OpacityMask>
+                                                            <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_close}" />
+                                                        </Rectangle.OpacityMask>
+                                                    </Rectangle>
+                                                </Button.Content>
+                                                
+                                            </Button>
+                                        <CheckBox Margin="2" IsChecked="{Binding Path=IsEnabled}" Content="{Binding Path=Filter}" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+                </Popup>
+            </StackPanel>
 
             <TextBox
                 Text="{Binding Path=ActiveItem.SearchString, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -147,7 +182,7 @@
                             <Setter Property="ContextMenu">
                                 <Setter.Value>
                                     <ContextMenu>
-                                        <MenuItem Header="Rename" cal:Message.Attach="Rename"/>
+                                        <MenuItem Header="Rename" cal:Message.Attach="Rename" />
                                     </ContextMenu>
                                 </Setter.Value>
                             </Setter>
@@ -197,7 +232,7 @@
             </Grid>
 
             <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" Height="3" VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch" behaviours:GridSplitterBehaviour.SaveSizeWithName="MainWindow.Description"/>
+                          HorizontalAlignment="Stretch" behaviours:GridSplitterBehaviour.SaveSizeWithName="MainWindow.Description" />
 
             <Grid x:Name="Details" Grid.Row="2" Grid.ColumnSpan="3">
                 <TextBox FontFamily="Courier New" Style="{StaticResource DetailsTextBlock}"

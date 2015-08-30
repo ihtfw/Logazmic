@@ -22,7 +22,7 @@ namespace Logazmic.ViewModels
 
         private List<string> logSourceLeaves = new List<string>();
 
-        private LogLevel minLogLevel;
+        private LogLevelViewModel minLogLevel;
 
         private string searchString;
 
@@ -35,7 +35,7 @@ namespace Logazmic.ViewModels
 
             Receiver = receiver;
             LogMessages = new BindableCollection<LogMessage>();
-            MinLogLevel = LogLevel.Trace;
+            MinLogLevel = LogLevels.First();
             LogSourceRoot = new LogSource
                             {
                                 Name = "Root"
@@ -79,7 +79,16 @@ namespace Logazmic.ViewModels
 
         public string ToolTip { get { return Receiver.Description; } }
 
-        public LogLevel MinLogLevel
+        public BindableCollection<LogLevelViewModel> LogLevels { get; } = new BindableCollection<LogLevelViewModel>
+                                                                          {
+                                                                              new LogLevelViewModel(LogLevel.Trace),
+                                                                              new LogLevelViewModel(LogLevel.Debug),
+                                                                              new LogLevelViewModel(LogLevel.Info),
+                                                                              new LogLevelViewModel(LogLevel.Warn),
+                                                                              new LogLevelViewModel(LogLevel.Error),
+                                                                              new LogLevelViewModel(LogLevel.Fatal),
+                                                                          };
+        public LogLevelViewModel MinLogLevel
         {
             get { return minLogLevel; }
             set
@@ -87,6 +96,31 @@ namespace Logazmic.ViewModels
                 minLogLevel = value;
                 Messaging.Publish(new RefreshEvent());
             }
+        }
+
+        public BindableCollection<MessageFilterViewModel> MessageFilters { get; }  = new BindableCollection<MessageFilterViewModel>();
+
+        public void AddMessageFilter(string messageFilter)
+        {
+            if (string.IsNullOrWhiteSpace(messageFilter))
+            {
+                return;
+            }
+            if (MessageFilters.Any(mf => mf.Filter == messageFilter))
+            {
+                return;
+            }
+            MessageFilters.Add(new MessageFilterViewModel(messageFilter));
+            Messaging.Publish(new RefreshEvent());
+        }
+
+        public void RemoveMessageFilter(MessageFilterViewModel messageFilter)
+        {
+            if (messageFilter == null)
+                return;
+
+            MessageFilters.Remove(messageFilter);
+            Messaging.Publish(new RefreshEvent());
         }
 
         public event EventHandler SyncWithSelectedItemRequired;
@@ -184,9 +218,22 @@ namespace Logazmic.ViewModels
                 return;
             }
 
-            if (resultRow.LogLevel < MinLogLevel)
+            if (resultRow.LogLevel < MinLogLevel.LogLevel)
             {
                 return;
+            }
+
+            if (!LogLevels.First(l => l.LogLevel == resultRow.LogLevel).IsEnabled)
+            {
+                return;
+            }
+
+            foreach (var messageFilter in MessageFilters.Where(mf => mf.IsEnabled))
+            {
+                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(resultRow.Message, messageFilter.Filter, CompareOptions.IgnoreCase) >= 0)
+                {
+                    return;
+                }
             }
 
             if (!string.IsNullOrEmpty(SearchString))
