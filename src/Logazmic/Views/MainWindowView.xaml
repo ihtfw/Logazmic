@@ -14,7 +14,7 @@
                    xmlns:behaviours="clr-namespace:Logazmic.Behaviours"
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-                   AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];[Shortcut Control+O] = [Action Open];"
+                   AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];[Shortcut Control+O] = [Action Open];[Shortcut Control+E] = [Action ExcludeLogEntry];"
                    WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
                    Icon="../Resources/appbar.flag.bear.ico"
                    ShowIconOnTitleBar="True">
@@ -114,8 +114,8 @@
                          cal:Action.TargetWithoutContext="{Binding ActiveItem}"
                          GotFocus="MessageFilterTextBox_OnGotFocus"
                          LostFocus="MessageFilterTextBox_OnLostFocus"
-                         metro:TextBoxHelper.Watermark="Filter"
-                         ToolTip="Enter text to exclude" />
+                         metro:TextBoxHelper.Watermark="Exclude"
+                         ToolTip="Enter text to exclude. Ctrl+E on selected." />
                 <Popup x:Name="MessageFilterPopup" MinWidth="120" MaxWidth="500" MaxHeight="150" PopupAnimation="Slide">
                     <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
                             GotFocus="MessageFilterTextBox_OnGotFocus"

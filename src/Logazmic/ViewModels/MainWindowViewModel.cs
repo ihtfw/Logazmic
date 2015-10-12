@@ -173,6 +173,11 @@
             LoadFile(path);
         }
 
+        public void ExcludeLogEntry()
+        {
+            ActiveItem?.AddMessageFilter(ActiveItem?.SelectedLogMessage?.Message);
+        }
+
         public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
         {
             var pane = (LogPaneViewModel)args.ClosingTabItem.Content;
