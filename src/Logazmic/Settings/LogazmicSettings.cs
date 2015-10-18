@@ -31,6 +31,9 @@ namespace Logazmic.Settings
         [DefaultValue(false)]
         public bool UseDarkTheme { get; set; }
 
+        [DefaultValue(true)]
+        public bool ShowStatusBar { get; set; }
+
         [DefaultValue(DataGridGridLinesVisibility.None)]
         public DataGridGridLinesVisibility GridLinesVisibility { get; set; }
 

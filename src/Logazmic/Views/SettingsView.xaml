@@ -11,67 +11,87 @@
            d:DesignHeight="300" d:DesignWidth="300"
            Position="Right" Header="Settings" IsOpen="{Binding IsSettingsOpen}" Padding="10">
     <ma:Flyout.Resources>
-        <Style x:Key="DescriptionHeaderStyle"
-               TargetType="Label">
-            <Setter Property="FontSize"
-                    Value="22" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Center" />
-        </Style>
-        <Style x:Key="DescriptionSubHeaderStyle"
-               TargetType="Label">
-            <Setter Property="FontSize"
-                    Value="14" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Center" />
-        </Style>
 
-        <Style x:Key="Default" TargetType="FrameworkElement">
-            <Setter Property="Margin" Value="25,3" />
+        <Style x:Key="DescriptionHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="FontSize" Value="22" />
+        </Style>
+        
+        <Style x:Key="DescriptionSubHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="25,3" />
+            <Setter Property="FontSize" Value="14" />
         </Style>
-        <Style TargetType="TextBlock" BasedOn="{StaticResource Default}" />
-        <Style TargetType="ma:NumericUpDown" BasedOn="{StaticResource Default}" />
-        <Style TargetType="ma:ToggleSwitch" BasedOn="{StaticResource Default}">
+
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="3" />
+        </Style>
+        
+        <Style TargetType="ma:NumericUpDown" BasedOn="{StaticResource {x:Type ma:NumericUpDown}}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="3" />
+        </Style>
+        
+        <Style TargetType="ma:ToggleSwitch" BasedOn="{StaticResource {x:Type ma:ToggleSwitch}}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="3" />
             <Setter Property="OffLabel" Value="" />
             <Setter Property="OnLabel" Value="" />
         </Style>
 
     </ma:Flyout.Resources>
     <StackPanel DataContext="{x:Static settings:LogazmicSettings.Instance}">
-        <Label Style="{StaticResource DescriptionHeaderStyle}">Appearance</Label>
+        <TextBlock Style="{StaticResource DescriptionHeaderStyle}">Appearance</TextBlock>
         <controls:TwoColumnGrid>
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Grid font size:</TextBlock>
+            <ma:NumericUpDown Value="{Binding GridFontSize}" Minimum="5" Maximum="30" />
 
-            <TextBlock>Grid font size:</TextBlock>
-            <ma:NumericUpDown Value="{Binding GridFontSize}" HorizontalAlignment="Left"
-                              Minimum="5"
-                              Maximum="30" />
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Description font size:</TextBlock>
+            <ma:NumericUpDown Value="{Binding DescriptionFontSize}" Minimum="5" Maximum="30" />
 
-            <TextBlock>Description font size:</TextBlock>
-            <ma:NumericUpDown Value="{Binding DescriptionFontSize}"
-                              Minimum="5"
-                              Maximum="30" />
-        </controls:TwoColumnGrid>
-        <Grid Margin="0,10,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Label Style="{StaticResource DescriptionSubHeaderStyle}" Grid.Column="0" Grid.Row="0">Dark theme:</Label>
-            <ma:ToggleSwitch Grid.Column="0" Grid.Row="1"
-                             IsChecked="{Binding UseDarkTheme}" />
-            <Label Style="{StaticResource DescriptionSubHeaderStyle}" Grid.Column="1" Grid.Row="0">Grid lines visibility:</Label>
-            <ComboBox Grid.Column="1" Grid.Row="1" SelectedItem="{Binding GridLinesVisibility}" HorizontalAlignment="Center" Margin="25,3">
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Dark theme:</TextBlock>
+            <ma:ToggleSwitch IsChecked="{Binding UseDarkTheme}" />
+
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Grid lines visibility:</TextBlock>
+            <ComboBox SelectedItem="{Binding GridLinesVisibility}">
                 <DataGridGridLinesVisibility>All</DataGridGridLinesVisibility>
                 <DataGridGridLinesVisibility>Horizontal</DataGridGridLinesVisibility>
                 <DataGridGridLinesVisibility>Vertical</DataGridGridLinesVisibility>
                 <DataGridGridLinesVisibility>None</DataGridGridLinesVisibility>
             </ComboBox>
-        </Grid>
+
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Status bar:</TextBlock>
+            <ma:ToggleSwitch IsChecked="{Binding ShowStatusBar}" />
+        </controls:TwoColumnGrid>
+        <!--        <Grid Margin="0,10,0,0">-->
+        <!--            <Grid.ColumnDefinitions>-->
+        <!--                <ColumnDefinition />-->
+        <!--                <ColumnDefinition />-->
+        <!--            </Grid.ColumnDefinitions>-->
+        <!--            <Grid.RowDefinitions>-->
+        <!--                <RowDefinition />-->
+        <!--                <RowDefinition />-->
+        <!--                <RowDefinition />-->
+        <!--            </Grid.RowDefinitions>-->
+        <!--            <Label Style="{StaticResource DescriptionSubHeaderStyle}" Grid.Column="0" Grid.Row="0">Dark theme:</Label>-->
+        <!--            <ma:ToggleSwitch Grid.Column="0" Grid.Row="1"-->
+        <!--                             IsChecked="{Binding UseDarkTheme}" />-->
+        <!--            <Label Style="{StaticResource DescriptionSubHeaderStyle}" Grid.Column="1" Grid.Row="0">Grid lines visibility:</Label>-->
+        <!--            <ComboBox Grid.Column="1" Grid.Row="1" SelectedItem="{Binding GridLinesVisibility}" HorizontalAlignment="Center" Margin="25,3">-->
+        <!--                <DataGridGridLinesVisibility>All</DataGridGridLinesVisibility>-->
+        <!--                <DataGridGridLinesVisibility>Horizontal</DataGridGridLinesVisibility>-->
+        <!--                <DataGridGridLinesVisibility>Vertical</DataGridGridLinesVisibility>-->
+        <!--                <DataGridGridLinesVisibility>None</DataGridGridLinesVisibility>-->
+        <!--            </ComboBox>-->
+        <!--            <ma:ToggleSwitch Grid.Column="0" Grid.Row="2"-->
+        <!--                             IsChecked="{Binding ShowStatusBar}" />-->
+        <!--        </Grid>-->
     </StackPanel>
 </ma:Flyout>

@@ -2,6 +2,7 @@ namespace Logazmic.ViewModels
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace Logazmic.ViewModels
 
             Receiver = receiver;
             LogMessages = new BindableCollection<LogMessage>();
-
+            LogMessages.CollectionChanged += LogMessagesOnCollectionChanged;
             LogSourceRoot = new LogSource(LogPaneServices)
                             {
                                 Name = "Root"
@@ -57,7 +58,17 @@ namespace Logazmic.ViewModels
             LogPaneServices.EventAggregator.Subscribe(this);
         }
 
+        private void LogMessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            NotifyOfPropertyChange(nameof(TotalLogMessages));
+            NotifyOfPropertyChange(nameof(ShownLogMessages));
+        }
+
         public bool AutoScroll { get; set; }
+
+        public int TotalLogMessages => LogMessages.Count;
+
+        public int ShownLogMessages => collectionViewSource?.View?.Cast<LogMessage>().Count() ?? 0;
 
         public override string DisplayName
         {
@@ -164,26 +175,6 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public void Dispose()
-        {
-            if (Receiver != null)
-            {
-                Receiver.NewMessage -= OnNewMessage;
-                Receiver.NewMessages -= OnNewMessages;
-                Receiver.Terminate();
-            }
-        }
-
-        public void Handle(RefreshCheckEvent message)
-        {
-            Update(true);
-        }
-
-        public void Handle(RefreshEvent message)
-        {
-            Update();
-        }
-
         public async void Rename()
         {
             var newName = await DialogService.Current.ShowInputDialog("Rename", "Enter new name:");
@@ -271,10 +262,8 @@ namespace Logazmic.ViewModels
 
             Execute.OnUIThread(() =>
             {
-                if (CollectionViewSource.View != null)
-                {
-                    CollectionViewSource.View.Refresh();
-                }
+                CollectionViewSource.View?.Refresh();
+                NotifyOfPropertyChange(nameof(ShownLogMessages));
             });
         }
 
@@ -315,6 +304,28 @@ namespace Logazmic.ViewModels
             {
                 handler(this, EventArgs.Empty);
             }
+        }
+
+        public void Handle(RefreshCheckEvent message)
+        {
+            Update(true);
+        }
+
+        public void Handle(RefreshEvent message)
+        {
+            Update();
+        }
+
+        public void Dispose()
+        {
+            if (Receiver != null)
+            {
+                Receiver.NewMessage -= OnNewMessage;
+                Receiver.NewMessages -= OnNewMessages;
+                Receiver.Terminate();
+            }
+
+            LogMessages.CollectionChanged -= LogMessagesOnCollectionChanged;
         }
     }
 }

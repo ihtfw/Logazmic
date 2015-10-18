@@ -12,7 +12,7 @@
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:settings="clr-namespace:Logazmic.Settings"
                    xmlns:behaviours="clr-namespace:Logazmic.Behaviours"
-                   mc:Ignorable="d"
+                   mc:Ignorable="d"  
                    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
                    AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];[Shortcut Control+O] = [Action Open];[Shortcut Control+E] = [Action ExcludeLogEntry];"
                    WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
@@ -154,6 +154,16 @@
                 metro:TextBoxHelper.Watermark="Search"
                 Style="{DynamicResource SearchMetroTextBox}" VerticalAlignment="Center" />
         </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=ShowStatusBar, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock>
+                <Run>Total:</Run>
+                <Run Text="{Binding ActiveItem.TotalLogMessages, Mode=OneWay}"></Run>
+            </TextBlock>
+            <TextBlock>
+                <Run>Shown:</Run>
+                <Run Text="{Binding ActiveItem.ShownLogMessages, Mode=OneWay}"></Run>
+            </TextBlock>
+        </StatusBar>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*" />
@@ -240,6 +250,7 @@
                          VerticalAlignment="Top"
                          Text="{Binding Path=ActiveItem.SelectedLogMessage.Message, Mode=OneWay}" Margin="10"
                          TextWrapping="Wrap" />
+                
             </Grid>
         </Grid>
     </DockPanel>
