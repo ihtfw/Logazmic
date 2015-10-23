@@ -15,6 +15,8 @@
 
     using MahApps.Metro.Controls;
 
+    using Squirrel;
+
     public sealed class MainWindowViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
     {
         #region Singleton
@@ -31,14 +33,37 @@
             LoadReciversFromSettings();
         }
 
+        public string Version { get; set; }
+
         public bool IsSettingsOpen { get; set; }
 
-        public void Dispose()
+        protected override async void OnViewLoaded(object view)
         {
-            foreach (var item in Items)
+            base.OnViewLoaded(view);
+
+            Version = await CheckForUpdates();
+        }
+
+        private async Task<string> CheckForUpdates()
+        {
+            try
             {
-                item.Dispose();
+                using (var gitHubManager = await UpdateManager.GitHubUpdateManager("https://github.com/ihtfw/Logazmic"))
+                {
+                    var releaseEntry = await gitHubManager.UpdateApp();
+                    return releaseEntry.Version.ToString();
+                }
             }
+            catch (Exception e)
+            {
+                if (e.Message != "Update.exe not found, not a Squirrel-installed app?")
+                {
+                    DialogService.Current.ShowErrorMessageBox("Failed to update: " + e.Message);
+                    return "1.0.0";
+                }
+            }
+
+            return "1.0.0";
         }
 
         private void LoadReciversFromSettings()
@@ -182,10 +207,16 @@
         {
             var pane = (LogPaneViewModel)args.ClosingTabItem.Content;
             pane.TryClose();
-            
         }
-                
 
         #endregion
+
+        public void Dispose()
+        {
+            foreach (var item in Items)
+            {
+                item.Dispose();
+            }
+        }
     }
 }

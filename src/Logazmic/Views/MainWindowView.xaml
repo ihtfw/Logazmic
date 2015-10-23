@@ -155,6 +155,10 @@
                 Style="{DynamicResource SearchMetroTextBox}" VerticalAlignment="Center" />
         </StackPanel>
         <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=ShowStatusBar, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="{Binding Version, Mode=OneWay}" />
+             </StatusBarItem>
+            
             <TextBlock>
                 <Run>Total:</Run>
                 <Run Text="{Binding ActiveItem.TotalLogMessages, Mode=OneWay}"></Run>
@@ -163,6 +167,7 @@
                 <Run>Shown:</Run>
                 <Run Text="{Binding ActiveItem.ShownLogMessages, Mode=OneWay}"></Run>
             </TextBlock>
+            
         </StatusBar>
         <Grid>
             <Grid.RowDefinitions>
