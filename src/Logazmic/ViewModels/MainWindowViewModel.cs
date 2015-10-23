@@ -51,7 +51,11 @@
                 using (var gitHubManager = await UpdateManager.GitHubUpdateManager("https://github.com/ihtfw/Logazmic"))
                 {
                     var releaseEntry = await gitHubManager.UpdateApp();
-                    return releaseEntry.Version.ToString();
+                    if (releaseEntry != null)
+                    {
+                        return gitHubManager.CurrentlyInstalledVersion() + " => " + releaseEntry.Version;
+                    }
+                    return gitHubManager.CurrentlyInstalledVersion().ToString();
                 }
             }
             catch (Exception e)
