@@ -1,8 +1,13 @@
 ﻿namespace Logazmic
 {
+    using System;
+
     using Caliburn.Micro;
 
+    using Logazmic.Services;
     using Logazmic.ViewModels;
+
+    using Squirrel;
 
     public class Bootstrapper : BootstrapperBase
     {
@@ -10,6 +15,7 @@
         {
             Initialize();
             IoC.Get<IWindowManager>().ShowWindow(MainWindowViewModel.Instance);
+            CheckForUpdates();
         }
 
         protected override void Configure()
@@ -30,6 +36,25 @@
 
                 return currentParser(target, triggerText);
             };
+        }
+
+        private async void CheckForUpdates()
+        {
+            try
+            {
+                using (var gitHubManager = await UpdateManager.GitHubUpdateManager("https://github.com/ihtfw/Logazmic"))
+                {
+                    if (gitHubManager.IsInstalledApp)
+                    {
+                        var releaseEntry = await gitHubManager.UpdateApp();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                DialogService.Current.ShowErrorMessageBox("Failed to update: " + e.Message);
+            }
+
         }
     }
 }

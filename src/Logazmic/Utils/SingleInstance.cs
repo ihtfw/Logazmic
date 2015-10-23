@@ -13,7 +13,6 @@ namespace Microsoft.Shell
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Deployment.Application;
     using System.IO;
     using System.Linq;
     using System.Runtime.Remoting;
@@ -326,29 +325,7 @@ namespace Microsoft.Shell
         /// <returns>List of command line arg strings.</returns>
         private static IList<string> GetCommandLineArgs(string uniqueApplicationName)
         {
-            string[] args = null;
-            if (!ApplicationDeployment.IsNetworkDeployed)
-            {
-                // The application was not clickonce deployed, get args from standard API's
-                args = Environment.GetCommandLineArgs();
-            }
-            else
-            {
-                // The application was clickonce deployed
-                // Clickonce deployed apps cannot recieve traditional commandline arguments
-                // As a workaround commandline arguments can be written to a shared location before 
-                // the app is launched and the app can obtain its commandline arguments from the 
-                // shared location         
-
-                args = new[] { "", ClickOnceUtils.StartUpArg };
-            }
-
-            if (args == null)
-            {
-                args = new string[] { };
-            }
-
-            return new List<string>(args);
+            return new List<string>(Environment.GetCommandLineArgs());
         }
 
         /// <summary>
