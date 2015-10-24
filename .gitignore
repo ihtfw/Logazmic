@@ -210,6 +210,10 @@ $RECYCLE.BIN/
 
 # Windows Installer files
 *.cab
-*.msi
+#*.msi
 *.msm
 *.msp
+
+#Squirrel
+!squirrel/bin
+!squirrel/releases
