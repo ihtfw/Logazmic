@@ -12,9 +12,13 @@
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:settings="clr-namespace:Logazmic.Settings"
                    xmlns:behaviours="clr-namespace:Logazmic.Behaviours"
-                   mc:Ignorable="d"  
+                   mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-                   AllowDrop="True" cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];[Shortcut Control+O] = [Action Open];[Shortcut Control+E] = [Action ExcludeLogEntry];"
+                   AllowDrop="True"
+                   cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];
+                   [Shortcut Control+O] = [Action Open];
+                   [Shortcut Control+E] = [Action ExcludeLogEntry];
+                   [Shortcut F3] = [Action FindNext];"
                    WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
                    Icon="../Resources/appbar.flag.bear.ico"
                    ShowIconOnTitleBar="True">
@@ -28,6 +32,46 @@
             <Setter Property="BorderThickness" Value="  0" />
             <Setter Property="Background" Value="Transparent" />
         </Style>
+
+        <ControlTemplate x:Key="NextSerachResultButtonTemplate" TargetType="{x:Type Button}">
+            <Grid Background="{TemplateBinding Background}">
+                <Grid.ToolTip>
+                    <TextBlock>F3</TextBlock>
+                </Grid.ToolTip>
+                <Grid x:Name="contentPresenter" Background="Transparent"
+                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                      Margin="{TemplateBinding Padding}"
+                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                      Opacity="0.75">
+                    <Canvas Width="15"
+                            Height="15"
+                            Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0">
+                        <!-- x:Key="appbar_magnify"-->
+                        <Path Width="15.7781"
+                              Height="15.7781"
+                              Stretch="Fill"
+                              Fill="{TemplateBinding Foreground}"
+                              Data="F1 M 42.3542,38L 26.5208,53.8333L 37.2083,53.8333L 53.8333,38L 37.2083,22.1667L 26.5208,22.1667L 42.3542,38 Z " />
+                    </Canvas>
+                </Grid>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+                    <Setter Property="cal:Message.Attach" Value="FindNext" />
+                    <Setter TargetName="contentPresenter"
+                            Property="Opacity"
+                            Value="1" />
+                </Trigger>
+                <Trigger Property="IsMouseOver"
+                         Value="False">
+                    <Setter TargetName="contentPresenter"
+                            Property="Opacity"
+                            Value=".5" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
 
         <DataTemplate x:Key="ComboboxLogLevelDataTemplate" DataType="viewModels:LogLevelViewModel">
             <CheckBox Content="{Binding Path=LogLevel}" IsChecked="{Binding Path=IsEnabled}">
@@ -61,6 +105,24 @@
             </CheckBox>
 
         </DataTemplate>
+        <DataTemplate x:Key="ExcludeItemTemplate">
+            <DockPanel>
+                <Button Margin="2" DockPanel.Dock="Right"
+                        cal:Message.Attach="[RemoveMessageFilter($dataContext)]"
+                        cal:Action.TargetWithoutContext="{Binding ElementName=MessageFilterPopup, Path=DataContext.ActiveItem}"
+                        Width="24" Height="24" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Button.Content>
+                        <Rectangle Width="8" Height="8" Fill="{DynamicResource ControlBorderBrush}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_close}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button.Content>
+
+                </Button>
+                <CheckBox Margin="2" IsChecked="{Binding Path=IsEnabled}" Content="{Binding Path=Filter}" />
+            </DockPanel>
+        </DataTemplate>
     </metro:MetroWindow.Resources>
     <metro:MetroWindow.Flyouts>
         <metro:FlyoutsControl>
@@ -93,7 +155,7 @@
                                         Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll" />
 
 
-        <controls:MetroButton cal:Message.Attach="ScrollIntoSelected('true')" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Scroll into selected item"
+            <controls:MetroButton cal:Message.Attach="ScrollIntoSelected('true')" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Scroll into selected item"
                                   Visual="{DynamicResource appbar_radar}" />
 
             <Rectangle Width="15" />
@@ -116,58 +178,44 @@
                          LostFocus="MessageFilterTextBox_OnLostFocus"
                          metro:TextBoxHelper.Watermark="Exclude"
                          ToolTip="Enter text to exclude. Ctrl+E on selected." />
-                <Popup x:Name="MessageFilterPopup" MinWidth="120" MaxWidth="500" MaxHeight="150" PopupAnimation="Slide">
+                <Popup x:Name="MessageFilterPopup" MinWidth="120" Width="150" MaxWidth="500" MaxHeight="150" PopupAnimation="Slide">
                     <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
                             GotFocus="MessageFilterTextBox_OnGotFocus"
                             LostFocus="MessageFilterTextBox_OnLostFocus">
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                            <ItemsControl x:Name="MessageFilterItemsControl" ItemsSource="{Binding Path=ActiveItem.MessageFilters}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <DockPanel>
-                                            <Button Margin="2" DockPanel.Dock="Right"
-                                                    cal:Message.Attach="[RemoveMessageFilter($dataContext)]"
-                                                    cal:Action.TargetWithoutContext="{Binding ElementName=MessageFilterPopup, Path=DataContext.ActiveItem}"
-                                                    Width="24" Height="24" Style="{DynamicResource MetroCircleButtonStyle}">
-                                                <Button.Content>
-                                                    <Rectangle Width="8" Height="8" Fill="{DynamicResource ControlBorderBrush}">
-                                                        <Rectangle.OpacityMask>
-                                                            <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_close}" />
-                                                        </Rectangle.OpacityMask>
-                                                    </Rectangle>
-                                                </Button.Content>
-                                                
-                                            </Button>
-                                        <CheckBox Margin="2" IsChecked="{Binding Path=IsEnabled}" Content="{Binding Path=Filter}" />
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <ItemsControl x:Name="MessageFilterItemsControl" ItemsSource="{Binding Path=ActiveItem.MessageFilters}" ItemTemplate="{StaticResource ExcludeItemTemplate}" />
                         </ScrollViewer>
                     </Border>
                 </Popup>
             </StackPanel>
 
-            <TextBox
-                Text="{Binding Path=ActiveItem.SearchString, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Width="200"
-                metro:TextBoxHelper.Watermark="Filter"
-                Style="{DynamicResource SearchMetroTextBox}" VerticalAlignment="Center" />
+            <TextBox Margin="5,0,5,0"
+                     Text="{Binding Path=ActiveItem.FilterText, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Width="150"
+                     metro:TextBoxHelper.Watermark="Filter"
+                     Style="{DynamicResource SearchMetroTextBox}"
+                     VerticalAlignment="Center" />
+
+            <TextBox Margin="5,0,5,0"
+                     metro:TextBoxHelper.Watermark="Search"
+                     metro:TextBoxHelper.ButtonTemplate="{StaticResource NextSerachResultButtonTemplate}"
+                     Text="{Binding Path=ActiveItem.SearchText, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Width="150" Style="{DynamicResource SearchMetroTextBox}" VerticalAlignment="Center" />
         </StackPanel>
         <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=ShowStatusBar, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StatusBarItem DockPanel.Dock="Right">
                 <TextBlock Text="{Binding Version, Mode=OneWay}" />
-             </StatusBarItem>
-            
+            </StatusBarItem>
+
             <TextBlock>
                 <Run>Total:</Run>
-                <Run Text="{Binding ActiveItem.TotalLogMessages, Mode=OneWay}"></Run>
+                <Run Text="{Binding ActiveItem.TotalLogMessages, Mode=OneWay}" />
             </TextBlock>
             <TextBlock>
                 <Run>Shown:</Run>
-                <Run Text="{Binding ActiveItem.ShownLogMessages, Mode=OneWay}"></Run>
+                <Run Text="{Binding ActiveItem.ShownLogMessages, Mode=OneWay}" />
             </TextBlock>
-            
+
         </StatusBar>
         <Grid>
             <Grid.RowDefinitions>
@@ -255,7 +303,7 @@
                          VerticalAlignment="Top"
                          Text="{Binding Path=ActiveItem.SelectedLogMessage.Message, Mode=OneWay}" Margin="10"
                          TextWrapping="Wrap" />
-                
+
             </Grid>
         </Grid>
     </DockPanel>

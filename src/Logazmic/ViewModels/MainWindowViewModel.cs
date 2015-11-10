@@ -43,7 +43,7 @@
 
             Version = await CheckForUpdates();
         }
-
+        
         private async Task<string> CheckForUpdates()
         {
             try
@@ -225,6 +225,11 @@
             {
                 item.Dispose();
             }
+        }
+
+        public void FindNext()
+        {
+            ActiveItem?.FindNext();
         }
     }
 }

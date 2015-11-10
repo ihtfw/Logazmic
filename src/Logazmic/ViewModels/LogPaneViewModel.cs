@@ -25,7 +25,7 @@ namespace Logazmic.ViewModels
 
         private LogLevelViewModel minLogLevel;
 
-        private string searchString;
+        private string filterText;
 
         public LogPaneServices LogPaneServices { get; set; } = new LogPaneServices();
 
@@ -74,24 +74,39 @@ namespace Logazmic.ViewModels
         {
             get
             {
-                if (Receiver == null)
-                {
-                    return null;
-                }
-
-                return Receiver.DisplayName;
+                return Receiver?.DisplayName;
             }
             set { Receiver.DisplayName = value; }
         }
 
-        public string SearchString
+        public string FilterText
         {
-            get { return searchString; }
+            get { return filterText; }
             set
             {
-                searchString = value;
+                filterText = value;
                 Update();
             }
+        }
+
+        private bool ContainsCaseInsesetive(LogMessage logMessage)
+        {
+            return CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, SearchText, CompareOptions.IgnoreCase) >= 0;
+        }
+
+        public string SearchText { get; set; }
+
+        private void OnSearchTextChanged()
+        {
+            IEnumerable<LogMessage> searchCollection = LogMessages;
+            if (SelectedLogMessage != null && ContainsCaseInsesetive(SelectedLogMessage)) 
+            {
+                var afterLastFound = LogMessages.SkipWhile(m => m != SelectedLogMessage).Skip(1); // Serach from last found
+                searchCollection = afterLastFound.Concat(LogMessages);
+            }
+         
+            SelectedLogMessage = searchCollection.First(ContainsCaseInsesetive);
+            ScrollIntoSelected(true);
         }
 
         public LogSource LogSourceRoot { get; private set; }
@@ -232,9 +247,9 @@ namespace Logazmic.ViewModels
                 }
             }
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(FilterText))
             {
-                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(resultRow.Message, SearchString, CompareOptions.IgnoreCase) < 0)
+                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(resultRow.Message, FilterText, CompareOptions.IgnoreCase) < 0)
                 {
                     return;
                 }
@@ -320,6 +335,11 @@ namespace Logazmic.ViewModels
             }
 
             LogMessages.CollectionChanged -= LogMessagesOnCollectionChanged;
+        }
+
+        public void FindNext()
+        {
+            OnSearchTextChanged();
         }
     }
 }
