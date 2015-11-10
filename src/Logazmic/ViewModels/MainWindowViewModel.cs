@@ -23,7 +23,7 @@
 
         private static readonly Lazy<MainWindowViewModel> instance = new Lazy<MainWindowViewModel>(() => new MainWindowViewModel());
 
-        public static MainWindowViewModel Instance { get { return instance.Value; } }
+        public static MainWindowViewModel Instance => instance.Value;
 
         #endregion
 
@@ -88,7 +88,11 @@
             logPaneViewModel.Deactivated += OnTabDeactivated;
             Items.Add(logPaneViewModel);
             ActivateItem(logPaneViewModel);
-            Task.Factory.StartNew(logPaneViewModel.Initialize);
+            Task.Factory.StartNew(logPaneViewModel.Initialize).ContinueWith(t =>
+            {
+                if(t.Exception != null)
+                    LogazmicSettings.Instance.Receivers.Remove(receiver);
+            });
         }
 
         protected override void OnDeactivate(bool close)

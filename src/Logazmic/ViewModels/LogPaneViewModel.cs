@@ -206,6 +206,7 @@ namespace Logazmic.ViewModels
             {
                 DialogService.Current.ShowErrorMessageBox(e);
                 TryClose();
+                throw;
             }
         }
 
