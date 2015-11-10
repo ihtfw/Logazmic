@@ -151,7 +151,7 @@
             <TextBox
                 Text="{Binding Path=ActiveItem.SearchString, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Width="200"
-                metro:TextBoxHelper.Watermark="Search"
+                metro:TextBoxHelper.Watermark="Filter"
                 Style="{DynamicResource SearchMetroTextBox}" VerticalAlignment="Center" />
         </StackPanel>
         <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=ShowStatusBar, Converter={StaticResource BooleanToVisibilityConverter}}">
