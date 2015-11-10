@@ -93,7 +93,7 @@
                                         Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll" />
 
 
-            <controls:MetroButton cal:Message.Attach="SyncWithSelectedItem" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Try to locate selected item"
+        <controls:MetroButton cal:Message.Attach="ScrollIntoSelected('true')" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Scroll into selected item"
                                   Visual="{DynamicResource appbar_radar}" />
 
             <Rectangle Width="15" />

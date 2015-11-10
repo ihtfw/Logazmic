@@ -144,15 +144,9 @@ namespace Logazmic.ViewModels
             Update();
         }
 
-        public event EventHandler SyncWithSelectedItemRequired;
-
+     
         public bool CanSyncWithSelectedItem { get { return SelectedLogMessage != null; } }
-
-        public void SyncWithSelectedItem()
-        {
-            OnSyncWithSelectedItemRequired();
-        }
-
+        
         public CollectionViewSource CollectionViewSource
         {
             get
@@ -246,7 +240,7 @@ namespace Logazmic.ViewModels
                 }
             }
 
-            if (!logSourceLeaves.Any(l => l == resultRow.LoggerName))
+            if (logSourceLeaves.All(l => l != resultRow.LoggerName))
             {
                 return;
             }
@@ -266,6 +260,14 @@ namespace Logazmic.ViewModels
                 CollectionViewSource.View?.Refresh();
                 NotifyOfPropertyChange(nameof(ShownLogMessages));
             });
+
+            ScrollIntoSelected();
+        }
+
+        public void ScrollIntoSelected(bool forced = false)
+        {
+            if(forced || !AutoScroll)
+                ((dynamic)GetView())?.ScrollIntoSelected();
         }
 
         #region OnNewMessages
@@ -297,16 +299,7 @@ namespace Logazmic.ViewModels
         }
 
         #endregion
-
-        protected virtual void OnSyncWithSelectedItemRequired()
-        {
-            var handler = SyncWithSelectedItemRequired;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
-        }
-
+        
         public void Handle(RefreshCheckEvent message)
         {
             Update(true);
