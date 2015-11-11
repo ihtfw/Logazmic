@@ -9,8 +9,6 @@ namespace Logazmic.Views
     /// </summary>
     public partial class LogPaneView
     {
-        private ScrollViewer scrollViewer;
-
         public LogPaneView()
         {
             InitializeComponent();
