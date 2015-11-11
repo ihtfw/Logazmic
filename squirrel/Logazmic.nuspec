@@ -1,35 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata>
-        <id>Logazmic</id>
-        <version>1.0.1</version>
-        <title>Logazmic</title>
-        <authors>ihtfw &amp; susloparovdenis</authors>
-        <owners>ihtfw &amp; susloparovdenis</owners>
-        <projectUrl>https://github.com/ihtfw/Logazmic</projectUrl>
-        <iconUrl>https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/appbar.flag.bear.png</iconUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is based on Log2console. UI is rewritten in WPF with usage of MahApps.Metro</description>
-    </metadata>
-    <files>
-        <file src="..\src\Logazmic\bin\Release\Resources\appbar.flag.bear.ico" target="lib\net45\Resources\appbar.flag.bear.ico" />
-        <file src="..\src\Logazmic\bin\Release\Caliburn.Micro.dll" target="lib\net45\Caliburn.Micro.dll" />
-        <file src="..\src\Logazmic\bin\Release\Caliburn.Micro.Platform.dll" target="lib\net45\Caliburn.Micro.Platform.dll" />
-        <file src="..\src\Logazmic\bin\Release\DeltaCompressionDotNet.dll" target="lib\net45\DeltaCompressionDotNet.dll" />
-        <file src="..\src\Logazmic\bin\Release\DeltaCompressionDotNet.MsDelta.dll" target="lib\net45\DeltaCompressionDotNet.MsDelta.dll" />
-        <file src="..\src\Logazmic\bin\Release\DeltaCompressionDotNet.PatchApi.dll" target="lib\net45\DeltaCompressionDotNet.PatchApi.dll" />
-        <file src="..\src\Logazmic\bin\Release\ICSharpCode.SharpZipLib.dll" target="lib\net45\ICSharpCode.SharpZipLib.dll" />
-        <file src="..\src\Logazmic\bin\Release\Logazmic.exe" target="lib\net45\Logazmic.exe" />
-        <file src="..\src\Logazmic\bin\Release\Logazmic.exe.config" target="lib\net45\Logazmic.exe.config" />
-        <file src="..\src\Logazmic\bin\Release\MahApps.Metro.dll" target="lib\net45\MahApps.Metro.dll" />
-        <file src="..\src\Logazmic\bin\Release\Mono.Cecil.dll" target="lib\net45\Mono.Cecil.dll" />
-        <file src="..\src\Logazmic\bin\Release\Mono.Cecil.Mdb.dll" target="lib\net45\Mono.Cecil.Mdb.dll" />
-        <file src="..\src\Logazmic\bin\Release\Mono.Cecil.Pdb.dll" target="lib\net45\Mono.Cecil.Pdb.dll" />
-        <file src="..\src\Logazmic\bin\Release\Mono.Cecil.Rocks.dll" target="lib\net45\Mono.Cecil.Rocks.dll" />
-        <file src="..\src\Logazmic\bin\Release\Newtonsoft.Json.dll" target="lib\net45\Newtonsoft.Json.dll" />
-        <file src="..\src\Logazmic\bin\Release\NuGet.Squirrel.dll" target="lib\net45\NuGet.Squirrel.dll" />
-        <file src="..\src\Logazmic\bin\Release\Splat.dll" target="lib\net45\Splat.dll" />
-        <file src="..\src\Logazmic\bin\Release\Squirrel.dll" target="lib\net45\Squirrel.dll" />
-        <file src="..\src\Logazmic\bin\Release\System.Windows.Interactivity.dll" target="lib\net45\System.Windows.Interactivity.dll" />
-    </files>
+  <metadata>
+    <id>Logazmic</id>
+    <version>0.0.0.0</version>
+    <title>Logazmic</title>
+    <authors>ihtfw &amp; susloparovdenis</authors>
+    <owners>ihtfw &amp; susloparovdenis</owners>
+    <projectUrl>https://github.com/ihtfw/Logazmic</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/appbar.flag.bear.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is based on Log2console. UI is rewritten in WPF with usage of MahApps.Metro</description>
+  </metadata>
+  <files>
+    <file src="..\src\Logazmic\bin\Release\Resources\appbar.flag.bear.ico" target="lib\net45\Resources\appbar.flag.bear.ico" />
+    <file src="..\src\Logazmic\bin\Release\Caliburn.Micro.dll" target="lib\net45\Caliburn.Micro.dll" />
+    <file src="..\src\Logazmic\bin\Release\Caliburn.Micro.Platform.dll" target="lib\net45\Caliburn.Micro.Platform.dll" />
+    <file src="..\src\Logazmic\bin\Release\DeltaCompressionDotNet.dll" target="lib\net45\DeltaCompressionDotNet.dll" />
+    <file src="..\src\Logazmic\bin\Release\DeltaCompressionDotNet.MsDelta.dll" target="lib\net45\DeltaCompressionDotNet.MsDelta.dll" />
+    <file src="..\src\Logazmic\bin\Release\DeltaCompressionDotNet.PatchApi.dll" target="lib\net45\DeltaCompressionDotNet.PatchApi.dll" />
+    <file src="..\src\Logazmic\bin\Release\ICSharpCode.SharpZipLib.dll" target="lib\net45\ICSharpCode.SharpZipLib.dll" />
+    <file src="..\src\Logazmic\bin\Release\Logazmic.exe" target="lib\net45\Logazmic.exe" />
+    <file src="..\src\Logazmic\bin\Release\Logazmic.exe.config" target="lib\net45\Logazmic.exe.config" />
+    <file src="..\src\Logazmic\bin\Release\MahApps.Metro.dll" target="lib\net45\MahApps.Metro.dll" />
+    <file src="..\src\Logazmic\bin\Release\Mono.Cecil.dll" target="lib\net45\Mono.Cecil.dll" />
+    <file src="..\src\Logazmic\bin\Release\Mono.Cecil.Mdb.dll" target="lib\net45\Mono.Cecil.Mdb.dll" />
+    <file src="..\src\Logazmic\bin\Release\Mono.Cecil.Pdb.dll" target="lib\net45\Mono.Cecil.Pdb.dll" />
+    <file src="..\src\Logazmic\bin\Release\Mono.Cecil.Rocks.dll" target="lib\net45\Mono.Cecil.Rocks.dll" />
+    <file src="..\src\Logazmic\bin\Release\Newtonsoft.Json.dll" target="lib\net45\Newtonsoft.Json.dll" />
+    <file src="..\src\Logazmic\bin\Release\NuGet.Squirrel.dll" target="lib\net45\NuGet.Squirrel.dll" />
+    <file src="..\src\Logazmic\bin\Release\Splat.dll" target="lib\net45\Splat.dll" />
+    <file src="..\src\Logazmic\bin\Release\Squirrel.dll" target="lib\net45\Squirrel.dll" />
+    <file src="..\src\Logazmic\bin\Release\System.Windows.Interactivity.dll" target="lib\net45\System.Windows.Interactivity.dll" />
+  </files>
 </package>

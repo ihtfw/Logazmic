@@ -1,0 +1,27 @@
+version: .{build}
+os: Visual Studio 2015
+init:
+  - ps: Update-AppveyorBuild -Version "$(Get-Date -format yyyy.M.d).$env:appveyor_build_number"
+before_build:
+- nuget restore src/Logazmic.sln
+configuration:
+  - Release
+build:
+  project: src/Logazmic.sln
+  verbosity: minimal
+after_build:
+  - ps: squirrel/build-appveyor.ps1
+artifacts:
+  - path: squirrel/Releases/*.*
+deploy:
+  tag: $(appveyor_build_version)
+  release: Logazmic - $(appveyor_build_version)
+  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
+  provider: GitHub
+  auth_token:
+    secure: nocHeSjVFe9vZ3FcO1zqeVkOQcfnMq56NG8WEX5nMwYy73lTiZT9PdiQbtg1S+zu
+  on:
+    branch: master
+cache:
+  - squirrel/Releases
+  - src/packages
