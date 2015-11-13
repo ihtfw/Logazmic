@@ -79,3 +79,13 @@ LogManager.Configuration = config;
 </appender>
 ```
 -->
+
+### Logazmic.Integration
+<img src="https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/appbar.flag.bear.png" alt="Icon" width="64px" height="64px" />
+<img src="https://ci.appveyor.com/api/projects/status/n45ye34e920c7c5k?svg=true" width="300">
+
+Install nuget package Logazmic.Integration. In your code to install, run and open log file
+```csharp
+ var runner = new Logazmic.Integration.Runner();
+ runner.Run(pathToLogFile);
+```
