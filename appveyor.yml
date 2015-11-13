@@ -22,7 +22,7 @@ deploy:
   description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
   provider: GitHub
   auth_token:
-    secure: nocHeSjVFe9vZ3FcO1zqeVkOQcfnMq56NG8WEX5nMwYy73lTiZT9PdiQbtg1S+zu
+    secure: avB/QSAB0oqYutIGEeLkfdv9b3hJOhFv+RWVoL6916LEZcjVozeLkLTneC6OL9cl
   on:
     branch: master
 cache:
