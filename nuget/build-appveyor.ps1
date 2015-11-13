@@ -20,4 +20,7 @@ $nuspec.Save($nuspecPath)
 Write-Host "------------------Create nupkg------------------"
 & ($curDir + "\bin\nuget.exe") pack $nuspecPath
 
-
+Write-Host "------------------Move nupkg------------------"
+$releasesDir = $curDir + "\Releases"
+New-Item -ItemType Directory -Force -Path $releasesDir
+Move-Item $nupkgPath -destination $releasesDir
