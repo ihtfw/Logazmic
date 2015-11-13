@@ -12,7 +12,7 @@ Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is ba
 * Drag-and-drop files
 
 ##Download 
-https://github.com/ihtfw/Logazmic/releases/download/2015.11.13.4/Setup.exe
+https://github.com/ihtfw/Logazmic/releases/latest/
 
 ##Screenshots:
 ![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot1.png) ![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot2.png)
