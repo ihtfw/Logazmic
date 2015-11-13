@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
 
@@ -34,23 +35,33 @@
         }
 
       
-        public override async Task<bool?> ShowQuestionMessageBox(string title, string message)
+        public override Task<bool?> ShowQuestionMessageBox(string title, string message)
         {
+            var mre = new ManualResetEvent(false);
             MessageDialogResult result = default(MessageDialogResult);
             var metroDialogSettings = new MetroDialogSettings() { AffirmativeButtonText = "Yes", NegativeButtonText = "No"};
-            await Execute.OnUIThreadAsync(async () =>
+            Execute.OnUIThread(async () =>
             {
                 result = await GetActiveWindow().ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings);
+                mre.Set();
             });
-            switch (result)
+            //Hack because of async. Doesnt work without it.
+            var task = new Task<bool?>(() =>
             {
-                case MessageDialogResult.Negative:
-                    return false;
-                case MessageDialogResult.Affirmative:
-                    return true;
-                default:
-                    return null;
-            }
+                mre.WaitOne();
+                switch (result)
+                {
+                    case MessageDialogResult.Negative:
+                        return false;
+                    case MessageDialogResult.Affirmative:
+                        return true;
+                    default:
+                        return null;
+                }
+            });
+            task.Start();
+
+            return task;
         }
 
         public override Task<string> ShowInputDialog(string title, string message)
