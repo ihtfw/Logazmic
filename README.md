@@ -1,7 +1,7 @@
 Logazmic
 ========
 <img src="https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/appbar.flag.bear.png" alt="Icon" width="64px" height="64px" />
-<img src="https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true" width="300">
+<img src="https://ci.appveyor.com/api/projects/status/ns7gdofc8w4so32m?svg=true" width="300">
 
 
 Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is based on [Log2console](https://log2console.codeplex.com/). UI is rewritten in WPF with usage of [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
