@@ -66,7 +66,7 @@ namespace Logazmic.Integration
             var arguments = " --processStart Logazmic.exe";
             if (!string.IsNullOrWhiteSpace(pathToLogFile) && File.Exists(pathToLogFile))
             {
-                arguments += " " + pathToLogFile;
+                arguments += " --process-start-args " + pathToLogFile;
             }
             Process.Start(installationChecker.UpdatePath, arguments);
         }
