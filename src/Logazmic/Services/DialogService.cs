@@ -44,5 +44,7 @@ namespace Logazmic.Services
         public abstract bool ShowOpenDialog(out string path, string defaultExt, string filter, string initialDir = null);
 
         public abstract Task<string> ShowInputDialog(string title, string message);
+
+        public abstract Task<bool?> ShowQuestionMessageBox(string title, string message);
     }
 }   

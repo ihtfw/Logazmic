@@ -8,7 +8,7 @@
            xmlns:settings="clr-namespace:Logazmic.Settings"
            mc:Ignorable="d"
            Theme="Inverse"
-           d:DesignHeight="300" d:DesignWidth="300"
+           d:DesignHeight="600" d:DesignWidth="300"
            Position="Right" Header="Settings" IsOpen="{Binding IsSettingsOpen}" Padding="10">
     <ma:Flyout.Resources>
 
@@ -70,28 +70,10 @@
             <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Status bar:</TextBlock>
             <ma:ToggleSwitch IsChecked="{Binding ShowStatusBar}" />
         </controls:TwoColumnGrid>
-        <!--        <Grid Margin="0,10,0,0">-->
-        <!--            <Grid.ColumnDefinitions>-->
-        <!--                <ColumnDefinition />-->
-        <!--                <ColumnDefinition />-->
-        <!--            </Grid.ColumnDefinitions>-->
-        <!--            <Grid.RowDefinitions>-->
-        <!--                <RowDefinition />-->
-        <!--                <RowDefinition />-->
-        <!--                <RowDefinition />-->
-        <!--            </Grid.RowDefinitions>-->
-        <!--            <Label Style="{StaticResource DescriptionSubHeaderStyle}" Grid.Column="0" Grid.Row="0">Dark theme:</Label>-->
-        <!--            <ma:ToggleSwitch Grid.Column="0" Grid.Row="1"-->
-        <!--                             IsChecked="{Binding UseDarkTheme}" />-->
-        <!--            <Label Style="{StaticResource DescriptionSubHeaderStyle}" Grid.Column="1" Grid.Row="0">Grid lines visibility:</Label>-->
-        <!--            <ComboBox Grid.Column="1" Grid.Row="1" SelectedItem="{Binding GridLinesVisibility}" HorizontalAlignment="Center" Margin="25,3">-->
-        <!--                <DataGridGridLinesVisibility>All</DataGridGridLinesVisibility>-->
-        <!--                <DataGridGridLinesVisibility>Horizontal</DataGridGridLinesVisibility>-->
-        <!--                <DataGridGridLinesVisibility>Vertical</DataGridGridLinesVisibility>-->
-        <!--                <DataGridGridLinesVisibility>None</DataGridGridLinesVisibility>-->
-        <!--            </ComboBox>-->
-        <!--            <ma:ToggleSwitch Grid.Column="0" Grid.Row="2"-->
-        <!--                             IsChecked="{Binding ShowStatusBar}" />-->
-        <!--        </Grid>-->
+        <TextBlock Style="{StaticResource DescriptionHeaderStyle}">Miscellaneous</TextBlock>
+        <controls:TwoColumnGrid>
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Autoupdate:</TextBlock>
+            <ma:ToggleSwitch IsChecked="{Binding AutoUpdate}" />
+        </controls:TwoColumnGrid>
     </StackPanel>
 </ma:Flyout>

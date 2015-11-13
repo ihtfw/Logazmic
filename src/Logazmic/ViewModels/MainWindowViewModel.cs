@@ -40,10 +40,19 @@
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
-
+            CheckAutoUpdateSettings();
             Version = await CheckForUpdates();
         }
-        
+
+        private async void CheckAutoUpdateSettings()
+        {
+            if (LogazmicSettings.Instance.AutoUpdate == null)
+            {
+                var result = await DialogService.Current.ShowQuestionMessageBox("Autoupdate", "Enable autoupdate?");
+                LogazmicSettings.Instance.AutoUpdate = result;
+            }
+        }
+
         private async Task<string> CheckForUpdates()
         {
             try
@@ -78,7 +87,7 @@
             }
         }
 
-        public void AddReceiver(ReceiverBase receiver, string tooltip = null)
+        public void AddReceiver(ReceiverBase receiver)
         {
             if (!LogazmicSettings.Instance.Receivers.Contains(receiver))
             {
@@ -147,7 +156,7 @@
                     DialogService.Current.ShowErrorMessageBox("Wrong port");
                     return;
                 }
-                AddReceiver(new TcpReceiver { Port = port, DisplayName = string.Format("TCP({0})", port) });
+                AddReceiver(new TcpReceiver { Port = port, DisplayName = $"TCP({port})" });
             }
         }
 
@@ -162,7 +171,7 @@
                     DialogService.Current.ShowErrorMessageBox("Wrong port");
                     return;
                 }
-                AddReceiver(new UdpReceiver { Port = port, DisplayName = string.Format("UDP({0})", port) });
+                AddReceiver(new UdpReceiver { Port = port, DisplayName = $"UDP({port})" });
             }
         }
 
@@ -186,7 +195,7 @@
                             {
                                 FileToWatch = path,
                                 FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
-                            }, path);
+                            });
             }
             catch (Exception e)
             {

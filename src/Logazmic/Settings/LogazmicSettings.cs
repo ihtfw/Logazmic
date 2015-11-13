@@ -37,6 +37,8 @@ namespace Logazmic.Settings
         [DefaultValue(DataGridGridLinesVisibility.None)]
         public DataGridGridLinesVisibility GridLinesVisibility { get; set; }
 
+        public bool? AutoUpdate { get; set; }
+
         protected override void SetDefaults()
         {
             base.SetDefaults();

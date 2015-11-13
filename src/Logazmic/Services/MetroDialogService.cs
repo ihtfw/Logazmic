@@ -1,5 +1,6 @@
 ﻿namespace Logazmic.Services
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -32,6 +33,26 @@
             Execute.OnUIThread(() => GetActiveWindow().ShowMessageAsync(title, message));
         }
 
+      
+        public override async Task<bool?> ShowQuestionMessageBox(string title, string message)
+        {
+            MessageDialogResult result = default(MessageDialogResult);
+            var metroDialogSettings = new MetroDialogSettings() { AffirmativeButtonText = "Yes", NegativeButtonText = "No"};
+            await Execute.OnUIThreadAsync(async () =>
+            {
+                result = await GetActiveWindow().ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings);
+            });
+            switch (result)
+            {
+                case MessageDialogResult.Negative:
+                    return false;
+                case MessageDialogResult.Affirmative:
+                    return true;
+                default:
+                    return null;
+            }
+        }
+
         public override Task<string> ShowInputDialog(string title, string message)
         {
             return GetActiveWindow().ShowInputAsync(title, message);
@@ -46,8 +67,7 @@
             {
                 var ofd = new OpenFileDialog
                           {
-                              DefaultExt = defaultExt,
-                              Filter = filter,
+                              DefaultExt = defaultExt, Filter = filter,
                           };
 
                 if (initialDir != null)
