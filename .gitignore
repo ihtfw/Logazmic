@@ -216,4 +216,8 @@ $RECYCLE.BIN/
 
 #Squirrel
 !squirrel/bin
-!squirrel/releases
+squirrel/Releases
+
+#Nuget
+!nuget/bin
+nuget/Releases
