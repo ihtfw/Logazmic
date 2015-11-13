@@ -26,5 +26,4 @@ deploy:
   on:
     branch: master
 cache:
-  - squirrel/Releases
   - src/packages
