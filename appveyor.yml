@@ -14,7 +14,8 @@ after_build:
 artifacts:
   - path: squirrel/Releases/*
 branches:
-  only: -master
+  only: 
+    - master
 deploy:
   tag: $(appveyor_build_version)
   release: Logazmic - $(appveyor_build_version)
