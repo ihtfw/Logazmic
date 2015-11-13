@@ -18,6 +18,6 @@ $nuspec.package.metadata.version = $version
 $nuspec.Save($nuspecPath)
 
 Write-Host "------------------Create nupkg------------------"
-& ($curDir + "\bin\nuget.exe") pack $nuspecPath -outputdirectory ($curDir + "\Releases")
+& ($curDir + "\bin\nuget.exe") pack $nuspecPath
 
 

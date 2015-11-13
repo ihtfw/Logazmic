@@ -12,7 +12,7 @@ build:
 after_build:
   - ps: nuget/build-appveyor.ps1
 artifacts:
-  - path: nuget/Releases/*
+  - path: nuget/.*\.nupkg/
 branches:
   only: 
     - integration
