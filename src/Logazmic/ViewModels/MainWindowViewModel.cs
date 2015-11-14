@@ -44,13 +44,16 @@
             Version = await CheckForUpdates();
         }
 
-        private async void CheckAutoUpdateSettings()
+        private void CheckAutoUpdateSettings()
         {
-            if (LogazmicSettings.Instance.AutoUpdate == null)
+            Execute.OnUIThreadAsync(async () =>
             {
-                var result = await DialogService.Current.ShowQuestionMessageBox("Autoupdate", "Enable autoupdate?");
-                LogazmicSettings.Instance.AutoUpdate = result;
-            }
+                if (LogazmicSettings.Instance.AutoUpdate == null)
+                {
+                    var result = await DialogService.Current.ShowQuestionMessageBox("Autoupdate", "Enable autoupdate?");
+                    LogazmicSettings.Instance.AutoUpdate = result;
+                }
+            });
         }
 
         private async Task<string> CheckForUpdates()

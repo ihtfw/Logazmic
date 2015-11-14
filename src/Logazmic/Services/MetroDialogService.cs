@@ -13,7 +13,7 @@
 
     using Microsoft.Win32;
 
-    class MetroDialogService : DialogService
+    internal class MetroDialogService : DialogService
     {
         private MetroWindow GetActiveWindow()
         {
@@ -23,9 +23,11 @@
             {
                 window = Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault(w => w.IsActive);
                 if (window == null)
+                {
                     window = Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault();
+                }
             });
-            
+
             return window;
         }
 
@@ -34,34 +36,19 @@
             Execute.OnUIThread(() => GetActiveWindow().ShowMessageAsync(title, message));
         }
 
-      
-        public override Task<bool?> ShowQuestionMessageBox(string title, string message)
+        public override async Task<bool?> ShowQuestionMessageBox(string title, string message)
         {
-            var mre = new ManualResetEvent(false);
-            MessageDialogResult result = default(MessageDialogResult);
-            var metroDialogSettings = new MetroDialogSettings() { AffirmativeButtonText = "Yes", NegativeButtonText = "No"};
-            Execute.OnUIThread(async () =>
+            var metroDialogSettings = new MetroDialogSettings() { AffirmativeButtonText = "Yes", NegativeButtonText = "No" };
+            var result = await GetActiveWindow().ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings);
+            switch (result)
             {
-                result = await GetActiveWindow().ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings);
-                mre.Set();
-            });
-            //Hack because of async. Doesnt work without it.
-            var task = new Task<bool?>(() =>
-            {
-                mre.WaitOne();
-                switch (result)
-                {
-                    case MessageDialogResult.Negative:
-                        return false;
-                    case MessageDialogResult.Affirmative:
-                        return true;
-                    default:
-                        return null;
-                }
-            });
-            task.Start();
-
-            return task;
+                case MessageDialogResult.Negative:
+                    return false;
+                case MessageDialogResult.Affirmative:
+                    return true;
+                default:
+                    return null;
+            }
         }
 
         public override Task<string> ShowInputDialog(string title, string message)

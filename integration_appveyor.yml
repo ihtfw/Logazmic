@@ -16,6 +16,7 @@ artifacts:
 branches:
   only: 
     - integration
+skip_tags: true
 deploy:
   tag: $(appveyor_build_version)
   release: Logazmic.Integration - $(appveyor_build_version)
