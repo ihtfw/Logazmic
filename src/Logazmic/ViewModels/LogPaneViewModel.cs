@@ -105,8 +105,11 @@ namespace Logazmic.ViewModels
                 searchCollection = afterLastFound.Concat(LogMessages);
             }
          
-            SelectedLogMessage = searchCollection.First(ContainsCaseInsesetive);
-            ScrollIntoSelected(true);
+            SelectedLogMessage = searchCollection.FirstOrDefault(ContainsCaseInsesetive);
+            if (SelectedLogMessage != null)
+            {
+                ScrollIntoSelected(true);
+            }
         }
 
         public LogSource LogSourceRoot { get; private set; }
