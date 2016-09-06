@@ -25,11 +25,15 @@
         {
             if (socket != null) return;
 
-            socket = new Socket(IpV6 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
-                     {
-                         ExclusiveAddressUse = true
-                     };
-            socket.Bind(new IPEndPoint(IpV6 ? IPAddress.IPv6Any : IPAddress.Any, Port));
+            socket = new Socket(IpV6 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork, SocketType.Stream,
+                ProtocolType.Tcp);
+
+            // allow other apps listen the same port
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ExclusiveAddressUse, false);
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+
+            var endpoint = new IPEndPoint(IpV6 ? IPAddress.IPv6Any : IPAddress.Any, Port);
+            socket.Bind(endpoint);
             socket.Listen(100);
             socket.ReceiveBufferSize = BufferSize;
 
