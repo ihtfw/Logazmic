@@ -120,6 +120,27 @@ namespace Logazmic.ViewModels
 
         public LogMessage SelectedLogMessage { get; set; }
 
+        private LogSource selectedLogSource;
+        private void OnSelectedLogMessageChanged()
+        {
+            if (SelectedLogMessage == null)
+            {
+                if (selectedLogSource != null)
+                {
+                    selectedLogSource.IsSelected = false;
+                }
+                selectedLogSource = null;
+                return;
+            }
+
+            selectedLogSource = LogSourceRoot.Find(SelectedLogMessage.LoggerNames);
+            if (selectedLogSource != null)
+            {
+                selectedLogSource.IsSelected = true;
+            }
+            //SelectedLogMessage.LastLoggerName
+        }
+
         public string ToolTip { get { return Receiver.Description; } }
 
         public BindableCollection<LogLevelViewModel> LogLevels { get; }
@@ -227,43 +248,50 @@ namespace Logazmic.ViewModels
             e.Accepted = false;
 
             var resultRow = e.Item as LogMessage;
-            if (resultRow == null)
-            {
+            if (IsFiltered(resultRow))
                 return;
+
+            e.Accepted = true;
+        }
+
+        private bool IsFiltered(LogMessage logMessage)
+        {
+            if (logMessage == null)
+            {
+                return true;
             }
 
-            if (resultRow.LogLevel < MinLogLevel.LogLevel)
+            if (logMessage.LogLevel < MinLogLevel.LogLevel)
             {
-                return;
+                return true;
             }
 
-            if (!LogLevels.First(l => l.LogLevel == resultRow.LogLevel).IsEnabled)
+            if (!LogLevels.First(l => l.LogLevel == logMessage.LogLevel).IsEnabled)
             {
-                return;
+                return true;
             }
 
             foreach (var messageFilter in MessageFilters.Where(mf => mf.IsEnabled))
             {
-                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(resultRow.Message, messageFilter.Filter, CompareOptions.IgnoreCase) >= 0)
+                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, messageFilter.Filter, CompareOptions.IgnoreCase) >= 0)
                 {
-                    return;
+                    return true;
                 }
             }
 
             if (!string.IsNullOrEmpty(FilterText))
             {
-                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(resultRow.Message, FilterText, CompareOptions.IgnoreCase) < 0)
+                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, FilterText, CompareOptions.IgnoreCase) < 0)
                 {
-                    return;
+                    return true;
                 }
             }
 
-            if (logSourceLeaves.All(l => l != resultRow.LoggerName))
+            if (logSourceLeaves.All(l => l != logMessage.LoggerName))
             {
-                return;
+                return true;
             }
-
-            e.Accepted = true;
+            return false;
         }
 
         protected override void DoUpdate(bool full)
@@ -275,7 +303,26 @@ namespace Logazmic.ViewModels
 
             Execute.OnUIThread(() =>
             {
+                var prevSelected = SelectedLogMessage;
                 CollectionViewSource.View?.Refresh();
+                if (CollectionViewSource.View != null && prevSelected != null)
+                {
+                    if (IsFiltered(prevSelected))
+                    {
+                        var index = LogMessages.IndexOf(prevSelected);
+                        if (index > 0)
+                        {
+                            foreach (var closestPrevMessage in LogMessages.Take(index).Reverse())
+                            {
+                                if (!IsFiltered(closestPrevMessage))
+                                {
+                                    SelectedLogMessage = closestPrevMessage;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
                 NotifyOfPropertyChange(nameof(ShownLogMessages));
             });
 
@@ -285,7 +332,9 @@ namespace Logazmic.ViewModels
         public void ScrollIntoSelected(bool forced = false)
         {
             if(forced || !AutoScroll)
+            {
                 ((dynamic)GetView())?.ScrollIntoSelected();
+            }
         }
 
         #region OnNewMessages

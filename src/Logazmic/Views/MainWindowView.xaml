@@ -276,7 +276,7 @@
                           HorizontalAlignment="Stretch" />
 
             <Grid x:Name="Tree" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
-                <TreeView Margin="5" VerticalAlignment="Stretch"
+                <TreeView Margin="5" VerticalAlignment="Stretch" 
                           ItemsSource="{Binding Path=ActiveItem.LogSourceRoot.Children}">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}"
@@ -289,6 +289,8 @@
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                             <Setter Property="IsExpanded" Value="True" />
+                            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                            <EventSetter Event="Selected" Handler="TreeViewSelectedItemChanged" />
                         </Style>
                     </TreeView.ItemContainerStyle>
                 </TreeView>

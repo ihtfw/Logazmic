@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
 
     using MahApps.Metro.Controls;
@@ -57,6 +58,16 @@
             else if (e.Key == Key.Escape)
             {
                 MessageFilterPopup.IsOpen = false;
+            }
+        }
+
+        private void TreeViewSelectedItemChanged(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem item = sender as TreeViewItem;
+            if (item != null)
+            {
+                item.BringIntoView();
+                e.Handled = true;
             }
         }
     }

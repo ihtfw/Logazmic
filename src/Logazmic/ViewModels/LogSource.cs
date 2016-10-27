@@ -24,6 +24,8 @@ namespace Logazmic.ViewModels
             isChecked = true;
         }
 
+        public bool IsSelected { get; set; }
+
         public bool IsChecked
         {
             get { return isChecked; }
@@ -96,16 +98,16 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public void Find(IReadOnlyList<string> loggerNames)
+        public LogSource Find(IReadOnlyList<string> loggerNames)
         {
-            Find(loggerNames, this, 0);
+            return Find(loggerNames, this, 0);
         }
 
-        protected void Find(IReadOnlyList<string> loggerNames, LogSource parent, int index)
+        protected LogSource Find(IReadOnlyList<string> loggerNames, LogSource parent, int index)
         {
             if (loggerNames.Count <= index)
             {
-                return;
+                return null;
             }
 
             var name = loggerNames[index];
@@ -121,7 +123,8 @@ namespace Logazmic.ViewModels
                 parent.Children.Add(logSource);
             }
 
-            Find(loggerNames, logSource, index + 1);
+            var source = Find(loggerNames, logSource, index + 1);
+            return source ?? logSource;
         }
 
         public IEnumerable<LogSource> Leaves()
