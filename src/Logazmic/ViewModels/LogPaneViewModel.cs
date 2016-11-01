@@ -5,6 +5,7 @@ namespace Logazmic.ViewModels
     using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Data;
@@ -70,14 +71,7 @@ namespace Logazmic.ViewModels
 
         public int ShownLogMessages => collectionViewSource?.View?.Cast<LogMessage>().Count() ?? 0;
 
-        public override string DisplayName
-        {
-            get
-            {
-                return Receiver?.DisplayName;
-            }
-            set { Receiver.DisplayName = value; }
-        }
+        public override string DisplayName { get { return Receiver?.DisplayName; } set { Receiver.DisplayName = value; } }
 
         public string FilterText
         {
@@ -99,12 +93,12 @@ namespace Logazmic.ViewModels
         private void OnSearchTextChanged()
         {
             IEnumerable<LogMessage> searchCollection = LogMessages;
-            if (SelectedLogMessage != null && ContainsCaseInsesetive(SelectedLogMessage)) 
+            if (SelectedLogMessage != null && ContainsCaseInsesetive(SelectedLogMessage))
             {
                 var afterLastFound = LogMessages.SkipWhile(m => m != SelectedLogMessage).Skip(1); // Serach from last found
                 searchCollection = afterLastFound.Concat(LogMessages);
             }
-         
+
             SelectedLogMessage = searchCollection.FirstOrDefault(ContainsCaseInsesetive);
             if (SelectedLogMessage != null)
             {
@@ -121,6 +115,7 @@ namespace Logazmic.ViewModels
         public LogMessage SelectedLogMessage { get; set; }
 
         private LogSource selectedLogSource;
+
         private void OnSelectedLogMessageChanged()
         {
             if (SelectedLogMessage == null)
@@ -183,9 +178,8 @@ namespace Logazmic.ViewModels
             Update();
         }
 
-     
         public bool CanSyncWithSelectedItem { get { return SelectedLogMessage != null; } }
-        
+
         public CollectionViewSource CollectionViewSource
         {
             get
@@ -223,6 +217,23 @@ namespace Logazmic.ViewModels
         {
             LogMessages.Clear();
             Update();
+        }
+
+        public void CopyCurrentToClipboard()
+        {
+            try
+            {
+                var sb = new StringBuilder();
+                foreach (var row in CollectionViewSource.View.OfType<LogMessage>())
+                {
+                    sb.AppendLine(row.MessageSingleLine);
+                }
+                Clipboard.SetDataObject(sb.ToString());
+            }
+            catch (Exception e)
+            {
+                DialogService.Current.ShowErrorMessageBox(e);
+            }
         }
 
         public void Initialize()
@@ -331,7 +342,7 @@ namespace Logazmic.ViewModels
 
         public void ScrollIntoSelected(bool forced = false)
         {
-            if(forced || !AutoScroll)
+            if (forced || !AutoScroll)
             {
                 ((dynamic)GetView())?.ScrollIntoSelected();
             }
@@ -366,7 +377,7 @@ namespace Logazmic.ViewModels
         }
 
         #endregion
-        
+
         public void Handle(RefreshCheckEvent message)
         {
             Update(true);

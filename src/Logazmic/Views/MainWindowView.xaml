@@ -150,6 +150,9 @@
             <controls:MetroButton cal:Action.TargetWithoutContext="{Binding ActiveItem}" cal:Message.Attach="Clear" ToolTip="Clear log"
                                   Visual="{DynamicResource appbar_close}" />
 
+            <controls:MetroButton cal:Action.TargetWithoutContext="{Binding ActiveItem}" cal:Message.Attach="CopyCurrentToClipboard" ToolTip="Copy current rows to clipboard"
+                                  Visual="{DynamicResource appbar_page_copy}" />
+
 
             <controls:MetroToggleButton IsChecked="{Binding ActiveItem.AutoScroll}"
                                         Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll" />
