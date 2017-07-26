@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +14,63 @@ namespace NLogSender
 
     class Program
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        class FloodContext
+        {
+            /// <summary>
+            /// Just an instance counter.
+            /// </summary>
+            private static int _counter;
+
+            /// <summary>
+            /// Number of loop hits.
+            /// </summary>
+            private readonly int _numberOfHits;
+
+            /// <summary>
+            /// Cooldown after each loop iteration in miliseconds.
+            /// </summary>
+            private readonly int _hitCooldown;
+
+            /// <summary>
+            /// Logger for concrete instance.
+            /// </summary>
+            private readonly Logger _localLogger = LogManager.GetLogger($"Flooder {_counter++}");
+
+            public FloodContext(int numberOfHits, int hitCooldown)
+            {
+                _numberOfHits = numberOfHits;
+                _hitCooldown = hitCooldown;
+            }
+
+            public void Do()
+            {
+                for (int i = 0; i < _numberOfHits; i++)
+                {
+                    switch (i % 3)
+                    {
+                        case 0:
+                            _localLogger.Trace(Messages.HugeMessage);
+                            break;
+
+                        case 1:
+                            _localLogger.Debug(Messages.LargeMessage);
+                            break;
+
+                        case 2:
+                            _localLogger.Error(Messages.ExceptionMessage, new IOException());
+                            break;
+
+                        default:
+                            _localLogger.Info(i);
+                            break;
+                    }
+                    Thread.Sleep(_hitCooldown);
+                }
+
+                _localLogger.Warn($"{_localLogger.Name} done!");
+            }
+        }
+
         public static void SetupNLog()
         {
             var config = new LoggingConfiguration();
@@ -37,22 +93,17 @@ namespace NLogSender
         {
             SetupNLog();
 
-            for (int i = 0; i < 1000; i++)
-            {
-                switch (i % 2)
-                {
-                    case 0:
-                        Logger.Trace(i);
-                        break;
-                    case 1:
-                        Logger.Debug(i);
-                        break;
-                    default:
-                        Logger.Info(i);
-                        break;
-                }
-                Thread.Sleep(10);
-            }
+            var numberOfHits = 10000;
+            var cooldown = 20;
+
+            var numberOfThreads = Environment.ProcessorCount;
+
+            var flooders = Enumerable.Range(1, numberOfThreads)
+                .Select(_ => new FloodContext(numberOfHits, cooldown))
+                .Select(f => Task.Factory.StartNew(f.Do))
+                .ToArray();
+
+            Task.WaitAll(flooders);
         }
     }
 }
