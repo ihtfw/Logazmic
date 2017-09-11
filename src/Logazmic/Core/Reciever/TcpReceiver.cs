@@ -1,4 +1,7 @@
-﻿namespace Logazmic.Core.Reciever
+﻿using System.Text;
+using NuGet;
+
+namespace Logazmic.Core.Reciever
 {
     using System;
     using System.IO;
@@ -9,7 +12,7 @@
 
     public class TcpReceiver : ReceiverBase
     {
-        Socket socket;
+        private Socket server;
 
         public int Port { get; set; }
         public bool IpV6 { get; set; }
@@ -18,63 +21,66 @@
         public TcpReceiver()
         {
             Port = 4505;
-            BufferSize = 10000;
+            BufferSize = 128 * 1024; // 128Kb
         }
 
         protected override void DoInitilize()
         {
-            if (socket != null) return;
+            if (server != null) return;
 
-            socket = new Socket(IpV6 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork, SocketType.Stream,
+            server = new Socket(IpV6 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork, SocketType.Stream,
                 ProtocolType.Tcp);
 
             // allow other apps listen the same port
-            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ExclusiveAddressUse, false);
-            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ExclusiveAddressUse, false);
+            server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
             var endpoint = new IPEndPoint(IpV6 ? IPAddress.IPv6Any : IPAddress.Any, Port);
-            socket.Bind(endpoint);
-            socket.Listen(100);
-            socket.ReceiveBufferSize = BufferSize;
-
+            server.Bind(endpoint);
+            server.Listen(100);
+            server.ReceiveBufferSize = BufferSize;
+            
             var args = new SocketAsyncEventArgs();
             args.Completed += AcceptAsyncCompleted;
 
-            socket.AcceptAsync(args);
+            server.AcceptAsync(args);
         }
 
         void AcceptAsyncCompleted(object sender, SocketAsyncEventArgs e)
         {
-            if (socket == null || e.SocketError != SocketError.Success) return;
+            if (server == null || e.SocketError != SocketError.Success) return;
+
             //This is original from Log2Console source
             new Thread(Start) { IsBackground = true }.Start(e.AcceptSocket);
-//            var newSocket = e.AcceptSocket;
-//            Task.Factory.StartNew(() => Start(newSocket));
 
             e.AcceptSocket = null;
-            socket.AcceptAsync(e);
+            server.AcceptAsync(e);
         }
 
         void Start(object newSocket)
         {
             try
             {
-                using (var socket = (Socket)newSocket)
+                using (var socket = (Socket) newSocket)
                 {
                     using (var ns = new NetworkStream(socket, FileAccess.Read, false))
                     {
-                        while (this.socket != null)
+                        string tail = null;
+                        while (server != null)
                         {
-                            var logMsg = ReceiverUtils.ParseLog4JXmlLogEvent(ns, "TcpLogger");
-                            logMsg.LoggerName = string.Format(":{1}.{0}", logMsg.LoggerName, Port);
-
-                            OnNewMessage(logMsg);
+                            var logMessages = ReceiverUtils.ReadEvents(ns, "TcpLogger", ref tail);
+                            foreach (var logMessage in logMessages)
+                            {
+                                logMessage.LoggerName = string.Format(":{1}.{0}", logMessage.LoggerName, Port);
+                                OnNewMessage(logMessage);
+                            }
                         }
                     }
                 }
             }
-            catch (IOException)
+            catch (IOException e)
             {
+                Console.WriteLine(e);
             }
             catch (Exception e)
             {
@@ -84,10 +90,10 @@
 
         public override void Terminate()
         {
-            if (socket == null) return;
+            if (server == null) return;
 
-            socket.Close();
-            socket = null;
+            server.Close();
+            server = null;
         }
     }
 }

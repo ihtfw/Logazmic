@@ -1,4 +1,9 @@
-﻿namespace Logazmic.Core.Reciever
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using NuGet;
+using Squirrel.Bsdiff;
+
+namespace Logazmic.Core.Reciever
 {
     using System;
     using System.ComponentModel;
@@ -28,7 +33,11 @@
 
         static XmlReaderSettings CreateSettings()
         {
-            return new XmlReaderSettings { CloseInput = false, ValidationType = ValidationType.None };
+            return new XmlReaderSettings
+            {
+                CloseInput = false,
+                ValidationType = ValidationType.None,
+            };
         }
 
         /// <summary>
@@ -53,8 +62,48 @@
             // In case of ungraceful disconnect 
             // logStream is closed and XmlReader throws the exception,
             // which we handle in TcpReceiver
-            using (var reader = XmlReader.Create(logStream, XmlSettings, XmlContext))
+            using (var reader = new XmlTextReader(logStream, XmlNodeType.None, XmlContext))
+            {
                 return ParseLog4JXmlLogEvent(reader, defaultLogger);
+            }
+        }
+
+        public static IEnumerable<LogMessage> ReadEvents(Stream logStream, string defaultLogger, ref string tail)
+        {
+            tail = string.Empty;
+
+            const string startTag = "<log4j:event";
+            const string endTag = "</log4j:event>";
+
+            byte[] buffer = new byte[10 * 1024];
+            var bufferStart = 0;
+
+            if (!string.IsNullOrEmpty(tail))
+            {
+                var bytes = Encoding.UTF8.GetBytes(tail);
+                Array.Copy(bytes, buffer, bytes.Length);
+                bufferStart = bytes.Length;
+            }
+
+            var bytesRead = logStream.Read(buffer, bufferStart, buffer.Length - bufferStart);
+            if (bytesRead == 0)
+                throw new IOException("No data available!");
+
+            var text = Encoding.UTF8.GetString(buffer);
+            var result = new List<LogMessage>();
+
+            var startIndex = text.IndexOf(startTag, StringComparison.InvariantCulture);
+            var endIndex = text.IndexOf(endTag, startIndex, StringComparison.InvariantCulture);
+
+            while (endIndex != -1)
+            {
+                var sub = text.Substring(startIndex, endIndex + endTag.Length - startIndex);
+                result.Add(ParseLog4JXmlLogEvent(sub, defaultLogger));
+                startIndex += sub.Length;
+                endIndex = text.IndexOf(endTag, startIndex, StringComparison.InvariantCulture);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -100,33 +149,22 @@
         /// 
         public static LogMessage ParseLog4JXmlLogEvent(XmlReader reader, string defaultLogger)
         {
-            var logMsg = new LogMessage();
-           
-            reader.Read();
-//            try
-//            {
-//                
-//            }
-//            catch(Exception e)
-//            {
-//                logMsg.LoggerName = "Logazmic";
-//                logMsg.ThreadName = "Logazmic";
-//                logMsg.LogLevel = LogLevel.Fatal;
-//                logMsg.Message = e.ToString();
-//                logMsg.TimeStamp = DateTime.Now;
-//                return logMsg;
-//            }
+            var moveResult = reader.MoveToContent();
 
-            if ((reader.MoveToContent() != XmlNodeType.Element) || (reader.Name != "log4j:event"))
-                throw new Exception("The Log Event is not a valid log4j Xml block.");
+            if ((moveResult != XmlNodeType.Element) || (reader.Name != "log4j:event"))
+                    throw new Exception("The Log Event is not a valid log4j Xml block.");
 
-            logMsg.LoggerName = reader.GetAttribute("logger");
-            logMsg.LogLevel = (LogLevel)Enum.Parse(typeof(LogLevel), reader.GetAttribute("level"), true);
-            logMsg.ThreadName = reader.GetAttribute("thread");
+                var logMsg = new LogMessage();
 
-            long timeStamp;
-            if (long.TryParse(reader.GetAttribute("timestamp"), out timeStamp))
-                logMsg.TimeStamp = s1970.AddMilliseconds(timeStamp).ToLocalTime();
+                // we are on event element - extract known attributes
+                logMsg.LoggerName = reader.GetAttribute("logger");
+                logMsg.LogLevel = (LogLevel)Enum.Parse(typeof(LogLevel), reader.GetAttribute("level"), true);
+                logMsg.ThreadName = reader.GetAttribute("thread");
+
+                long timeStamp;
+                if (long.TryParse(reader.GetAttribute("timestamp"), out timeStamp))
+                    logMsg.TimeStamp = s1970.AddMilliseconds(timeStamp).ToLocalTime();
+
 
             int eventDepth = reader.Depth;
             reader.Read();
@@ -152,11 +190,13 @@
                             if (uint.TryParse(reader.GetAttribute("line"), out sourceFileLine))
                                 logMsg.SourceFileLineNr = sourceFileLine;
                             break;
+
                         case "nlog:eventSequenceNumber":
                             ulong sequenceNumber;
                             if (ulong.TryParse(reader.ReadString(), out sequenceNumber))
                                 logMsg.SequenceNr = sequenceNumber;
                             break;
+
                         case "nlog:locationInfo":
                             break;
 
