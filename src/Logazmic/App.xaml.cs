@@ -1,20 +1,16 @@
 ﻿using System.Windows;
+using Microsoft.Shell;
 
 namespace Logazmic
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-
-    using Logazmic.Core.Reciever;
-    using Logazmic.Settings;
-    using Logazmic.Utils;
-    using Logazmic.ViewModels;
+    using Settings;
+    using Utils;
+    using ViewModels;
 
     using MahApps.Metro;
-
-    using Microsoft.Shell;
 
     /// <summary>
     /// Interaction logic for App.xaml

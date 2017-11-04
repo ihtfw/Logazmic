@@ -8,13 +8,12 @@
 // </summary>
 //-----------------------------------------------------------------------
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Shell
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
     using System.Runtime.Remoting;
     using System.Runtime.Remoting.Channels;
     using System.Runtime.Remoting.Channels.Ipc;
@@ -22,12 +21,9 @@ namespace Microsoft.Shell
     using System.Threading;
     using System.Windows;
     using System.Windows.Threading;
-    using System.Xml.Serialization;
     using System.Security;
     using System.Runtime.InteropServices;
     using System.ComponentModel;
-
-    using Logazmic.Utils;
 
     internal enum WM
     {
@@ -429,7 +425,7 @@ namespace Microsoft.Shell
                 {
                     // Do an asynchronous call to ActivateFirstInstance function
                     Application.Current.Dispatcher.BeginInvoke(
-                        DispatcherPriority.Normal, new DispatcherOperationCallback(SingleInstance<TApplication>.ActivateFirstInstanceCallback), args);
+                        DispatcherPriority.Normal, new DispatcherOperationCallback(ActivateFirstInstanceCallback), args);
                 }
             }
 

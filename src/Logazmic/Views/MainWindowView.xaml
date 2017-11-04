@@ -5,13 +5,11 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:cal="http://www.caliburnproject.org"
                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
-                   xmlns:log="clr-namespace:Logazmic.Core.Log"
                    xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
                    xmlns:controls="clr-namespace:Logazmic.Controls"
                    xmlns:views="clr-namespace:Logazmic.Views"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:settings="clr-namespace:Logazmic.Settings"
-                   xmlns:behaviours="clr-namespace:Logazmic.Behaviours"
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
                    AllowDrop="True"
@@ -22,108 +20,6 @@
                    WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
                    Icon="../Resources/appbar.flag.bear.ico"
                    ShowIconOnTitleBar="True">
-    <metro:MetroWindow.Resources>
-
-
-        <!---->
-        <Style x:Key="DetailsTextBlock" TargetType="TextBox">
-            <Setter Property="IsReadOnly" Value="True" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="  0" />
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-
-        <ControlTemplate x:Key="NextSerachResultButtonTemplate" TargetType="{x:Type Button}">
-            <Grid Background="{TemplateBinding Background}">
-                <Grid.ToolTip>
-                    <TextBlock>F3</TextBlock>
-                </Grid.ToolTip>
-                <Grid x:Name="contentPresenter" Background="Transparent"
-                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                      Margin="{TemplateBinding Padding}"
-                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                      Opacity="0.75">
-                    <Canvas Width="15"
-                            Height="15"
-                            Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0">
-                        <!-- x:Key="appbar_magnify"-->
-                        <Path Width="15.7781"
-                              Height="15.7781"
-                              Stretch="Fill"
-                              Fill="{TemplateBinding Foreground}"
-                              Data="F1 M 42.3542,38L 26.5208,53.8333L 37.2083,53.8333L 53.8333,38L 37.2083,22.1667L 26.5208,22.1667L 42.3542,38 Z " />
-                    </Canvas>
-                </Grid>
-            </Grid>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsMouseOver"
-                         Value="True">
-                    <Setter Property="cal:Message.Attach" Value="FindNext" />
-                    <Setter TargetName="contentPresenter"
-                            Property="Opacity"
-                            Value="1" />
-                </Trigger>
-                <Trigger Property="IsMouseOver"
-                         Value="False">
-                    <Setter TargetName="contentPresenter"
-                            Property="Opacity"
-                            Value=".5" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-        <DataTemplate x:Key="ComboboxLogLevelDataTemplate" DataType="viewModels:LogLevelViewModel">
-            <CheckBox Content="{Binding Path=LogLevel}" IsChecked="{Binding Path=IsEnabled}">
-                <CheckBox.Style>
-                    <Style>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Trace}">
-                                <Setter Property="Control.Foreground" Value="{DynamicResource TraceColor}" />
-                                <Setter Property="Control.FontWeight" Value="Thin" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Debug}">
-                                <Setter Property="Control.Foreground" Value="{DynamicResource DebugColor}" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Info}">
-                                <Setter Property="Control.Foreground" Value="{DynamicResource InfoColor}" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Warn}">
-                                <Setter Property="Control.Foreground" Value="{DynamicResource WarnColor}" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Error}">
-                                <Setter Property="Control.Foreground" Value="{DynamicResource ErrorColor}" />
-                                <Setter Property="Control.FontWeight" Value="DemiBold" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Fatal}">
-                                <Setter Property="Control.Foreground" Value="{DynamicResource FatalColor}" />
-                                <Setter Property="Control.FontWeight" Value="Bold" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </CheckBox.Style>
-            </CheckBox>
-
-        </DataTemplate>
-        <DataTemplate x:Key="ExcludeItemTemplate">
-            <DockPanel>
-                <Button Margin="2" DockPanel.Dock="Right"
-                        cal:Message.Attach="[RemoveMessageFilter($dataContext)]"
-                        cal:Action.TargetWithoutContext="{Binding ElementName=MessageFilterPopup, Path=DataContext.ActiveItem}"
-                        Width="24" Height="24" Style="{DynamicResource MetroCircleButtonStyle}">
-                    <Button.Content>
-                        <Rectangle Width="8" Height="8" Fill="{DynamicResource ControlBorderBrush}">
-                            <Rectangle.OpacityMask>
-                                <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_close}" />
-                            </Rectangle.OpacityMask>
-                        </Rectangle>
-                    </Button.Content>
-
-                </Button>
-                <CheckBox Margin="2" IsChecked="{Binding Path=IsEnabled}" Content="{Binding Path=Filter}" />
-            </DockPanel>
-        </DataTemplate>
-    </metro:MetroWindow.Resources>
     <metro:MetroWindow.Flyouts>
         <metro:FlyoutsControl>
             <views:SettingsView />
@@ -167,43 +63,24 @@
                                         Visual="{DynamicResource appbar_settings}" ToolTip="Settings" />
 
 
-            <ComboBox Margin="5,0,5,0" SelectedItem="{Binding Path=ActiveItem.MinLogLevel}" Width="120"
-                      ItemTemplate="{StaticResource ComboboxLogLevelDataTemplate}"
-                      ItemsSource="{Binding Path=ActiveItem.LogLevels}"
-                      VerticalAlignment="Center" />
+            <ContentControl Margin="5,0,5,0" VerticalAlignment="Center" Width="120"
+                            cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
+                            cal:View.Context="LogLevels" />
 
-            <StackPanel Margin="5,0,5,0" VerticalAlignment="Center">
-                <TextBox x:Name="MessageFilterTextBox" Width="120"
-                         KeyUp="MessageFilterTextBox_OnKeyUp"
-                         cal:Message.Attach="[Shortcut Enter] = [AddMessageFilter(MessageFilterTextBox)]"
-                         cal:Action.TargetWithoutContext="{Binding ActiveItem}"
-                         GotFocus="MessageFilterTextBox_OnGotFocus"
-                         LostFocus="MessageFilterTextBox_OnLostFocus"
-                         metro:TextBoxHelper.Watermark="Exclude"
-                         ToolTip="Enter text to exclude. Ctrl+E on selected." />
-                <Popup x:Name="MessageFilterPopup" MinWidth="120" Width="150" MaxWidth="500" MaxHeight="150" PopupAnimation="Slide">
-                    <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
-                            GotFocus="MessageFilterTextBox_OnGotFocus"
-                            LostFocus="MessageFilterTextBox_OnLostFocus">
-                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                            <ItemsControl x:Name="MessageFilterItemsControl" ItemsSource="{Binding Path=ActiveItem.MessageFilters}" ItemTemplate="{StaticResource ExcludeItemTemplate}" />
-                        </ScrollViewer>
-                    </Border>
-                </Popup>
-            </StackPanel>
+            <ContentControl Margin="5,0,5,0" VerticalAlignment="Center"
+                            cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
+                            cal:View.Context="MessageFilter" />
 
             <TextBox Margin="5,0,5,0"
-                     Text="{Binding Path=ActiveItem.FilterText, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Path=ActiveItem.ProfileFiltersViewModel.FilterText, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Width="150"
                      metro:TextBoxHelper.Watermark="Filter"
                      Style="{DynamicResource SearchMetroTextBox}"
                      VerticalAlignment="Center" />
 
-            <TextBox Margin="5,0,5,0"
-                     metro:TextBoxHelper.Watermark="Search"
-                     metro:TextBoxHelper.ButtonTemplate="{StaticResource NextSerachResultButtonTemplate}"
-                     Text="{Binding Path=ActiveItem.SearchText, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Width="150" Style="{DynamicResource SearchMetroTextBox}" VerticalAlignment="Center" />
+            <ContentControl Margin="5,0,5,0" Width="150" VerticalAlignment="Center"
+                            cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
+                            cal:View.Context="Search" />
         </StackPanel>
         <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=ShowStatusBar, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StatusBarItem DockPanel.Dock="Right">
@@ -220,96 +97,48 @@
             </TextBlock>
 
         </StatusBar>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="5*" />
-                <RowDefinition Height="5" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
 
-            <Grid x:Name="Main">
-                <metro:MetroTabControl x:Name="Items">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="TabItemClosingEvent">
-                            <cal:ActionMessage MethodName="CloseTab">
-                                <cal:Parameter Value="$eventArgs" />
-                            </cal:ActionMessage>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <metro:MetroTabControl.Resources>
-                        <Style TargetType="metro:MetroTabItem">
-                            <Setter Property="ToolTip" Value="{Binding ToolTip}" />
-                            <Setter Property="CloseButtonEnabled" Value="True" />
-                            <Setter Property="ContextMenu">
-                                <Setter.Value>
-                                    <ContextMenu>
-                                        <MenuItem Header="Rename" cal:Message.Attach="Rename" />
-                                    </ContextMenu>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </metro:MetroTabControl.Resources>
-                    <TabControl.ContentTemplate>
-                        <DataTemplate>
-                            <ContentControl Focusable="False" cal:View.Model="{Binding}" />
-                        </DataTemplate>
-                    </TabControl.ContentTemplate>
-                </metro:MetroTabControl>
-                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
+        <Grid x:Name="Main">
+            <metro:MetroTabControl x:Name="Items">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TabItemClosingEvent">
+                        <cal:ActionMessage MethodName="CloseTab">
+                            <cal:Parameter Value="$eventArgs" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <metro:MetroTabControl.Resources>
+                    <Style TargetType="metro:MetroTabItem">
+                        <Setter Property="ToolTip" Value="{Binding ToolTip}" />
+                        <Setter Property="CloseButtonEnabled" Value="True" />
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="Rename" cal:Message.Attach="Rename" />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </metro:MetroTabControl.Resources>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ContentControl Focusable="False" cal:View.Model="{Binding}" />
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </metro:MetroTabControl>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
                            Text="Add at least one tab.">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Items.Count}" Value="0">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-            </Grid>
-
-            <GridSplitter Grid.Row="0" Grid.Column="1" Width="3" ResizeDirection="Columns"
-                          HorizontalAlignment="Stretch" />
-
-            <Grid x:Name="Tree" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
-                <TreeView Margin="5" VerticalAlignment="Stretch" 
-                          ItemsSource="{Binding Path=ActiveItem.LogSourceRoot.Children}">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}"
-                                                  DataType="{x:Type viewModels:LogSource}">
-                            <CheckBox IsChecked="{Binding Path=IsChecked}">
-                                <ContentPresenter VerticalAlignment="Center" Content="{Binding Name, Mode=OneTime}" />
-                            </CheckBox>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                    <TreeView.ItemContainerStyle>
-                        <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                            <Setter Property="IsExpanded" Value="True" />
-                            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
-                            <EventSetter Event="Selected" Handler="TreeViewSelectedItemChanged" />
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-                </TreeView>
-            </Grid>
-
-            <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" Height="3" VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch" behaviours:GridSplitterBehaviour.SaveSizeWithName="MainWindow.Description" />
-
-            <Grid x:Name="Details" Grid.Row="2" Grid.ColumnSpan="3">
-                <TextBox FontFamily="Courier New" Style="{StaticResource DetailsTextBlock}"
-                         FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=DescriptionFontSize}"
-                         VerticalAlignment="Top"
-                         Text="{Binding Path=ActiveItem.SelectedLogMessage.Message, Mode=OneWay}" Margin="10"
-                         TextWrapping="Wrap" />
-
-            </Grid>
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Items.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
         </Grid>
     </DockPanel>
 </metro:MetroWindow>

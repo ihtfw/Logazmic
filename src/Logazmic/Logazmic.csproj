@@ -109,6 +109,9 @@
       <HintPath>..\packages\squirrel.windows.1.2.1\lib\Net45\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -182,21 +185,34 @@
     <Compile Include="Controls\MetroToggleButton.xaml.cs">
       <DependentUpon>MetroToggleButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\Filters\LogLevelFilter.cs" />
+    <Compile Include="Core\Filters\MessageFilter.cs" />
+    <Compile Include="Core\Filters\SourceFilter.cs" />
     <Compile Include="Core\Reciever\UdpReciever.cs" />
     <Compile Include="InputBindingTrigger.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\MetroDialogService.cs" />
+    <Compile Include="Core\Filters\FiltersProfile.cs" />
     <Compile Include="Settings\JsonSettingsBase.cs" />
     <Compile Include="Settings\LogazmicSettings.cs" />
+    <Compile Include="Core\Filters\FiltersProfiles.cs" />
     <Compile Include="ShortcutParser.cs" />
     <Compile Include="Utils\SingleInstance.cs" />
     <Compile Include="Utils\DependencyPropertyHelpers.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
-    <Compile Include="ViewModels\LogLevelViewModel.cs" />
+    <Compile Include="Core\Filters\FilterLogic.cs" />
+    <Compile Include="ViewModels\Filters\LogLevelFilterViewModel.cs" />
+    <Compile Include="ViewModels\Filters\SourceFilterViewModel.cs" />
     <Compile Include="ViewModels\LogPaneServices.cs" />
-    <Compile Include="ViewModels\MessageFilterViewModel.cs" />
+    <Compile Include="ViewModels\Filters\MessageFilterViewModel.cs" />
+    <Compile Include="ViewModels\Filters\ProfileFiltersViewModel.cs" />
     <Compile Include="ViewModels\UpdatableScreen.cs" />
+    <Compile Include="Views\Filters\ProfileFilters\LogLevels.xaml.cs">
+      <DependentUpon>LogLevels.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Filters\ProfileFilters\Search.xaml.cs">
+      <DependentUpon>Search.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LogPaneView.xaml.cs">
       <DependentUpon>LogPaneView.xaml</DependentUpon>
     </Compile>
@@ -205,9 +221,10 @@
     </Compile>
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\LogPaneViewModel.cs" />
-    <Compile Include="ViewModels\LogSource.cs" />
-    <Compile Include="ViewModels\RefreshCheckEvent.cs" />
-    <Compile Include="ViewModels\RefreshEvent.cs" />
+    <Compile Include="ViewModels\Events\RefreshEvent.cs" />
+    <Compile Include="Views\Filters\ProfileFilters\MessageFilter.xaml.cs">
+      <DependentUpon>MessageFilter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -243,6 +260,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Filters\ProfileFilters\LogLevels.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Filters\ProfileFilters\Search.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LogPaneView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -250,6 +275,10 @@
     <Page Include="Views\MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Filters\ProfileFilters\MessageFilter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
@@ -328,6 +357,7 @@
       <DefaultIcon>Resources\appbar.flag.bear.ico</DefaultIcon>
     </FileAssociation>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.2.0\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\packages\Fody.2.2.0\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

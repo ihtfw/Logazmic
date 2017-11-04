@@ -12,7 +12,7 @@ namespace Logazmic.Core.Reciever
     using System.Xml;
     using System.Xml.Linq;
 
-    using Logazmic.Core.Log;
+    using Log;
 
     public static class ReceiverUtils
     {

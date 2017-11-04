@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="Logazmic.Views.Filters.ProfileFilters.MessageFilter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:filters="clr-namespace:Logazmic.ViewModels.Filters"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance filters:ProfileFiltersViewModel}"
+             x:Name="Root"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel >
+        <TextBox x:Name="MessageFilterTextBox" 
+                 KeyUp="MessageFilterTextBox_OnKeyUp"
+                 cal:Message.Attach="[Shortcut Enter] = [AddMessageFilter(MessageFilterTextBox)]"
+                 GotFocus="MessageFilterTextBox_OnGotFocus"
+                 LostFocus="MessageFilterTextBox_OnLostFocus"
+                 controls:TextBoxHelper.Watermark="Exclude"
+                 ToolTip="Enter text to exclude. Ctrl+E on selected." />
+        <Popup x:Name="MessageFilterPopup" MinWidth="120" Width="150" MaxWidth="500" MaxHeight="150" PopupAnimation="Slide">
+            <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
+                    GotFocus="MessageFilterTextBox_OnGotFocus"
+                    LostFocus="MessageFilterTextBox_OnLostFocus">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="MessageFilterItemsControl" ItemsSource="{Binding Path=MessageFilters}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="filters:MessageFilterViewModel">
+                                <DockPanel>
+                                    <Button Margin="2" DockPanel.Dock="Right"
+                                            cal:Message.Attach="[RemoveMessageFilter($dataContext)]"
+                                            cal:Action.TargetWithoutContext="{Binding ElementName=Root, Path=DataContext}"
+                                            Width="24" Height="24" Style="{DynamicResource MetroCircleButtonStyle}">
+                                        <Button.Content>
+                                            <Rectangle Width="8" Height="8" Fill="{DynamicResource ControlBorderBrush}">
+                                                <Rectangle.OpacityMask>
+                                                    <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_close}" />
+                                                </Rectangle.OpacityMask>
+                                            </Rectangle>
+                                        </Button.Content>
+
+                                    </Button>
+                                    <CheckBox Margin="2" IsChecked="{Binding Path=IsEnabled}" Content="{Binding Path=Filter}" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Popup>
+    </StackPanel>
+</UserControl>

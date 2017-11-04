@@ -5,7 +5,7 @@ namespace Logazmic.Settings
     using System.IO;
     using System.Windows.Controls;
 
-    using Logazmic.Core.Reciever;
+    using Core.Reciever;
 
     
     public class LogazmicSettings : JsonSettingsBase

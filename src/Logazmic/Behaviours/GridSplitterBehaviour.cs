@@ -7,8 +7,8 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    using Logazmic.Settings;
-    using Logazmic.Utils;
+    using Settings;
+    using Utils;
 
     public class DtoGridLength
     {

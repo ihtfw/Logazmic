@@ -5,7 +5,7 @@
     using System.IO;
     using System.Text;
 
-    using Logazmic.Core.Log;
+    using Log;
 
     /// <summary>
     ///     This receiver watch a given file, like a 'tail' program, with one log event by line.

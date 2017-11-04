@@ -1,9 +1,15 @@
+using System.Collections.Generic;
+using System.Globalization;
+using JetBrains.Annotations;
+using Logazmic.Core.Filters;
+using Logazmic.Utils;
+using Logazmic.ViewModels.Events;
+using Logazmic.ViewModels.Filters;
+
 namespace Logazmic.ViewModels
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -11,84 +17,38 @@ namespace Logazmic.ViewModels
     using System.Windows.Data;
 
     using Caliburn.Micro;
+    
+    using Core.Log;
+    using Core.Reciever;
+    using Services;
+    using Settings;
 
-    using Logazmic.Annotations;
-    using Logazmic.Core.Log;
-    using Logazmic.Core.Reciever;
-    using Logazmic.Services;
-    using Logazmic.Settings;
-
-    public class LogPaneViewModel : UpdatableScreen, IHandle<RefreshEvent>, IHandle<RefreshCheckEvent>, IDisposable
+    public class LogPaneViewModel : UpdatableScreen, IHandle<RefreshEvent>, IDisposable
     {
+        private SourceFilterViewModel selectedLogSource;
         private CollectionViewSource collectionViewSource;
 
-        private List<string> logSourceLeaves = new List<string>();
-
-        private LogLevelViewModel minLogLevel;
-
-        private string filterText;
-
-        public LogPaneServices LogPaneServices { get; set; } = new LogPaneServices();
-
+        private IDisposable searchTextChangedSubscriber;
+        private FilterLogic filterLogic;
         public LogPaneViewModel([NotNull] ReceiverBase receiver)
         {
             if (receiver == null)
             {
-                throw new ArgumentNullException("receiver");
+                throw new ArgumentNullException(nameof(receiver));
             }
 
             Receiver = receiver;
-            LogMessages = new BindableCollection<LogMessage>();
+            var filtersProfile = new FiltersProfile();
             LogMessages.CollectionChanged += LogMessagesOnCollectionChanged;
-            LogSourceRoot = new LogSource(LogPaneServices)
-                            {
-                                Name = "Root"
-                            };
 
-            LogLevels = new BindableCollection<LogLevelViewModel>
-                        {
-                            new LogLevelViewModel(LogPaneServices, LogLevel.Trace),
-                            new LogLevelViewModel(LogPaneServices, LogLevel.Debug),
-                            new LogLevelViewModel(LogPaneServices, LogLevel.Info),
-                            new LogLevelViewModel(LogPaneServices, LogLevel.Warn),
-                            new LogLevelViewModel(LogPaneServices, LogLevel.Error),
-                            new LogLevelViewModel(LogPaneServices, LogLevel.Fatal),
-                        };
-            MinLogLevel = LogLevels.First();
+            ProfileFiltersViewModel = new ProfileFiltersViewModel(filtersProfile, LogPaneServices);
+            filterLogic = new FilterLogic(filtersProfile);
+
+            searchTextChangedSubscriber = ProfileFiltersViewModel.SubscribeToPropertyChanged(vm => vm.SearchText, OnSearchTextChanged);
 
             LogPaneServices.EventAggregator.Subscribe(this);
         }
 
-        private void LogMessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-            NotifyOfPropertyChange(nameof(TotalLogMessages));
-            NotifyOfPropertyChange(nameof(ShownLogMessages));
-        }
-
-        public bool AutoScroll { get; set; }
-
-        public int TotalLogMessages => LogMessages.Count;
-
-        public int ShownLogMessages => collectionViewSource?.View?.Cast<LogMessage>().Count() ?? 0;
-
-        public override string DisplayName { get { return Receiver?.DisplayName; } set { Receiver.DisplayName = value; } }
-
-        public string FilterText
-        {
-            get { return filterText; }
-            set
-            {
-                filterText = value;
-                Update();
-            }
-        }
-
-        private bool ContainsCaseInsesetive(LogMessage logMessage)
-        {
-            return CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, SearchText, CompareOptions.IgnoreCase) >= 0;
-        }
-
-        public string SearchText { get; set; }
 
         private void OnSearchTextChanged()
         {
@@ -106,15 +66,33 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public LogSource LogSourceRoot { get; private set; }
+        private bool ContainsCaseInsesetive(LogMessage logMessage)
+        {
+            return CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, ProfileFiltersViewModel.SearchText, CompareOptions.IgnoreCase) >= 0;
+        }
 
-        public ReceiverBase Receiver { get; private set; }
+        public LogPaneServices LogPaneServices { get; } = new LogPaneServices();
+        public ProfileFiltersViewModel ProfileFiltersViewModel { get; } 
 
-        public BindableCollection<LogMessage> LogMessages { get; private set; }
+        private void LogMessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            NotifyOfPropertyChange(nameof(TotalLogMessages));
+            NotifyOfPropertyChange(nameof(ShownLogMessages));
+        }
+
+        public bool AutoScroll { get; set; }
+
+        public int TotalLogMessages => LogMessages.Count;
+
+        public int ShownLogMessages => collectionViewSource?.View?.Cast<LogMessage>().Count() ?? 0;
+
+        public override string DisplayName { get { return Receiver?.DisplayName; } set { Receiver.DisplayName = value; } }
+        
+        public ReceiverBase Receiver { get; }
+
+        public BindableCollection<LogMessage> LogMessages { get; } =new BindableCollection<LogMessage>();
 
         public LogMessage SelectedLogMessage { get; set; }
-
-        private LogSource selectedLogSource;
 
         private void OnSelectedLogMessageChanged()
         {
@@ -128,7 +106,7 @@ namespace Logazmic.ViewModels
                 return;
             }
 
-            selectedLogSource = LogSourceRoot.Find(SelectedLogMessage.LoggerNames);
+            selectedLogSource = ProfileFiltersViewModel.SourceFilterRootViewModel.Find(SelectedLogMessage.LoggerNames);
             if (selectedLogSource != null)
             {
                 selectedLogSource.IsSelected = true;
@@ -137,46 +115,6 @@ namespace Logazmic.ViewModels
         }
 
         public string ToolTip { get { return Receiver.Description; } }
-
-        public BindableCollection<LogLevelViewModel> LogLevels { get; }
-
-        public LogLevelViewModel MinLogLevel
-        {
-            get { return minLogLevel; }
-            set
-            {
-                minLogLevel = value;
-                Update();
-            }
-        }
-
-        public BindableCollection<MessageFilterViewModel> MessageFilters { get; } = new BindableCollection<MessageFilterViewModel>();
-
-        public void AddMessageFilter(string messageFilter)
-        {
-            if (string.IsNullOrWhiteSpace(messageFilter))
-            {
-                return;
-            }
-            if (MessageFilters.Any(mf => mf.Filter == messageFilter))
-            {
-                return;
-            }
-            var messageFilterViewModel = new MessageFilterViewModel(LogPaneServices, messageFilter);
-            MessageFilters.Add(messageFilterViewModel);
-            Update();
-        }
-
-        public void RemoveMessageFilter(MessageFilterViewModel messageFilter)
-        {
-            if (messageFilter == null)
-            {
-                return;
-            }
-
-            MessageFilters.Remove(messageFilter);
-            Update();
-        }
 
         public bool CanSyncWithSelectedItem { get { return SelectedLogMessage != null; } }
 
@@ -201,7 +139,7 @@ namespace Logazmic.ViewModels
                 return collectionViewSource;
             }
         }
-
+        
         public async void Rename()
         {
             var newName = await DialogService.Current.ShowInputDialog("Rename", "Enter new name:");
@@ -212,13 +150,18 @@ namespace Logazmic.ViewModels
             DisplayName = newName;
             LogazmicSettings.Instance.Save();
         }
+        
+        public void FindNext()
+        {
+            OnSearchTextChanged();
+        }
 
         public void Clear()
         {
             LogMessages.Clear();
             Update();
         }
-
+        
         public void CopyCurrentToClipboard()
         {
             try
@@ -259,57 +202,17 @@ namespace Logazmic.ViewModels
             e.Accepted = false;
 
             var resultRow = e.Item as LogMessage;
-            if (IsFiltered(resultRow))
+            if (filterLogic.IsFiltered(resultRow))
                 return;
 
             e.Accepted = true;
         }
-
-        private bool IsFiltered(LogMessage logMessage)
-        {
-            if (logMessage == null)
-            {
-                return true;
-            }
-
-            if (logMessage.LogLevel < MinLogLevel.LogLevel)
-            {
-                return true;
-            }
-
-            if (!LogLevels.First(l => l.LogLevel == logMessage.LogLevel).IsEnabled)
-            {
-                return true;
-            }
-
-            foreach (var messageFilter in MessageFilters.Where(mf => mf.IsEnabled))
-            {
-                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, messageFilter.Filter, CompareOptions.IgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(FilterText))
-            {
-                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, FilterText, CompareOptions.IgnoreCase) < 0)
-                {
-                    return true;
-                }
-            }
-
-            if (logSourceLeaves.All(l => l != logMessage.LoggerName))
-            {
-                return true;
-            }
-            return false;
-        }
-
+        
         protected override void DoUpdate(bool full)
         {
             if (full)
             {
-                logSourceLeaves = LogSourceRoot.Leaves().Where(l => l.IsChecked).Select(c => c.FullName).Distinct().ToList();
+                filterLogic.RebuildLeaves();
             }
 
             Execute.OnUIThread(() =>
@@ -318,14 +221,14 @@ namespace Logazmic.ViewModels
                 CollectionViewSource.View?.Refresh();
                 if (CollectionViewSource.View != null && prevSelected != null)
                 {
-                    if (IsFiltered(prevSelected))
+                    if (filterLogic.IsFiltered(prevSelected))
                     {
                         var index = LogMessages.IndexOf(prevSelected);
                         if (index > 0)
                         {
                             foreach (var closestPrevMessage in LogMessages.Take(index).Reverse())
                             {
-                                if (!IsFiltered(closestPrevMessage))
+                                if (!filterLogic.IsFiltered(closestPrevMessage))
                                 {
                                     SelectedLogMessage = closestPrevMessage;
                                     break;
@@ -357,7 +260,7 @@ namespace Logazmic.ViewModels
                 lock (LogMessages)
                 {
                     LogMessages.AddRange(logMsgs);
-                    Array.ForEach(logMsgs, m => LogSourceRoot.Find(m.LoggerNames));
+                    Array.ForEach(logMsgs, m => ProfileFiltersViewModel.SourceFilterRootViewModel.Find(m.LoggerNames));
                     Update(true);
                 }
             });
@@ -370,26 +273,23 @@ namespace Logazmic.ViewModels
                 lock (LogMessages)
                 {
                     LogMessages.Add(logMsg);
-                    LogSourceRoot.Find(logMsg.LoggerNames);
+                    ProfileFiltersViewModel.SourceFilterRootViewModel.Find(logMsg.LoggerNames);
                     Update(true);
                 }
             });
         }
 
         #endregion
-
-        public void Handle(RefreshCheckEvent message)
-        {
-            Update(true);
-        }
-
+        
         public void Handle(RefreshEvent message)
         {
-            Update();
+            Update(message.IsFull);
         }
 
         public void Dispose()
         {
+            searchTextChangedSubscriber?.Dispose();
+
             if (Receiver != null)
             {
                 Receiver.NewMessage -= OnNewMessage;
@@ -398,11 +298,6 @@ namespace Logazmic.ViewModels
             }
 
             LogMessages.CollectionChanged -= LogMessagesOnCollectionChanged;
-        }
-
-        public void FindNext()
-        {
-            OnSearchTextChanged();
         }
     }
 }

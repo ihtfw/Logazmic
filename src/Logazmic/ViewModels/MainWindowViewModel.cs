@@ -8,11 +8,9 @@
 
     using Caliburn.Micro;
 
-    using Logazmic.Core.Reciever;
-    using Logazmic.Services;
-    using Logazmic.Settings;
-    using Logazmic.Utils;
-
+    using Core.Reciever;
+    using Services;
+    using Settings;
     using MahApps.Metro.Controls;
 
     using Squirrel;
@@ -220,7 +218,7 @@
 
         public void ExcludeLogEntry()
         {
-            ActiveItem?.AddMessageFilter(ActiveItem?.SelectedLogMessage?.Message);
+            ActiveItem?.ProfileFiltersViewModel.AddMessageFilter(ActiveItem?.SelectedLogMessage?.Message);
         }
 
         public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)

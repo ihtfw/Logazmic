@@ -1,4 +1,6 @@
-﻿namespace Logazmic.Settings
+﻿using JetBrains.Annotations;
+
+namespace Logazmic.Settings
 {
     using System;
     using System.Collections.Specialized;
@@ -8,11 +10,7 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization.Formatters;
-
-    using Caliburn.Micro;
-
-    using Logazmic.Annotations;
-
+    
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 

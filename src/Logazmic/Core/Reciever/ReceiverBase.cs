@@ -2,7 +2,7 @@
 {
     using System;
 
-    using Logazmic.Core.Log;
+    using Log;
 
     using Newtonsoft.Json;
 

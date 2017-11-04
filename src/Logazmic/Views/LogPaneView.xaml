@@ -8,6 +8,8 @@
              xmlns:log="clr-namespace:Logazmic.Core.Log"
              xmlns:controls="clr-namespace:Logazmic.Controls"
              xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
+             xmlns:behaviours="clr-namespace:Logazmic.Behaviours"
+             xmlns:filters="clr-namespace:Logazmic.ViewModels.Filters"
              mc:Ignorable="d"
              Focusable="False" 
              d:DataContext="{d:DesignInstance viewModels:LogPaneViewModel}"
@@ -43,31 +45,87 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="DetailsTextBlock" TargetType="TextBox">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="  0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
     </UserControl.Resources>
-    <DataGrid x:Name="LogDataGrid" ItemsSource="{Binding Path=CollectionViewSource.View}"
-              SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
-              CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
-              CanUserResizeRows="False" SelectionMode="Single"
-              GridLinesVisibility="{Binding  Source={x:Static settings:LogazmicSettings.Instance}, Path=GridLinesVisibility}"
-              FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=GridFontSize}"
-              CellStyle="{StaticResource CellStyle}" RowStyle="{StaticResource RowStyle}"
-              controls:DataGridBehavior.Autoscroll="{Binding AutoScroll}">
-        <DataGrid.Resources>
-            <Style TargetType="TextBlock">
-                <Setter Property="Foreground" Value="Red" />
-            </Style>
-        </DataGrid.Resources>
-        <DataGrid.Columns>
-            <DataGridTextColumn IsReadOnly="True" Header="Time"
-                                Binding="{Binding Path=TimeStamp, ConverterCulture={x:Static glob:CultureInfo.CurrentUICulture}}" />
-            <DataGridTextColumn IsReadOnly="True" Header="Level"
-                                Binding="{Binding Path=LogLevel}" />
-            <DataGridTextColumn IsReadOnly="True" Header="Logger"
-                                Binding="{Binding Path=LastLoggerName}" />
-            <DataGridTextColumn IsReadOnly="True" Header="Thread"
-                                Binding="{Binding Path=ThreadName}" />
-            <DataGridTextColumn IsReadOnly="True" Header="Message" Width="*"
-                                Binding="{Binding Path=MessageSingleLine}" />
-        </DataGrid.Columns>
-    </DataGrid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid x:Name="LogDataGrid" ItemsSource="{Binding Path=CollectionViewSource.View}"
+                  SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
+                  CanUserResizeRows="False" SelectionMode="Single"
+                  GridLinesVisibility="{Binding  Source={x:Static settings:LogazmicSettings.Instance}, Path=GridLinesVisibility}"
+                  FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=GridFontSize}"
+                  CellStyle="{StaticResource CellStyle}" RowStyle="{StaticResource RowStyle}"
+                  controls:DataGridBehavior.Autoscroll="{Binding AutoScroll}">
+            <DataGrid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="Red" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Time"
+                                    Binding="{Binding Path=TimeStamp, ConverterCulture={x:Static glob:CultureInfo.CurrentUICulture}}" />
+                <DataGridTextColumn IsReadOnly="True" Header="Level"
+                                    Binding="{Binding Path=LogLevel}" />
+                <DataGridTextColumn IsReadOnly="True" Header="Logger"
+                                    Binding="{Binding Path=LastLoggerName}" />
+                <DataGridTextColumn IsReadOnly="True" Header="Thread"
+                                    Binding="{Binding Path=ThreadName}" />
+                <DataGridTextColumn IsReadOnly="True" Header="Message" Width="*"
+                                    Binding="{Binding Path=MessageSingleLine}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GridSplitter Grid.Row="0" Grid.Column="1" Width="3" ResizeDirection="Columns"
+                          HorizontalAlignment="Stretch" />
+
+        <Grid x:Name="Tree" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
+            <TreeView Margin="5" VerticalAlignment="Stretch" 
+                          ItemsSource="{Binding Path=ProfileFiltersViewModel.SourceFilterRootViewModel.Children}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}"
+                                                  DataType="{x:Type filters:SourceFilterViewModel}">
+                        <CheckBox IsChecked="{Binding Path=IsChecked}">
+                            <ContentPresenter VerticalAlignment="Center" Content="{Binding Name, Mode=OneTime}" />
+                        </CheckBox>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                        <Setter Property="IsExpanded" Value="True" />
+                        <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                        <EventSetter Event="Selected" Handler="TreeViewSelectedItemChanged" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+        </Grid>
+
+        <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" Height="3" VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch" behaviours:GridSplitterBehaviour.SaveSizeWithName="MainWindow.Description" />
+
+        <Grid x:Name="Details" Grid.Row="2" Grid.ColumnSpan="3">
+            <TextBox FontFamily="Courier New" Style="{StaticResource DetailsTextBlock}"
+                         FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=DescriptionFontSize}"
+                         VerticalAlignment="Top"
+                         Text="{Binding Path=SelectedLogMessage.Message, Mode=OneWay}" Margin="10"
+                         TextWrapping="Wrap" />
+
+        </Grid>
+    </Grid>
 </UserControl>

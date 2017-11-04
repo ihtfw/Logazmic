@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="Logazmic.Views.Filters.ProfileFilters.LogLevels"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Logazmic.Views.Filters.ProfileFilters"
+             xmlns:filters="clr-namespace:Logazmic.ViewModels.Filters"
+             xmlns:log="clr-namespace:Logazmic.Core.Log"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance filters:ProfileFiltersViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ComboboxLogLevelDataTemplate" DataType="filters:LogLevelFilterViewModel">
+            <CheckBox Content="{Binding Path=LogLevel}" IsChecked="{Binding Path=IsEnabled}">
+                <CheckBox.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Trace}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource TraceColor}" />
+                                <Setter Property="Control.FontWeight" Value="Thin" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Debug}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource DebugColor}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Info}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource InfoColor}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Warn}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource WarnColor}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Error}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource ErrorColor}" />
+                                <Setter Property="Control.FontWeight" Value="DemiBold" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}"
+                                         Value="{x:Static log:LogLevel.Fatal}">
+                                <Setter Property="Control.Foreground" Value="{DynamicResource FatalColor}" />
+                                <Setter Property="Control.FontWeight" Value="Bold" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </CheckBox.Style>
+            </CheckBox>
+
+        </DataTemplate>
+    </UserControl.Resources>
+    <ComboBox SelectedItem="{Binding Path=MinLogLevel}" 
+              ItemTemplate="{StaticResource ComboboxLogLevelDataTemplate}"
+              ItemsSource="{Binding Path=LogLevels}" />
+</UserControl>
