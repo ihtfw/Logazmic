@@ -6,21 +6,22 @@ Logazmic
 
 Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is based on [Log2console](https://log2console.codeplex.com/). UI is rewritten in WPF with usage of [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
 
-##Supports:
+## Supports:
 * Listening on tcp/udp
 * Opening *.log4j files 
 * Drag-and-drop files
 
-##Download 
+## Download 
 https://github.com/ihtfw/Logazmic/releases/latest/
 
-##Screenshots:
+## Screenshots:
+
 ![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot1.png) ![Alt Logazmic screenshot 1](https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/screenshot2.png)
 
 
 
-##Setup 
-###NLog (http://nlog-project.org/):
+## Setup 
+### NLog (http://nlog-project.org/):
 ### Xml configuration
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -69,7 +70,7 @@ config.LoggingRules.Add(tcpNetworkRule);
 LogManager.Configuration = config;
 ```
 <!---
-###Log4net
+### Log4net
 ```xml
 <appender name=\"FileAppender\" type=\"log4net.Appender.FileAppender\">
     <file value=\"log-file.txt\" />
