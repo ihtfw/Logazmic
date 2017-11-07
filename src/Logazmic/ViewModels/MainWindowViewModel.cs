@@ -1,4 +1,6 @@
-﻿namespace Logazmic.ViewModels
+﻿using Logazmic.ViewModels.Filters;
+
+namespace Logazmic.ViewModels
 {
     using System;
     using System.IO;
@@ -30,6 +32,7 @@
             DisplayName = "Logazmic";
             LoadReciversFromSettings();
         }
+
 
         public string Version { get; set; }
 
@@ -221,6 +224,11 @@
             ActiveItem?.ProfileFiltersViewModel.AddMessageFilter(ActiveItem?.SelectedLogMessage?.Message);
         }
 
+        public void FindNext()
+        {
+            ActiveItem?.FindNext();
+        }
+
         public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
         {
             var pane = (LogPaneViewModel)args.ClosingTabItem.Content;
@@ -235,11 +243,6 @@
             {
                 item.Dispose();
             }
-        }
-
-        public void FindNext()
-        {
-            ActiveItem?.FindNext();
         }
     }
 }

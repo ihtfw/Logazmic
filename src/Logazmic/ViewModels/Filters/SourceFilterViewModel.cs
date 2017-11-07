@@ -8,13 +8,40 @@ namespace Logazmic.ViewModels.Filters
 {
     public class SourceFilterViewModel : PropertyChangedBase
     {
-        private readonly SourceFilter sourceFilter;
+        private SourceFilter sourceFilter;
         private readonly LogPaneServices logPaneServices;
 
         public SourceFilterViewModel(SourceFilter sourceFilter, LogPaneServices logPaneServices)
         {
             this.sourceFilter = sourceFilter;
             this.logPaneServices = logPaneServices;
+        }
+
+        public void Rebuild(SourceFilter rootSourceFilter)
+        {
+            this.sourceFilter = rootSourceFilter;
+
+            Children.Clear();
+
+            foreach (var child in sourceFilter.Children)
+            {
+                AddChild(child);
+            }
+
+            IsSelected = false;
+            NotifyOfPropertyChange(nameof(IsChecked));
+            NotifyOfPropertyChange(nameof(Name));
+        }
+
+        private void AddChild(SourceFilter child)
+        {
+            var childViewModel = new SourceFilterViewModel(child, logPaneServices);
+            Children.Add(childViewModel);
+
+            foreach (var subChild in child.Children)
+            {
+                childViewModel.AddChild(subChild);
+            }
         }
 
         public bool IsSelected { get; set; }

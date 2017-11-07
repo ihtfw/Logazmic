@@ -1,3 +1,5 @@
+using Logazmic.Core.Filters;
+
 namespace Logazmic.Settings
 {
     using System;
@@ -12,15 +14,26 @@ namespace Logazmic.Settings
     {
         #region Singleton
 
+        private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\settings.json");
+
         private static readonly Lazy<LogazmicSettings> instance = new Lazy<LogazmicSettings>(() => Load<LogazmicSettings>(path));
 
         public static LogazmicSettings Instance { get { return instance.Value; } }
+        public override void Save()
+        {
+            Save(path);
+        }
 
         #endregion
+        
+        private FiltersProfiles filtersProfiles;
+        private ObservableCollection<ReceiverBase> receivers;
 
-        private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\settings.json");
-
-        public ObservableCollection<ReceiverBase> Receivers { get; set; }
+        public ObservableCollection<ReceiverBase> Receivers
+        {
+            get { return receivers ?? (receivers = new ObservableCollection<ReceiverBase>()); }
+            set { receivers = value; }
+        }
 
         [DefaultValue(12)]
         public int GridFontSize { get; set; }
@@ -38,16 +51,5 @@ namespace Logazmic.Settings
         public DataGridGridLinesVisibility GridLinesVisibility { get; set; }
 
         public bool? AutoUpdate { get; set; }
-
-        protected override void SetDefaults()
-        {
-            base.SetDefaults();
-            Receivers = new ObservableCollection<ReceiverBase>();
-        }
-
-        public override void Save()
-        {
-            Save(path);
-        }
     }
 }

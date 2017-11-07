@@ -67,20 +67,20 @@
                             cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
                             cal:View.Context="LogLevels" />
 
-            <ContentControl Margin="5,0,5,0" VerticalAlignment="Center"
+            <ContentControl Margin="5,0,5,0" VerticalAlignment="Center" Width="150"
                             cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
                             cal:View.Context="MessageFilter" />
 
-            <TextBox Margin="5,0,5,0"
-                     Text="{Binding Path=ActiveItem.ProfileFiltersViewModel.FilterText, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Width="150"
-                     metro:TextBoxHelper.Watermark="Filter"
-                     Style="{DynamicResource SearchMetroTextBox}"
-                     VerticalAlignment="Center" />
+            <ContentControl Margin="5,0,5,0" VerticalAlignment="Center" Width="150"
+                            cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
+                            cal:View.Context="FilterText" />
 
             <ContentControl Margin="5,0,5,0" Width="150" VerticalAlignment="Center"
                             cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
                             cal:View.Context="Search" />
+
+            <ContentControl Margin="5,0,5,0" Width="150" VerticalAlignment="Center"
+                            cal:View.Model="{Binding Path=ActiveItem.ProfilesFiltersViewModel}"/>
         </StackPanel>
         <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=ShowStatusBar, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StatusBarItem DockPanel.Dock="Right">

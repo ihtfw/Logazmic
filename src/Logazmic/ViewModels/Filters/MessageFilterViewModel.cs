@@ -14,7 +14,6 @@ namespace Logazmic.ViewModels.Filters
         {
             this.logPaneServices = logPaneServices;
             MessageFilter = messageFilter;
-            IsEnabled = true;
         }
 
         public string Filter

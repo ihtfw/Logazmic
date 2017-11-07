@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="Logazmic.Views.Filters.ProfileFilters.FilterText"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:filters="clr-namespace:Logazmic.ViewModels.Filters"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance filters:ProfileFiltersViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <TextBox Text="{Binding Path=FilterText, Delay=300, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+             controls:TextBoxHelper.Watermark="Filter"
+             Style="{DynamicResource SearchMetroTextBox}"
+             VerticalAlignment="Center" />
+</UserControl>

@@ -92,5 +92,23 @@ namespace Logazmic.Core.Filters
                 yield return this;
         }
 
+
+        public SourceFilter Clone()
+        {
+            var parentClone = new SourceFilter
+            {
+                Name = Name,
+                IsChecked = IsChecked
+            };
+
+            foreach (var child in Children)
+            {
+                var childClone = child.Clone();
+                childClone.Parent = parentClone;
+                parentClone.Children.Add(childClone);
+            }
+
+            return parentClone;
+        }
     }
 }

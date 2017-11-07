@@ -10,5 +10,9 @@ namespace Logazmic.Core.Filters
         public string Message { get;  }
         public bool IsEnabled { get; set; } = true;
 
+        public override string ToString()
+        {
+            return $"{Message} - {IsEnabled}";
+        }
     }
 }

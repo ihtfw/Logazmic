@@ -28,8 +28,8 @@ namespace Logazmic.ViewModels
         private SourceFilterViewModel selectedLogSource;
         private CollectionViewSource collectionViewSource;
 
-        private IDisposable searchTextChangedSubscriber;
-        private FilterLogic filterLogic;
+        private readonly IDisposable searchTextChangedSubscriber;
+        private readonly FilterLogic filterLogic;
         public LogPaneViewModel([NotNull] ReceiverBase receiver)
         {
             if (receiver == null)
@@ -43,8 +43,10 @@ namespace Logazmic.ViewModels
 
             ProfileFiltersViewModel = new ProfileFiltersViewModel(filtersProfile, LogPaneServices);
             filterLogic = new FilterLogic(filtersProfile);
-
+            ProfilesFiltersViewModel = new ProfilesFiltersViewModel(filtersProfile, LogPaneServices);
             searchTextChangedSubscriber = ProfileFiltersViewModel.SubscribeToPropertyChanged(vm => vm.SearchText, OnSearchTextChanged);
+
+            ProfilesFiltersViewModel.ActivateWith(this);
 
             LogPaneServices.EventAggregator.Subscribe(this);
         }
@@ -72,7 +74,8 @@ namespace Logazmic.ViewModels
         }
 
         public LogPaneServices LogPaneServices { get; } = new LogPaneServices();
-        public ProfileFiltersViewModel ProfileFiltersViewModel { get; } 
+        public ProfileFiltersViewModel ProfileFiltersViewModel { get; }
+        public ProfilesFiltersViewModel ProfilesFiltersViewModel { get; } 
 
         private void LogMessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
@@ -283,11 +286,17 @@ namespace Logazmic.ViewModels
         
         public void Handle(RefreshEvent message)
         {
+            if (message.IsFilters)
+            {
+                ProfileFiltersViewModel.UpdateFilters();
+            }
             Update(message.IsFull);
         }
 
         public void Dispose()
         {
+            LogPaneServices.EventAggregator.Unsubscribe(this);
+
             searchTextChangedSubscriber?.Dispose();
 
             if (Receiver != null)

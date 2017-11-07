@@ -11,5 +11,9 @@ namespace Logazmic.Core.Filters
 
         public LogLevel LogLevel { get; }
         public bool IsEnabled { get; set; } = true;
+        public override string ToString()
+        {
+            return $"{LogLevel} - {IsEnabled}";
+        }
     }
 }

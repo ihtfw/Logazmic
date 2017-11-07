@@ -2,16 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Logazmic.Core.Log;
+using Logazmic.Settings;
 
 namespace Logazmic.Core.Filters
 {
-    public class FiltersProfile
+    public class FiltersProfile 
     {
         private List<LogLevelFilter> enabledLogLevels;
         private List<MessageFilter> messageFilters;
         private SourceFilter sourceFilterRoot;
+        private string name;
 
-        public string Name { get; set; } = "New profile";
+        public string Name
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = "New profile";
+                }
+                return name;
+            }
+            set { name = value; }
+        }
 
         public LogLevel MinLogLevel { get; set; } = LogLevel.Trace;
 
@@ -39,13 +52,34 @@ namespace Logazmic.Core.Filters
         {
             return Enum.GetValues(typeof(LogLevel)).OfType<LogLevel>().Where(l => l != LogLevel.None);
         }
-
-        public void CopyFrom(FiltersProfile filtersProfile)
+        
+        public void Apply(FiltersProfile other)
         {
-            if (filtersProfile == null)
+            if (other == null)
                 return;
 
+            Name = other.Name;
+            MinLogLevel = other.MinLogLevel;
+            FilterText = other.FilterText;
 
+            MessageFilters.Clear();
+
+            foreach (var messageFilter in other.MessageFilters)
+            {
+                MessageFilters.Add(new MessageFilter(messageFilter.Message)
+                {
+                    IsEnabled = messageFilter.IsEnabled
+                });
+            }
+
+            foreach (var logLevel in LogLevels)
+            {
+                logLevel.IsEnabled =
+                    other.LogLevels.FirstOrDefault(ll => ll.LogLevel == logLevel.LogLevel)?.IsEnabled ?? true;
+            }
+
+            SourceFilterRoot = other.SourceFilterRoot.Clone();
         }
+
     }
 }

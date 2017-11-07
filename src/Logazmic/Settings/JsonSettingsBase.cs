@@ -36,20 +36,14 @@ namespace Logazmic.Settings
                                                                            {
                                                                                TypeNameHandling = TypeNameHandling.Auto,
                                                                                TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
-                                                                           };
+                                                                               ObjectCreationHandling = ObjectCreationHandling.Replace
+        };
 
         static JsonSettingsBase()
         {
             serilizerSettings.Converters.Add(new StringEnumConverter());
         }
-
-        protected JsonSettingsBase()
-        {
-            // ReSharper disable once DoNotCallOverridableMethodsInConstructor
-            SetDefaults();
-            SetupAutoSave();
-        }
-
+        
         private void SetupAutoSave()
         {
             PropertyChanged += (sender, args) => Save();
@@ -79,12 +73,21 @@ namespace Logazmic.Settings
 
         protected static T Load<T>(string path) where T : JsonSettingsBase, new()
         {
+            T settings;
             if (!File.Exists(path))
             {
-                return new T();
+                settings = new T();
             }
-            var json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<T>(json, serilizerSettings);
+            else
+            {
+                var json = File.ReadAllText(path);
+                settings = JsonConvert.DeserializeObject<T>(json, serilizerSettings);
+            }
+
+            settings.SetDefaults();
+            settings.SetupAutoSave();
+
+            return settings;
         }
 
         protected void Save(string path)

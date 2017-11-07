@@ -202,16 +202,23 @@
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
     <Compile Include="Core\Filters\FilterLogic.cs" />
     <Compile Include="ViewModels\Filters\LogLevelFilterViewModel.cs" />
+    <Compile Include="ViewModels\Filters\ProfilesFiltersViewModel.cs" />
     <Compile Include="ViewModels\Filters\SourceFilterViewModel.cs" />
     <Compile Include="ViewModels\LogPaneServices.cs" />
     <Compile Include="ViewModels\Filters\MessageFilterViewModel.cs" />
     <Compile Include="ViewModels\Filters\ProfileFiltersViewModel.cs" />
     <Compile Include="ViewModels\UpdatableScreen.cs" />
+    <Compile Include="Views\Filters\ProfileFilters\FilterText.xaml.cs">
+      <DependentUpon>FilterText.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Filters\ProfileFilters\LogLevels.xaml.cs">
       <DependentUpon>LogLevels.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Filters\ProfileFilters\Search.xaml.cs">
       <DependentUpon>Search.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Filters\ProfilesFiltersView.xaml.cs">
+      <DependentUpon>ProfilesFiltersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LogPaneView.xaml.cs">
       <DependentUpon>LogPaneView.xaml</DependentUpon>
@@ -260,11 +267,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Filters\ProfileFilters\FilterText.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Filters\ProfileFilters\LogLevels.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Filters\ProfileFilters\Search.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Filters\ProfilesFiltersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
