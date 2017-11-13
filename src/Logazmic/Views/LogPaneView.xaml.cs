@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
+using Logazmic.Utils;
 
 namespace Logazmic.Views
 {
@@ -10,12 +12,32 @@ namespace Logazmic.Views
     /// </summary>
     public partial class LogPaneView
     {
+        private ThrottleHelper throttleHelper;
+
         public LogPaneView()
         {
+            Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
             InitializeComponent();
         }
 
+        private void OnUnloaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            throttleHelper?.Dispose();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            throttleHelper?.Dispose();
+            throttleHelper = new ThrottleHelper(150, ScrollIntoSelectedInternal);
+        }
+
         public void ScrollIntoSelected()
+        {
+            throttleHelper.Do();
+        }
+
+        private void ScrollIntoSelectedInternal(List<object> objects)
         {
             Execute.OnUIThread(() =>
             {
@@ -24,6 +46,7 @@ namespace Logazmic.Views
                 LogDataGrid.ScrollIntoView(LogDataGrid.SelectedItem);
             });
         }
+
         private void TreeViewSelectedItemChanged(object sender, RoutedEventArgs e)
         {
             TreeViewItem item = sender as TreeViewItem;

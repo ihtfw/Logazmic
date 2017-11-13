@@ -201,6 +201,7 @@
     <Compile Include="Utils\DependencyPropertyHelpers.cs" />
     <Compile Include="Utils\PropertyChangedHelpers.cs" />
     <Compile Include="Core\Filters\FilterLogic.cs" />
+    <Compile Include="Utils\ThrottleHelper.cs" />
     <Compile Include="ViewModels\Filters\LogLevelFilterViewModel.cs" />
     <Compile Include="ViewModels\Filters\ProfilesFiltersViewModel.cs" />
     <Compile Include="ViewModels\Filters\SourceFilterViewModel.cs" />
