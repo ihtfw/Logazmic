@@ -1,4 +1,7 @@
-﻿namespace Logazmic.ViewModels
+﻿using System.Net;
+using NLog;
+
+namespace Logazmic.ViewModels
 {
     using System;
     using System.IO;
@@ -17,6 +20,8 @@
 
     public sealed class MainWindowViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
     {
+        private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         #region Singleton
 
         private static readonly Lazy<MainWindowViewModel> instance = new Lazy<MainWindowViewModel>(() => new MainWindowViewModel());
@@ -54,18 +59,23 @@
                 }
             });
         }
-
+        
         private async Task<string> CheckForUpdates()
         {
+            //hack to fix exception: The request was aborted: Could not create SSL/TLS secure channel
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             UpdateManager gitHubManager;
             try
             {
                 gitHubManager = await UpdateManager.GitHubUpdateManager("https://github.com/ihtfw/Logazmic");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.Error(e, "Failed to create GitHubUpdateManager");
                 //not deployed
-                return "1.0.0";
+                return "Not deployed";
             }
 
             try
@@ -83,6 +93,8 @@
             }
             catch (Exception e)
             {
+                Logger.Error(e, "Failed to update");
+
                 DialogService.Current.ShowErrorMessageBox("Failed to update: " + e.Message);
             }
             finally

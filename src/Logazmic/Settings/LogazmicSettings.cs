@@ -51,5 +51,9 @@ namespace Logazmic.Settings
         public DataGridGridLinesVisibility GridLinesVisibility { get; set; }
 
         public bool? AutoUpdate { get; set; }
+
+        public bool EnableSelfLogging { get; set; }
+
+        public int SelfLoggingPort { get; set; } = 6789;
     }
 }

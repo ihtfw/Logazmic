@@ -1,6 +1,11 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Threading;
 using Logazmic.Services;
+using Logazmic.Settings;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace Logazmic
 {
@@ -21,6 +26,31 @@ namespace Logazmic
         {
             base.Configure();
             SetupCaliburnShortcutMessage();
+            SetupSelfLogging();
+        }
+
+        private static void SetupSelfLogging()
+        {
+            if (!LogazmicSettings.Instance.EnableSelfLogging)
+                return;
+
+            var config = new LoggingConfiguration(); 
+            
+            #region tcp
+
+            var tcpNetworkTarget = new NLogViewerTarget
+            {
+                Address = "tcp4://127.0.0.1:" + LogazmicSettings.Instance.SelfLoggingPort,
+                Encoding = Encoding.UTF8,
+                Name = "NLogViewer",
+                IncludeNLogData = false
+            };
+            var tcpNetworkRule = new LoggingRule("*", LogLevel.Trace, tcpNetworkTarget);
+            config.LoggingRules.Add(tcpNetworkRule);
+
+            #endregion
+
+            NLog.LogManager.Configuration = config;
         }
 
         private static void SetupCaliburnShortcutMessage()
