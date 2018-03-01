@@ -1,6 +1,4 @@
-﻿using Logazmic.ViewModels.Filters;
-
-namespace Logazmic.ViewModels
+﻿namespace Logazmic.ViewModels
 {
     using System;
     using System.IO;
@@ -59,25 +57,37 @@ namespace Logazmic.ViewModels
 
         private async Task<string> CheckForUpdates()
         {
+            UpdateManager gitHubManager;
             try
             {
-                using (var gitHubManager = await UpdateManager.GitHubUpdateManager("https://github.com/ihtfw/Logazmic"))
+                gitHubManager = await UpdateManager.GitHubUpdateManager("https://github.com/ihtfw/Logazmic");
+            }
+            catch (Exception)
+            {
+                //not deployed
+                return "1.0.0";
+            }
+
+            try
+            {
+                var releaseEntry = await gitHubManager.UpdateApp(progress =>
                 {
-                    var releaseEntry = await gitHubManager.UpdateApp();
-                    if (releaseEntry != null)
-                    {
-                        return gitHubManager.CurrentlyInstalledVersion() + " => " + releaseEntry.Version;
-                    }
-                    return gitHubManager.CurrentlyInstalledVersion().ToString();
+                    Version = "Updating... " + progress + "%";
+                });
+                if (releaseEntry != null)
+                {
+                    return gitHubManager.CurrentlyInstalledVersion() + " => " + releaseEntry.Version;
                 }
+
+                return gitHubManager.CurrentlyInstalledVersion().ToString();
             }
             catch (Exception e)
             {
-                if (e.Message != "Update.exe not found, not a Squirrel-installed app?")
-                {
-                    DialogService.Current.ShowErrorMessageBox("Failed to update: " + e.Message);
-                    return "1.0.0";
-                }
+                DialogService.Current.ShowErrorMessageBox("Failed to update: " + e.Message);
+            }
+            finally
+            {
+                gitHubManager.Dispose();
             }
 
             return "1.0.0";

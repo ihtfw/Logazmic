@@ -5,7 +5,7 @@ $curDir = (Split-Path -Path $MyInvocation.MyCommand.Definition -Parent)
 $slnDir = $curDir + "\..\src\"
 $projDir = $slnDir + $projDirName+ "\"
 
-$version = (Get-Date -format yyyy.M.d) + "." + $env:appveyor_build_number;
+$version = (Get-Date -format yyMM.d) + "." + $env:appveyor_build_number;
 
 $nuspecPath = ($curDir + "\" + $projName + ".nuspec")
 $nupkgPath = ($curDir + "\" + $projName + "." + $version + ".nupkg")

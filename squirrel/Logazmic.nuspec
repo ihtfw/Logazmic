@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Logazmic</id>
-    <version>0.0.0.0</version>
+    <version>0.0.0</version>
     <title>Logazmic</title>
     <authors>ihtfw &amp; susloparovdenis</authors>
     <owners>ihtfw &amp; susloparovdenis</owners>
