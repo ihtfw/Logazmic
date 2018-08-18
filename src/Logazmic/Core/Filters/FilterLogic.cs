@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Logazmic.Core.Log;
+using NuGet;
 
 namespace Logazmic.Core.Filters
 {
@@ -9,7 +10,7 @@ namespace Logazmic.Core.Filters
     {
         private readonly FiltersProfile filtersProfile;
 
-        private List<string> logSourceLeaves = new List<string>();
+        private readonly HashSet<string> logSourceLeaves = new HashSet<string>();
 
         public FilterLogic(FiltersProfile filtersProfile)
         {
@@ -49,7 +50,7 @@ namespace Logazmic.Core.Filters
                 }
             }
 
-            if (logSourceLeaves.All(l => l != logMessage.LoggerName))
+            if (!logSourceLeaves.Contains(logMessage.LoggerName))
             {
                 return true;
             }
@@ -58,7 +59,8 @@ namespace Logazmic.Core.Filters
 
         public void RebuildLeaves()
         {
-            logSourceLeaves = filtersProfile.SourceFilterRoot.Leaves().Where(l => l.IsChecked).Select(c => c.FullName).Distinct().ToList();
+            logSourceLeaves.Clear();
+            logSourceLeaves.AddRange(filtersProfile.SourceFilterRoot.Leaves().Where(l => l.IsChecked).Select(c => c.FullName));
         }
     }
 }

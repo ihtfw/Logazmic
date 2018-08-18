@@ -88,8 +88,7 @@ namespace Logazmic.Core.Filters
                 }
             }
 
-            if (!Children.Any())
-                yield return this;
+            yield return this;
         }
 
 
