@@ -1,5 +1,5 @@
 version: .{build}
-os: Visual Studio 2015
+os: Visual Studio 2017
 init:
   - ps: Update-AppveyorBuild -Version "$(Get-Date -format yyyy.M.d).$env:appveyor_build_number"
 before_build:

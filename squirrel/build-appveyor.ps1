@@ -22,7 +22,7 @@ Write-Host "------------------Create nupkg------------------"
 
 Write-Host "------------------Release------------------"
 Write-Host $nupkgPath
-& ($curDir + "\bin\squirrel.exe") --releasify $nupkgPath | Out-Null
+& ($curDir + "\bin\squirrel.exe") --releasify $nupkgPath --no-msi | Out-Null
 Write-Host "------------------Completed------------------"
 
 
