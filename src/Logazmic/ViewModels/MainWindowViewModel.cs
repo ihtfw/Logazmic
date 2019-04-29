@@ -69,7 +69,7 @@ namespace Logazmic.ViewModels
             UpdateManager gitHubManager;
             try
             {
-                gitHubManager = await UpdateManager.GitHubUpdateManager("https://github.com/ihtfw/Logazmic");
+                gitHubManager = await UpdateManager.GitHubUpdateManager("https://github.com/ihtfw/Logazmic", "Logazmic", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             }
             catch (Exception e)
             {

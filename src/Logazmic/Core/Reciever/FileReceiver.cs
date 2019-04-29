@@ -13,6 +13,8 @@
     /// </summary>
     public class FileReceiver : ReceiverBase
     {
+        private static readonly string EventCloseTag = "</log4j:event>";
+
         public enum FileFormatEnums
         {
             Log4jXml,
@@ -136,11 +138,14 @@
                     sb.AppendLine(line);
 
                     // This condition allows us to process events that spread over multiple lines
-                    if (line.Contains("</log4j:event>"))
+                    var index = line.IndexOf(EventCloseTag, StringComparison.Ordinal);
+                    if (index >= 0)
                     {
                         LogMessage logMsg = ReceiverUtils.ParseLog4JXmlLogEvent(sb.ToString(), null);
                         logMsgs.Add(logMsg);
                         sb = new StringBuilder();
+                        //add tail to next iteration. it is nessecary if there are some problems with line endings
+                        sb.Append(line.Substring(index + EventCloseTag.Length));
                     }
                 }
             }
