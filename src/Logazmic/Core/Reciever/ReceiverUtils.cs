@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using NLog.Targets.Wrappers;
 using NuGet;
 using Squirrel.Bsdiff;
 
@@ -70,26 +71,28 @@ namespace Logazmic.Core.Reciever
 
         public static IEnumerable<LogMessage> ReadEvents(Stream logStream, string defaultLogger, ref string tail)
         {
-            tail = string.Empty;
-
             const string startTag = "<log4j:event";
             const string endTag = "</log4j:event>";
 
+            // tail > 256kb clean up
+            if (!string.IsNullOrEmpty(tail) && tail.Length >  262144)
+            {
+                tail = string.Empty;
+            }
+
             byte[] buffer = new byte[10 * 1024];
             var bufferStart = 0;
-
-            if (!string.IsNullOrEmpty(tail))
-            {
-                var bytes = Encoding.UTF8.GetBytes(tail);
-                Array.Copy(bytes, buffer, bytes.Length);
-                bufferStart = bytes.Length;
-            }
 
             var bytesRead = logStream.Read(buffer, bufferStart, buffer.Length - bufferStart);
             if (bytesRead == 0)
                 throw new IOException("No data available!");
 
-            var text = Encoding.UTF8.GetString(buffer);
+            var text = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            if (!string.IsNullOrEmpty(tail))
+            {
+                text = tail + text;
+            }
+
             var result = new List<LogMessage>();
 
             var startIndex = text.IndexOf(startTag, StringComparison.InvariantCulture);
@@ -101,6 +104,11 @@ namespace Logazmic.Core.Reciever
                 result.Add(ParseLog4JXmlLogEvent(sub, defaultLogger));
                 startIndex += sub.Length;
                 endIndex = text.IndexOf(endTag, startIndex, StringComparison.InvariantCulture);
+            }
+
+            if (startIndex != -1 && endIndex == -1 && startIndex != text.Length)
+            {
+                tail = text.Substring(startIndex, text.Length - startIndex);
             }
 
             return result;
