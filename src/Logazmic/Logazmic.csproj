@@ -193,6 +193,17 @@
     <Compile Include="Core\Filters\LogLevelFilter.cs" />
     <Compile Include="Core\Filters\MessageFilter.cs" />
     <Compile Include="Core\Filters\SourceFilter.cs" />
+    <Compile Include="Core\Readers\LogFormats.cs" />
+    <Compile Include="Core\Readers\LogReaderFactory.cs" />
+    <Compile Include="Core\Readers\Parsers\AXmlLogParser.cs" />
+    <Compile Include="Core\Readers\Parsers\FlatLogParser.cs" />
+    <Compile Include="Core\Readers\Parsers\ILogParser.cs" />
+    <Compile Include="Core\Readers\Parsers\Log4jParser.cs" />
+    <Compile Include="Core\Readers\Parsers\LogEventParseItem.cs" />
+    <Compile Include="Core\Readers\ILogReaderFactory.cs" />
+    <Compile Include="Core\Readers\ILogStreamReader.cs" />
+    <Compile Include="Core\Readers\LogStreamReader.cs" />
+    <Compile Include="Core\Readers\Parsers\LogParserExtensions.cs" />
     <Compile Include="Core\Reciever\UdpReciever.cs" />
     <Compile Include="InputBindingTrigger.cs" />
     <Compile Include="Services\DialogService.cs" />
@@ -311,7 +322,6 @@
     <Compile Include="Core\Log\LogMessage.cs" />
     <Compile Include="Core\Reciever\ReceiverBase.cs" />
     <Compile Include="Core\Reciever\FileReceiver.cs" />
-    <Compile Include="Core\Reciever\ReceiverUtils.cs" />
     <Compile Include="Core\Reciever\TcpReceiver.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

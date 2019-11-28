@@ -1,4 +1,7 @@
-﻿namespace Logazmic.Core.Reciever
+﻿using Logazmic.Core.Readers;
+using Logazmic.Core.Readers.Parsers;
+
+namespace Logazmic.Core.Reciever
 {
     using System;
     using System.Net;
@@ -51,6 +54,8 @@
 
         private void Start()
         {
+            var logParser = LogReaderFactory.LogParser(LogFormat);
+
             while (true)
             {
                 try
@@ -58,7 +63,7 @@
                     byte[] buffer = udpClient.Receive(ref remoteEndPoint);
                     string loggingEvent = System.Text.Encoding.UTF8.GetString(buffer);
 
-                    LogMessage logMsg = ReceiverUtils.ParseLog4JXmlLogEvent(loggingEvent, "UdpLogger");
+                    LogMessage logMsg = logParser.TryParseLogEvent(loggingEvent, "UdpLogger");
                     logMsg.LoggerName = string.Format("{0}_{1}", remoteEndPoint.Address.ToString().Replace(".", "-"), logMsg.LoggerName);
                     OnNewMessage(logMsg);
                 }

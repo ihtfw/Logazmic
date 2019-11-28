@@ -1,4 +1,6 @@
-﻿namespace Logazmic.Core.Reciever
+﻿using Logazmic.Core.Readers;
+
+namespace Logazmic.Core.Reciever
 {
     using System;
 
@@ -14,6 +16,14 @@
 
         [JsonIgnore]
         public virtual string Description { get { return null; } }
+        
+        /// <summary>
+        /// Must be set externally!
+        /// </summary>
+        [JsonIgnore]
+        public ILogReaderFactory LogReaderFactory { get; set; }
+
+        public string LogFormat { get; set; }
 
         public void Dispose()
         {

@@ -1,4 +1,5 @@
 using Logazmic.Core.Filters;
+using Logazmic.Core.Readers;
 
 namespace Logazmic.Settings
 {
@@ -55,5 +56,7 @@ namespace Logazmic.Settings
         public bool EnableSelfLogging { get; set; }
 
         public int SelfLoggingPort { get; set; } = 6789;
+
+        public string LogFormat { get; set; } = LogFormats.Log4j;
     }
 }

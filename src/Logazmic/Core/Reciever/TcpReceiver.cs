@@ -1,5 +1,4 @@
-﻿using System.Text;
-using NuGet;
+﻿using Logazmic.Core.Readers;
 
 namespace Logazmic.Core.Reciever
 {
@@ -8,7 +7,6 @@ namespace Logazmic.Core.Reciever
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
-    using System.Threading.Tasks;
 
     public class TcpReceiver : ReceiverBase
     {
@@ -61,15 +59,16 @@ namespace Logazmic.Core.Reciever
         {
             try
             {
+                var logStreamReader = LogReaderFactory.LogStreamReader(LogFormat);
+                logStreamReader.DefaultLogger = "TcpLogger";
+
                 using (var socket = (Socket) newSocket)
                 {
                     using (var ns = new NetworkStream(socket, FileAccess.Read, false))
                     {
-                        string tail = null;
                         while (server != null)
                         {
-                            var logMessages = ReceiverUtils.ReadEvents(ns, "TcpLogger", ref tail);
-                            foreach (var logMessage in logMessages)
+                            foreach (var logMessage in logStreamReader.NextLogEvents(ns))
                             {
                                 logMessage.LoggerName = string.Format(":{1}.{0}", logMessage.LoggerName, Port);
                                 OnNewMessage(logMessage);

@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logazmic", "Logazmic\Logazmic.csproj", "{9455CD69-7FFE-4A38-88A5-47F2D9BB1C3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLogSender", "NLogSender\NLogSender.csproj", "{99075202-822D-4564-9E6A-7FD878A177A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logazmic.Integration", "Logazmic.Integration\Logazmic.Integration.csproj", "{8758219F-7893-421E-B301-334A07518F57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logazmic.Tests", "Logazmic.Tests\Logazmic.Tests.csproj", "{2FDA4ACC-F86A-4F09-827D-8D0CDC4AF699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +29,15 @@ Global
 		{8758219F-7893-421E-B301-334A07518F57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8758219F-7893-421E-B301-334A07518F57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8758219F-7893-421E-B301-334A07518F57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FDA4ACC-F86A-4F09-827D-8D0CDC4AF699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FDA4ACC-F86A-4F09-827D-8D0CDC4AF699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FDA4ACC-F86A-4F09-827D-8D0CDC4AF699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FDA4ACC-F86A-4F09-827D-8D0CDC4AF699}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F37DD86C-39E2-490E-82A6-182976897B04}
 	EndGlobalSection
 EndGlobal

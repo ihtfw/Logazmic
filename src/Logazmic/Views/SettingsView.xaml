@@ -6,6 +6,7 @@
            xmlns:ma="http://metro.mahapps.com/winfx/xaml/controls"
            xmlns:controls="clr-namespace:Logazmic.Controls"
            xmlns:settings="clr-namespace:Logazmic.Settings"
+           xmlns:system="clr-namespace:System;assembly=mscorlib"
            mc:Ignorable="d"
            Theme="Inverse"
            d:DesignHeight="600" d:DesignWidth="300"
@@ -48,6 +49,14 @@
 
     </ma:Flyout.Resources>
     <StackPanel DataContext="{x:Static settings:LogazmicSettings.Instance}">
+        <TextBlock Style="{StaticResource DescriptionHeaderStyle}">Mode</TextBlock>
+        <controls:TwoColumnGrid>
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Log format:</TextBlock>
+            <ComboBox SelectedItem="{Binding LogFormat}">
+                <system:String>Log4j</system:String>
+                <system:String>Flat</system:String>
+            </ComboBox>
+        </controls:TwoColumnGrid>
         <TextBlock Style="{StaticResource DescriptionHeaderStyle}">Appearance</TextBlock>
         <controls:TwoColumnGrid>
             <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Grid font size:</TextBlock>

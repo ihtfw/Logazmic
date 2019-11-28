@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Logazmic.Core.Readers;
 using NLog;
 
 namespace Logazmic.ViewModels
@@ -20,18 +21,26 @@ namespace Logazmic.ViewModels
 
     public sealed class MainWindowViewModel : Conductor<LogPaneViewModel>.Collection.OneActive, IDisposable
     {
+        private readonly ILogReaderFactory _logReaderFactory;
         private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         #region Singleton
 
-        private static readonly Lazy<MainWindowViewModel> instance = new Lazy<MainWindowViewModel>(() => new MainWindowViewModel());
+        private static readonly Lazy<MainWindowViewModel> instance = new Lazy<MainWindowViewModel>(CreateMainWindowViewModel);
+
+        private static MainWindowViewModel CreateMainWindowViewModel()
+        {
+            var logReaderFactory = new LogReaderFactory();
+            return new MainWindowViewModel(logReaderFactory);
+        }
 
         public static MainWindowViewModel Instance => instance.Value;
 
         #endregion
 
-        private MainWindowViewModel()
+        private MainWindowViewModel(ILogReaderFactory logReaderFactory)
         {
+            _logReaderFactory = logReaderFactory;
             DisplayName = "Logazmic";
             LoadReciversFromSettings();
         }
@@ -80,16 +89,22 @@ namespace Logazmic.ViewModels
 
             try
             {
+                var currentlyInstalledVersion = gitHubManager.CurrentlyInstalledVersion();
+                if (currentlyInstalledVersion == null)
+                {
+                    return "Not deployed";
+                }
+
                 var releaseEntry = await gitHubManager.UpdateApp(progress =>
                 {
                     Version = "Updating... " + progress + "%";
                 });
                 if (releaseEntry != null)
                 {
-                    return gitHubManager.CurrentlyInstalledVersion() + " => " + releaseEntry.Version;
+                    return currentlyInstalledVersion + " => " + releaseEntry.Version;
                 }
 
-                return gitHubManager.CurrentlyInstalledVersion().ToString();
+                return currentlyInstalledVersion.ToString();
             }
             catch (Exception e)
             {
@@ -115,10 +130,17 @@ namespace Logazmic.ViewModels
 
         public void AddReceiver(ReceiverBase receiver)
         {
+            receiver.LogReaderFactory = _logReaderFactory;
+            if (string.IsNullOrEmpty(receiver.LogFormat))
+            {
+                receiver.LogFormat = LogazmicSettings.Instance.LogFormat;
+            }
+
             if (!LogazmicSettings.Instance.Receivers.Contains(receiver))
             {
                 LogazmicSettings.Instance.Receivers.Add(receiver);
             }
+
             var logPaneViewModel = new LogPaneViewModel(receiver);
             logPaneViewModel.Deactivated += OnTabDeactivated;
             Items.Add(logPaneViewModel);
@@ -170,7 +192,7 @@ namespace Logazmic.ViewModels
         }
 
         #region Actions
-
+        
         public async void AddTCPReciever()
         {
             var result = await DialogService.Current.ShowInputDialog("TCP Reciever", "Enter port:");
@@ -217,11 +239,12 @@ namespace Logazmic.ViewModels
                     return;
                 }
 
-                AddReceiver(new FileReceiver
-                            {
-                                FileToWatch = path,
-                                FileFormat = FileReceiver.FileFormatEnums.Log4jXml,
-                            });
+                var fileReceiver = new FileReceiver
+                {
+                    FileToWatch = path,
+                    LogFormat = _logReaderFactory.GetLogFormatByFileExtension(Path.GetExtension(path))
+                };
+                AddReceiver(fileReceiver);
             }
             catch (Exception e)
             {
@@ -232,7 +255,7 @@ namespace Logazmic.ViewModels
         public void Open()
         {
             string path;
-            var res = DialogService.Current.ShowOpenDialog(out path, ".log4j", "Nlog log4jxml|*.log4jxml;*.log4j");
+            var res = DialogService.Current.ShowOpenDialog(out path, ".log4j", "Nlog log4jxml|*.log4jxml;*.log4j|Flat|*.log");
             if (!res)
             {
                 return;

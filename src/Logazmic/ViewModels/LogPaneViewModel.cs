@@ -117,7 +117,18 @@ namespace Logazmic.ViewModels
             //SelectedLogMessage.LastLoggerName
         }
 
-        public string ToolTip { get { return Receiver.Description; } }
+        public string ToolTip
+        {
+            get
+            {
+                var format = "LogFormat: " + Receiver.LogFormat;
+                if (string.IsNullOrEmpty(Receiver.Description))
+                {
+                    return format;
+                }
+                return Receiver.Description + Environment.NewLine + format;
+            }
+        }
 
         public bool CanSyncWithSelectedItem { get { return SelectedLogMessage != null; } }
 
