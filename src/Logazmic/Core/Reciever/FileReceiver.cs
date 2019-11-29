@@ -102,13 +102,19 @@ namespace Logazmic.Core.Reciever
             // Seek to the last file length
             _fileReader.BaseStream.Seek(_lastFileLength, SeekOrigin.Begin);
 
-            foreach (var logMessage in _logStreamReader.NextLogEvents(_fileReader.BaseStream))
+            bool any;
+            do
             {
-                OnNewMessage(logMessage);
-            }
+                any = false;
+                foreach (var logMessage in _logStreamReader.NextLogEvents(_fileReader.BaseStream))
+                {
+                    any = true;
+                    OnNewMessage(logMessage);
+                }
 
-            // Update the last file length
-            _lastFileLength = _fileReader.BaseStream.Position;
+                // Update the last file length
+                _lastFileLength = _fileReader.BaseStream.Position;
+            } while (any);
         }
     }
 }
