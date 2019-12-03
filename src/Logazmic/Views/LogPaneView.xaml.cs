@@ -12,7 +12,7 @@ namespace Logazmic.Views
     /// </summary>
     public partial class LogPaneView
     {
-        private ThrottleHelper throttleHelper;
+        private ThrottleHelper _throttleHelper;
 
         public LogPaneView()
         {
@@ -23,18 +23,18 @@ namespace Logazmic.Views
 
         private void OnUnloaded(object sender, RoutedEventArgs routedEventArgs)
         {
-            throttleHelper?.Dispose();
+            _throttleHelper?.Dispose();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
-            throttleHelper?.Dispose();
-            throttleHelper = new ThrottleHelper(150, ScrollIntoSelectedInternal);
+            _throttleHelper?.Dispose();
+            _throttleHelper = new ThrottleHelper(150, ScrollIntoSelectedInternal);
         }
 
         public void ScrollIntoSelected()
         {
-            throttleHelper.Do();
+            _throttleHelper?.Do();
         }
 
         private void ScrollIntoSelectedInternal(List<object> objects)
@@ -49,8 +49,7 @@ namespace Logazmic.Views
 
         private void TreeViewSelectedItemChanged(object sender, RoutedEventArgs e)
         {
-            TreeViewItem item = sender as TreeViewItem;
-            if (item != null)
+            if (sender is TreeViewItem item)
             {
                 item.BringIntoView();
                 e.Handled = true;

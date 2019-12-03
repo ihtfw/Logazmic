@@ -10,7 +10,7 @@ namespace Logazmic.Core.Reciever
 
     public abstract class ReceiverBase : IDisposable
     {
-        private bool isInitilized;
+        private bool _isInitilized;
 
         public string DisplayName { get; set; }
 
@@ -32,12 +32,12 @@ namespace Logazmic.Core.Reciever
 
         public void Initialize()
         {
-            if (isInitilized)
+            if (_isInitilized)
             {
                 return;
             }
             DoInitilize();
-            isInitilized = true;
+            _isInitilized = true;
         }
 
         public abstract void Terminate();

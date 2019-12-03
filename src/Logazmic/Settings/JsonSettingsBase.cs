@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using NLog;
 
 namespace Logazmic.Settings
 {
@@ -9,39 +10,43 @@ namespace Logazmic.Settings
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using System.Runtime.Serialization.Formatters;
     
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
     public abstract class JsonSettingsBase : INotifyPropertyChanged
     {
-        #region INotifyPropertyChanged implimentation
+        protected readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        [JsonIgnore]
+        public readonly object SyncRoot = new object();
+        
+        public static JsonSerializer CreateJsonSerializer()
         {
-            var handler = PropertyChanged;
-            if (handler != null)
+            var serializer = new JsonSerializer
             {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+                TypeNameHandling = TypeNameHandling.Auto,
+                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                ObjectCreationHandling = ObjectCreationHandling.Replace
+            };
+
+            serializer.Converters.Add(new StringEnumConverter());
+            return serializer;
         }
 
-        #endregion
-
-        private static readonly JsonSerializerSettings serilizerSettings = new JsonSerializerSettings
-                                                                           {
-                                                                               TypeNameHandling = TypeNameHandling.Auto,
-                                                                               TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
-                                                                               ObjectCreationHandling = ObjectCreationHandling.Replace
-        };
-
-        static JsonSettingsBase()
+        private static JsonSerializerSettings CreateSerializerSettings()
         {
-            serilizerSettings.Converters.Add(new StringEnumConverter());
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                ObjectCreationHandling = ObjectCreationHandling.Replace
+            };
+            
+            settings.Converters.Add(new StringEnumConverter());
+
+            return settings;
         }
         
         private void SetupAutoSave()
@@ -56,16 +61,19 @@ namespace Logazmic.Settings
             }
         }
 
-        protected virtual void SetDefaults()
+        private void SetDefaults()
         {
-            foreach (var propertyInfo in GetType().GetProperties())
+            lock (SyncRoot)
             {
-                if (!propertyInfo.IsDefined(typeof(DefaultValueAttribute)))
+                foreach (var propertyInfo in GetType().GetProperties())
                 {
-                    continue;
+                    if (!propertyInfo.IsDefined(typeof(DefaultValueAttribute)))
+                    {
+                        continue;
+                    }
+                    var value = propertyInfo.GetCustomAttributes<DefaultValueAttribute>().Single().DefaultValue;
+                    propertyInfo.SetValue(this, value);
                 }
-                var value = propertyInfo.GetCustomAttributes<DefaultValueAttribute>().Single().DefaultValue;
-                propertyInfo.SetValue(this, value);
             }
         }
             
@@ -81,7 +89,14 @@ namespace Logazmic.Settings
             else
             {
                 var json = File.ReadAllText(path);
-                settings = JsonConvert.DeserializeObject<T>(json, serilizerSettings);
+                if (string.IsNullOrEmpty(json))
+                {
+                    settings = new T();
+                }
+                else
+                {
+                    settings = JsonConvert.DeserializeObject<T>(json, CreateSerializerSettings());
+                }
             }
 
             settings.SetDefaults();
@@ -92,9 +107,21 @@ namespace Logazmic.Settings
 
         protected void Save(string path)
         {
-            new FileInfo(path).Directory.Create();
-            var json = JsonConvert.SerializeObject(this, Formatting.Indented, serilizerSettings);
-            File.WriteAllText(path, json);
+            lock (SyncRoot)
+            {
+                new FileInfo(path).Directory?.Create();
+
+                using (var streamWriter = new StreamWriter(path))
+                {
+                    using (var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented })
+                    {
+                        var jsonSerializer = CreateJsonSerializer();
+                        jsonSerializer.Serialize(jsonTextWriter, this);
+                    }
+                }
+            }
+
+            Logger.Trace("Saved!");
         }
 
         [AttributeUsage(AttributeTargets.Property)]
@@ -107,5 +134,17 @@ namespace Logazmic.Settings
 
             public object DefaultValue { get; set; }
         }
+
+        #region INotifyPropertyChanged implimentation
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
     }
 }

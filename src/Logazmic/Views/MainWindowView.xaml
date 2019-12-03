@@ -16,7 +16,9 @@
                    cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];
                    [Shortcut Control+O] = [Action Open];
                    [Shortcut Control+E] = [Action ExcludeLogEntry];
-                   [Shortcut F3] = [Action FindNext];"
+                   [Shortcut F3] = [Action FindNext];
+                   [Shortcut Control+W] = [Action CloseActiveTab()];
+                   [Shortcut Control+F4] = [Action CloseActiveTab()];"
                    WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
                    Icon="../Resources/appbar.flag.bear.ico"
                    ShowIconOnTitleBar="True">

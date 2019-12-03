@@ -7,7 +7,7 @@ namespace Logazmic.Core.Readers
     public interface ILogStreamReader
     {
         string DefaultLogger { get; set; }
-
-        IEnumerable<LogMessage> NextLogEvents(Stream stream);
+        
+        IEnumerable<LogMessage> NextLogEvents(Stream stream, out int bytesRead);
     }
 }

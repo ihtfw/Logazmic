@@ -66,14 +66,15 @@ namespace Logazmic.Core.Reciever
                 {
                     using (var ns = new NetworkStream(socket, FileAccess.Read, false))
                     {
-                        while (server != null)
+                        int bytesRead;
+                        do
                         {
-                            foreach (var logMessage in logStreamReader.NextLogEvents(ns))
+                            foreach (var logMessage in logStreamReader.NextLogEvents(ns, out bytesRead))
                             {
                                 logMessage.LoggerName = string.Format(":{1}.{0}", logMessage.LoggerName, Port);
                                 OnNewMessage(logMessage);
                             }
-                        }
+                        } while (server != null && bytesRead > 0);
                     }
                 }
             }

@@ -163,13 +163,23 @@ namespace Logazmic.ViewModels
 
         private void OnTabDeactivated(object sender, DeactivationEventArgs args)
         {
-            if (args.WasClosed)
+            if (!args.WasClosed) return;
+
+            var pane = (LogPaneViewModel)sender;
+            Items.Remove(pane);
+
+            Task.Factory.StartNew(() =>
             {
-                var pane = (LogPaneViewModel)sender;
-                LogazmicSettings.Instance.Receivers.Remove(pane.Receiver);
-                pane.Dispose();
-                Items.Remove(pane);
-            }
+                try
+                {
+                    LogazmicSettings.Instance.Receivers.Remove(pane.Receiver);
+                    pane.Dispose();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Failed to remove or dispose receiver");
+                }
+            });
         }
 
         public void OnDrop(DragEventArgs e)
@@ -272,6 +282,11 @@ namespace Logazmic.ViewModels
         public void FindNext()
         {
             ActiveItem?.FindNext();
+        }
+
+        public void CloseActiveTab()
+        {
+            ActiveItem?.TryClose();
         }
 
         public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)

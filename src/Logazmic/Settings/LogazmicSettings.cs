@@ -19,7 +19,8 @@ namespace Logazmic.Settings
 
         private static readonly Lazy<LogazmicSettings> instance = new Lazy<LogazmicSettings>(() => Load<LogazmicSettings>(path));
 
-        public static LogazmicSettings Instance { get { return instance.Value; } }
+        public static LogazmicSettings Instance => instance.Value;
+
         public override void Save()
         {
             Save(path);
@@ -27,13 +28,12 @@ namespace Logazmic.Settings
 
         #endregion
         
-        private FiltersProfiles filtersProfiles;
-        private ObservableCollection<ReceiverBase> receivers;
+        private ObservableCollection<ReceiverBase> _receivers;
 
         public ObservableCollection<ReceiverBase> Receivers
         {
-            get { return receivers ?? (receivers = new ObservableCollection<ReceiverBase>()); }
-            set { receivers = value; }
+            get => _receivers ?? (_receivers = new ObservableCollection<ReceiverBase>());
+            set => _receivers = value;
         }
 
         [DefaultValue(12)]
