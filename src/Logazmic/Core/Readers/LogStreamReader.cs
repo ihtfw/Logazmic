@@ -12,7 +12,7 @@ namespace Logazmic.Core.Readers
     {
         private readonly ILogParser _logParser;
         private string _tail = string.Empty;
-        private byte[] _buffer = new byte[10 * 1024];
+        private byte[] _buffer;
 
         public int MaxTailSize { get; set; } = 262144;
 
@@ -21,6 +21,14 @@ namespace Logazmic.Core.Readers
         public LogStreamReader(ILogParser logParser)
         {
             _logParser = logParser;
+
+            BufferSize = 10 * 1024;
+        }
+
+        public int BufferSize
+        {
+            get => _buffer.Length;
+            set => _buffer = new byte[value];
         }
 
         public IEnumerable<LogMessage> NextLogEvents(Stream stream, out int bytesRead)

@@ -1,4 +1,5 @@
-﻿using Logazmic.Core.Readers;
+﻿using System.Linq;
+using Logazmic.Core.Readers;
 
 namespace Logazmic.Core.Reciever
 {
@@ -40,7 +41,7 @@ namespace Logazmic.Core.Reciever
         
         #region AReceiver Members
 
-        protected override void DoInitilize()
+        protected override void DoInitialize()
         {
             if (!File.Exists(FileToWatch))
             {
@@ -48,21 +49,22 @@ namespace Logazmic.Core.Reciever
             }
 
             _logStreamReader = LogReaderFactory.LogStreamReader(LogFormat);
+            _logStreamReader.BufferSize = 1 * 1024 * 1024; // 1 MB
 
             _fileReader = new StreamReader(new FileStream(FileToWatch, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
             _lastFileLength = 0;
 
+            ReadFile();
+
             string path = Path.GetDirectoryName(FileToWatch);
             _filename = Path.GetFileName(FileToWatch);
             _fileWatcher = new FileSystemWatcher(path, _filename)
-                          {
-                              NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
-                          };
+            {
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
+            };
             _fileWatcher.Changed += OnFileChanged;
             _fileWatcher.EnableRaisingEvents = true;
-
-            ReadFile();
         }
 
         public override void Terminate()
@@ -105,10 +107,9 @@ namespace Logazmic.Core.Reciever
             int bytesRead;
             do
             {
-                foreach (var logMessage in _logStreamReader.NextLogEvents(_fileReader.BaseStream, out bytesRead))
-                {
-                    OnNewMessage(logMessage);
-                }
+                var nextLogEvents = _logStreamReader.NextLogEvents(_fileReader.BaseStream, out bytesRead).ToList();
+                if (nextLogEvents.Any())
+                    OnNewMessages(nextLogEvents);
 
                 // Update the last file length
                 _lastFileLength = _fileReader.BaseStream.Position;

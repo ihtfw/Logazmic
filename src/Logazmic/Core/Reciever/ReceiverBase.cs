@@ -1,4 +1,5 @@
-﻿using Logazmic.Core.Readers;
+﻿using System.Collections.Generic;
+using Logazmic.Core.Readers;
 
 namespace Logazmic.Core.Reciever
 {
@@ -10,7 +11,7 @@ namespace Logazmic.Core.Reciever
 
     public abstract class ReceiverBase : IDisposable
     {
-        private bool _isInitilized;
+        public bool IsInitialized { get; private set; }
 
         public string DisplayName { get; set; }
 
@@ -32,42 +33,38 @@ namespace Logazmic.Core.Reciever
 
         public void Initialize()
         {
-            if (_isInitilized)
+            if (IsInitialized)
             {
                 return;
             }
-            DoInitilize();
-            _isInitilized = true;
+            DoInitialize();
+            IsInitialized = true;
+
+            Initialized?.Invoke(this, EventArgs.Empty);
         }
 
         public abstract void Terminate();
 
-        protected abstract void DoInitilize();
+        protected abstract void DoInitialize();
 
         #region Events
 
+        public event EventHandler Initialized;
+
         public event EventHandler<LogMessage> NewMessage;
 
-        public event EventHandler<LogMessage[]> NewMessages;
+        public event EventHandler<IReadOnlyCollection<LogMessage>> NewMessages;
 
         #region Invocators
 
         protected virtual void OnNewMessage(LogMessage e)
         {
-            var handler = NewMessage;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            NewMessage?.Invoke(this, e);
         }
 
-        protected virtual void OnNewMessages(LogMessage[] e)
+        protected virtual void OnNewMessages(IReadOnlyCollection<LogMessage> e)
         {
-            var handler = NewMessages;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            NewMessages?.Invoke(this, e);
         }
 
         #endregion

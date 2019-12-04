@@ -22,7 +22,7 @@ namespace Logazmic.Core.Reciever
             BufferSize = 128 * 1024; // 128Kb
         }
 
-        protected override void DoInitilize()
+        protected override void DoInitialize()
         {
             if (server != null) return;
 

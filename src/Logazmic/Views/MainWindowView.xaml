@@ -16,6 +16,8 @@
                    cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];
                    [Shortcut Control+O] = [Action Open];
                    [Shortcut Control+E] = [Action ExcludeLogEntry];
+                   [Shortcut Control+X] = [Action Clear()];
+                   [Shortcut Control+L] = [Action ScrollIntoSelected()];
                    [Shortcut F3] = [Action FindNext];
                    [Shortcut Control+W] = [Action CloseActiveTab()];
                    [Shortcut Control+F4] = [Action CloseActiveTab()];"
@@ -31,7 +33,7 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
 
 
-            <controls:MetroButton cal:Message.Attach="Open" ToolTip="Open File"
+            <controls:MetroButton cal:Message.Attach="Open" ToolTip="Open File. Control+O"
                                   Visual="{DynamicResource appbar_folder_open}" />
 
             <controls:CircleMenuButton Visual="{DynamicResource appbar_add}" ToolTip="Add reciever">
@@ -45,7 +47,7 @@
 
             <Rectangle Width="15" />
 
-            <controls:MetroButton cal:Action.TargetWithoutContext="{Binding ActiveItem}" cal:Message.Attach="Clear" ToolTip="Clear log"
+            <controls:MetroButton cal:Action.TargetWithoutContext="{Binding ActiveItem}" cal:Message.Attach="Clear" ToolTip="Clear log; Control+X"
                                   Visual="{DynamicResource appbar_close}" />
 
             <controls:MetroButton cal:Action.TargetWithoutContext="{Binding ActiveItem}" cal:Message.Attach="CopyCurrentToClipboard" ToolTip="Copy current rows to clipboard"
@@ -56,7 +58,7 @@
                                         Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll" />
 
 
-            <controls:MetroButton cal:Message.Attach="ScrollIntoSelected('true')" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Scroll into selected item"
+            <controls:MetroButton cal:Message.Attach="ScrollIntoSelected('true')" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Scroll into selected item; Control+L"
                                   Visual="{DynamicResource appbar_radar}" />
 
             <Rectangle Width="15" />
@@ -79,7 +81,7 @@
 
             <ContentControl Margin="5,0,5,0" Width="150" VerticalAlignment="Center"
                             cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
-                            cal:View.Context="Search" />
+                            cal:View.Context="Search"/>
 
             <ContentControl Margin="5,0,5,0" Width="150" VerticalAlignment="Center"
                             cal:View.Model="{Binding Path=ActiveItem.ProfilesFiltersViewModel}"/>

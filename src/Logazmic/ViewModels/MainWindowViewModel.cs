@@ -279,6 +279,16 @@ namespace Logazmic.ViewModels
             ActiveItem?.ProfileFiltersViewModel.AddMessageFilter(ActiveItem?.SelectedLogMessage?.Message);
         }
 
+        public void ScrollIntoSelected()
+        {
+            ActiveItem?.ScrollIntoSelected(true);
+        }
+
+        public void Clear()
+        {
+            ActiveItem?.Clear();
+        }
+
         public void FindNext()
         {
             ActiveItem?.FindNext();

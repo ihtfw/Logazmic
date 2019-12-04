@@ -38,7 +38,7 @@ namespace Logazmic.Core.Reciever
             udpClient.Close();
         }
 
-        protected override void DoInitilize()
+        protected override void DoInitialize()
         {
             remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
             udpClient = IpV6 ? new UdpClient(Port, AddressFamily.InterNetworkV6) : new UdpClient(Port);

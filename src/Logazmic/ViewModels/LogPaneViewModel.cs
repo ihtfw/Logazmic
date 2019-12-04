@@ -254,7 +254,7 @@ namespace Logazmic.ViewModels
                 NotifyOfPropertyChange(nameof(ShownLogMessages));
             });
 
-            ScrollIntoSelected();
+           // ScrollIntoSelected();
         }
 
         public void ScrollIntoSelected(bool forced = false)
@@ -267,30 +267,31 @@ namespace Logazmic.ViewModels
 
         #region OnNewMessages
 
-        private void OnNewMessages(object sender, LogMessage[] logMsgs)
+        private void OnNewMessages(object sender, IReadOnlyCollection<LogMessage> logMsgs)
         {
-            Task.Factory.StartNew(() =>
+            lock (LogMessages)
             {
-                lock (LogMessages)
+                LogMessages.AddRange(logMsgs);
+                foreach (var logMessage in logMsgs)
                 {
-                    LogMessages.AddRange(logMsgs);
-                    Array.ForEach(logMsgs, m => ProfileFiltersViewModel.SourceFilterRootViewModel.Find(m.LoggerNames));
-                    Update(true);
+                    ProfileFiltersViewModel.SourceFilterRootViewModel.Find(logMessage.LoggerNames);
                 }
-            });
+
+                if (Receiver.IsInitialized)
+                    Update(true);
+            }
         }
 
         private void OnNewMessage(object sender, LogMessage logMsg)
         {
-            Task.Factory.StartNew(() =>
+            lock (LogMessages)
             {
-                lock (LogMessages)
-                {
-                    LogMessages.Add(logMsg);
-                    ProfileFiltersViewModel.SourceFilterRootViewModel.Find(logMsg.LoggerNames);
+                LogMessages.Add(logMsg);
+                ProfileFiltersViewModel.SourceFilterRootViewModel.Find(logMsg.LoggerNames);
+                
+                if (Receiver.IsInitialized)
                     Update(true);
-                }
-            });
+            }
         }
 
         #endregion
