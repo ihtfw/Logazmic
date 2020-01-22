@@ -36,20 +36,19 @@ namespace Logazmic.Settings
             set => _receivers = value;
         }
 
-        [DefaultValue(12)]
-        public int GridFontSize { get; set; }
+        public int GridFontSize { get; set; } = 12;
 
-        [DefaultValue(18)]
-        public int DescriptionFontSize { get; set; }
+        public int DescriptionFontSize { get; set; } = 18;
 
-        [DefaultValue(false)]
         public bool UseDarkTheme { get; set; }
 
-        [DefaultValue(true)]
-        public bool ShowStatusBar { get; set; }
+        public bool ShowStatusBar { get; set; } = true;
 
-        [DefaultValue(DataGridGridLinesVisibility.None)]
-        public DataGridGridLinesVisibility GridLinesVisibility { get; set; }
+        public bool UtcTime { get; set; } 
+
+        public bool Use24HourFormat { get; set; } = true;
+
+        public DataGridGridLinesVisibility GridLinesVisibility { get; set; } = DataGridGridLinesVisibility.None;
 
         public bool? AutoUpdate { get; set; }
 

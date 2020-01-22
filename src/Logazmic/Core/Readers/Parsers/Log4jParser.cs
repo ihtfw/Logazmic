@@ -129,7 +129,7 @@ namespace Logazmic.Core.Readers.Parsers
 
         public static DateTime ToDateTime(long timeStamp)
         {
-            return S1970.AddMilliseconds(timeStamp).ToLocalTime();
+            return S1970.AddMilliseconds(timeStamp);
         }
     }
 }

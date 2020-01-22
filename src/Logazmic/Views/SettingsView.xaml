@@ -56,6 +56,12 @@
                 <system:String>Log4j</system:String>
                 <system:String>Flat</system:String>
             </ComboBox>
+
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">UTC time:</TextBlock>
+            <ma:ToggleSwitch IsChecked="{Binding UtcTime}" />
+
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">24H time format:</TextBlock>
+            <ma:ToggleSwitch IsChecked="{Binding Use24HourFormat}" />
         </controls:TwoColumnGrid>
         <TextBlock Style="{StaticResource DescriptionHeaderStyle}">Appearance</TextBlock>
         <controls:TwoColumnGrid>

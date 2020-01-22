@@ -190,6 +190,7 @@
     <Compile Include="Controls\MetroToggleButton.xaml.cs">
       <DependentUpon>MetroToggleButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\DateTimeToStringConverter.cs" />
     <Compile Include="Core\Filters\LogLevelFilter.cs" />
     <Compile Include="Core\Filters\MessageFilter.cs" />
     <Compile Include="Core\Filters\SourceFilter.cs" />

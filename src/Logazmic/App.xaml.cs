@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections;
+using System.Windows;
+using Logazmic.Converters;
 using Microsoft.Shell;
 
 namespace Logazmic
@@ -41,12 +43,18 @@ namespace Logazmic
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            SetDateTimeToStringConverterOptions();
             ChangeTheme();
             if (SingleInstance<App>.InitializeAsFirstInstance(guid))
                 new Bootstrapper();
             else
                 Shutdown();
-            
+        }
+
+        private void SetDateTimeToStringConverterOptions()
+        {
+            var dateTimeToStringConverter = (DateTimeToStringConverter) Resources["DateTimeToStringConverter"];
+            dateTimeToStringConverter.Options = new DateTimeToStringConverterOptions(LogazmicSettings.Instance);
         }
 
         public bool SignalExternalCommandLineArgs(IList<string> args)
@@ -75,5 +83,19 @@ namespace Logazmic
             window.Topmost = false; 
             window.Focus();      
         }
+    }
+
+    internal class DateTimeToStringConverterOptions : IDateTimeToStringConverterOptions
+    {
+        private readonly LogazmicSettings _logazmicSettings;
+
+        public DateTimeToStringConverterOptions(LogazmicSettings logazmicSettings)
+        {
+            _logazmicSettings = logazmicSettings;
+        }
+
+        public bool UtcTime => _logazmicSettings.UtcTime;
+
+        public bool Use24HourFormat => _logazmicSettings.Use24HourFormat;
     }
 }

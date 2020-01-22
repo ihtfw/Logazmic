@@ -80,7 +80,7 @@
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Time"
-                                    Binding="{Binding Path=TimeStamp, ConverterCulture={x:Static glob:CultureInfo.CurrentUICulture}}" />
+                                    Binding="{Binding Path=TimeStamp, Converter={StaticResource DateTimeToStringConverter}}" />
                 <DataGridTextColumn IsReadOnly="True" Header="Level"
                                     Binding="{Binding Path=LogLevel}" />
                 <DataGridTextColumn IsReadOnly="True" Header="Logger"
