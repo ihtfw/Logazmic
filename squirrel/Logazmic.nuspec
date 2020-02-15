@@ -12,9 +12,9 @@
     <description>Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is based on Log2console. UI is rewritten in WPF with usage of MahApps.Metro</description>
   </metadata>
   <files>
-    <file src="..\src\Logazmic\bin\Release\Resources\*" target="lib\net45\Resources\" />	
-    <file src="..\src\Logazmic\bin\Release\*.dll" target="lib\net45\" />
-    <file src="..\src\Logazmic\bin\Release\*.exe" target="lib\net45\" />
-    <file src="..\src\Logazmic\bin\Release\*.config" target="lib\net45\" />
+    <file src="..\src\Logazmic\bin\Release\Resources\*" target="lib\net472\Resources\" />	
+    <file src="..\src\Logazmic\bin\Release\*.dll" target="lib\net472\" />
+    <file src="..\src\Logazmic\bin\Release\*.exe" target="lib\net472\" />
+    <file src="..\src\Logazmic\bin\Release\*.config" target="lib\net472\" />
   </files>
 </package>
