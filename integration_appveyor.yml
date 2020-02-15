@@ -8,7 +8,7 @@ configuration:
   - Release
 build:
   project: src/Logazmic.sln
-  verbosity: detailed
+  verbosity: normal
 after_build:
   - ps: nuget/build-appveyor.ps1
 artifacts:
