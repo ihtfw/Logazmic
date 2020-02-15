@@ -1,5 +1,5 @@
 version: .{build}
-os: Visual Studio 2017
+os: Visual Studio 2019
 init:
   - ps: Update-AppveyorBuild -Version "$(Get-Date -format yyyy.M.d).$env:appveyor_build_number"
 before_build:
@@ -8,7 +8,7 @@ configuration:
   - Release
 build:
   project: src/Logazmic.sln
-  verbosity: minimal
+  verbosity: detailed
 after_build:
   - ps: squirrel/build-appveyor.ps1
 artifacts:
