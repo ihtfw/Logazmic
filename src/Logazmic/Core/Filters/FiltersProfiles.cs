@@ -11,24 +11,25 @@ namespace Logazmic.Core.Filters
     {
         #region Singleton
 
-        private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\filters_profiles.json");
+        private static readonly string SettingFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\filters_profiles.json");
 
-        private static readonly Lazy<FiltersProfiles> instance = new Lazy<FiltersProfiles>(() => Load<FiltersProfiles>(path));
+        private static readonly Lazy<FiltersProfiles> LazyInstance = new Lazy<FiltersProfiles>(() => Load<FiltersProfiles>(SettingFilePath));
 
-        public static FiltersProfiles Instance { get { return instance.Value; } }
+        public static FiltersProfiles Instance => LazyInstance.Value;
+
         public override void Save()
         {
-            Save(path);
+            Save(SettingFilePath);
         }
 
         #endregion
 
-        private List<FiltersProfile> profiles;
+        private List<FiltersProfile> _profiles;
 
         public List<FiltersProfile> Profiles
         {
-            get { return profiles ?? (profiles = new List<FiltersProfile>()); }
-            set { profiles = value; }
+            get => _profiles ?? (_profiles = new List<FiltersProfile>());
+            set => _profiles = value;
         }
 
         public FiltersProfile Add()

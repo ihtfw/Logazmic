@@ -15,8 +15,8 @@ namespace Logazmic
 
         public InputBinding InputBinding
         {
-            get { return (InputBinding)GetValue(InputBindingProperty); }
-            set { SetValue(InputBindingProperty, value); }
+            get => (InputBinding)GetValue(InputBindingProperty);
+            set => SetValue(InputBindingProperty, value);
         }
 
         public event EventHandler CanExecuteChanged = delegate { };
@@ -60,17 +60,6 @@ namespace Logazmic
             }
             base.OnAttached();
 
-        }
-
-        private Window GetWindow(FrameworkElement frameworkElement)
-        {
-            if (frameworkElement is Window)
-                return frameworkElement as Window;
-
-            var parent = frameworkElement.Parent as FrameworkElement;
-            Debug.Assert(parent != null);
-
-            return GetWindow(parent);
         }
 
         private FrameworkElement GetFocusable(FrameworkElement frameworkElement)

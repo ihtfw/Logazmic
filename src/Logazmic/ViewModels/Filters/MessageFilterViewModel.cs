@@ -6,28 +6,25 @@ namespace Logazmic.ViewModels.Filters
 {
     public class MessageFilterViewModel : PropertyChangedBase
     {
-        private readonly LogPaneServices logPaneServices;
+        private readonly LogPaneServices _logPaneServices;
         
         public  MessageFilter MessageFilter { get; }
 
         public MessageFilterViewModel(LogPaneServices logPaneServices, MessageFilter messageFilter)
         {
-            this.logPaneServices = logPaneServices;
+            _logPaneServices = logPaneServices;
             MessageFilter = messageFilter;
         }
 
-        public string Filter
-        {
-            get { return MessageFilter.Message; }
-        }
+        public string Filter => MessageFilter.Message;
 
         public bool IsEnabled
         {
-            get { return MessageFilter.IsEnabled; }
+            get => MessageFilter.IsEnabled;
             set
             {
                 MessageFilter.IsEnabled = value;
-                logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+                _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
             }
         }
     }

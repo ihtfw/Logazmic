@@ -7,15 +7,15 @@ namespace Logazmic.ViewModels.Filters
 {
     public class ProfileFiltersViewModel : PropertyChangedBase
     {
-        private readonly LogPaneServices logPaneServices;
-        private LogLevelFilterViewModel minLogLevel;
+        private readonly LogPaneServices _logPaneServices;
+        private LogLevelFilterViewModel _minLogLevel;
 
         public FiltersProfile FiltersProfile { get; } 
 
         public ProfileFiltersViewModel(FiltersProfile filtersProfile, LogPaneServices logPaneServices)
         {
             FiltersProfile = filtersProfile;
-            this.logPaneServices = logPaneServices;
+            _logPaneServices = logPaneServices;
 
             LogLevels = new BindableCollection<LogLevelFilterViewModel>(
                 FiltersProfile.LogLevels.Select(ll => new LogLevelFilterViewModel(logPaneServices, ll)));
@@ -32,26 +32,26 @@ namespace Logazmic.ViewModels.Filters
 
         public string FilterText
         {
-            get { return FiltersProfile.FilterText; }
+            get => FiltersProfile.FilterText;
             set
             {
                 FiltersProfile.FilterText = value;
                 
-                logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+                _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
             }
         }
         public BindableCollection<LogLevelFilterViewModel> LogLevels { get; }
 
         public LogLevelFilterViewModel MinLogLevel
         {
-            get { return minLogLevel; }
+            get => _minLogLevel;
             set
             {
-                minLogLevel = value;
-                if (minLogLevel != null)
+                _minLogLevel = value;
+                if (_minLogLevel != null)
                 {
-                    FiltersProfile.MinLogLevel = minLogLevel.LogLevel;
-                    logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+                    FiltersProfile.MinLogLevel = _minLogLevel.LogLevel;
+                    _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
                 }
             }
         }
@@ -71,10 +71,10 @@ namespace Logazmic.ViewModels.Filters
 
             var filter = new MessageFilter(messageFilter);
             FiltersProfile.MessageFilters.Add(filter);
-            var messageFilterViewModel = new MessageFilterViewModel(logPaneServices, filter);
+            var messageFilterViewModel = new MessageFilterViewModel(_logPaneServices, filter);
             MessageFilters.Add(messageFilterViewModel);
 
-            logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+            _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
         }
 
         public void RemoveMessageFilter(MessageFilterViewModel messageFilterViewModel)
@@ -87,7 +87,7 @@ namespace Logazmic.ViewModels.Filters
             FiltersProfile.MessageFilters.Remove(messageFilterViewModel.MessageFilter);
             MessageFilters.Remove(messageFilterViewModel);
 
-            logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+            _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
         }
         
         public void UpdateFilters()
@@ -95,11 +95,11 @@ namespace Logazmic.ViewModels.Filters
             SearchText = null;
 
             MessageFilters.Clear();
-            MessageFilters.AddRange(FiltersProfile.MessageFilters.Select(mf => new MessageFilterViewModel(logPaneServices, mf)));
+            MessageFilters.AddRange(FiltersProfile.MessageFilters.Select(mf => new MessageFilterViewModel(_logPaneServices, mf)));
 
             MinLogLevel = null;
             LogLevels.Clear();
-            LogLevels.AddRange(FiltersProfile.LogLevels.Select(ll => new LogLevelFilterViewModel(logPaneServices, ll)));
+            LogLevels.AddRange(FiltersProfile.LogLevels.Select(ll => new LogLevelFilterViewModel(_logPaneServices, ll)));
             MinLogLevel = LogLevels.FirstOrDefault(ll => ll.LogLevel == FiltersProfile.MinLogLevel) ?? LogLevels.First();
 
             SourceFilterRootViewModel.Rebuild(FiltersProfile.SourceFilterRoot);

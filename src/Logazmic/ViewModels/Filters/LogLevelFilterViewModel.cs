@@ -7,24 +7,24 @@ namespace Logazmic.ViewModels.Filters
 {
     public class LogLevelFilterViewModel : PropertyChangedBase
     {
-        private readonly LogPaneServices logPaneServices;
-        private readonly LogLevelFilter logLevelFilter;
+        private readonly LogPaneServices _logPaneServices;
+        private readonly LogLevelFilter _logLevelFilter;
 
-        public LogLevel LogLevel => logLevelFilter.LogLevel;
+        public LogLevel LogLevel => _logLevelFilter.LogLevel;
 
         public LogLevelFilterViewModel(LogPaneServices logPaneServices, LogLevelFilter logLevelFilter)
         {
-            this.logPaneServices = logPaneServices;
-            this.logLevelFilter = logLevelFilter;
+            _logPaneServices = logPaneServices;
+            _logLevelFilter = logLevelFilter;
         }
 
         public bool IsEnabled
         {
-            get { return logLevelFilter.IsEnabled; }
+            get => _logLevelFilter.IsEnabled;
             set
             {
-                logLevelFilter.IsEnabled = value;
-                logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+                _logLevelFilter.IsEnabled = value;
+                _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
             }
         }
     }

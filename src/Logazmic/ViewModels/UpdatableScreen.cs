@@ -12,40 +12,40 @@ namespace Logazmic.ViewModels
     /// </summary>
     public class UpdatableScreen : Screen
     {
-        private bool needToUpdate;
+        private bool _needToUpdate;
 
-        private bool fullUpdate;
+        private bool _fullUpdate;
 
-        private readonly object updateLock = new object();
+        private readonly object _updateLock = new object();
 
-        private readonly Timer timer = new Timer(150);
-        private readonly Timer forceTimer = new Timer(1500);
+        private readonly Timer _timer = new Timer(150);
+        private readonly Timer _forceTimer = new Timer(1500);
 
-        public UpdatableScreen()
+        protected UpdatableScreen()
         {
-            timer.Elapsed += TimerOnElapsed;
-            forceTimer.Elapsed += TimerOnElapsed;
-            forceTimer.Start();
+            _timer.Elapsed += TimerOnElapsed;
+            _forceTimer.Elapsed += TimerOnElapsed;
+            _forceTimer.Start();
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             bool l;
-            lock (timer)
+            lock (_timer)
             {
-                timer.Stop();
+                _timer.Stop();
 
-                if (!needToUpdate)
+                if (!_needToUpdate)
                 {
                     return;
                 }
 
-                l = fullUpdate;
+                l = _fullUpdate;
 
-                needToUpdate = false;
-                fullUpdate = false;
+                _needToUpdate = false;
+                _fullUpdate = false;
             }
-            if (Monitor.TryEnter(updateLock))
+            if (Monitor.TryEnter(_updateLock))
             {
                 try
                 {
@@ -53,7 +53,7 @@ namespace Logazmic.ViewModels
                 }
                 finally
                 {
-                    Monitor.Exit(updateLock);
+                    Monitor.Exit(_updateLock);
                 }
             }
             else
@@ -64,17 +64,17 @@ namespace Logazmic.ViewModels
 
         public void Update(bool full = false)
         {
-            lock (timer)
+            lock (_timer)
             {
-                timer.Stop();
+                _timer.Stop();
 
-                needToUpdate = true;
-                if (!fullUpdate)
+                _needToUpdate = true;
+                if (!_fullUpdate)
                 {
-                    fullUpdate = full;
+                    _fullUpdate = full;
                 }
 
-                timer.Start();
+                _timer.Start();
             }
         }
 

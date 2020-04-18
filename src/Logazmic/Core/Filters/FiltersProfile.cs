@@ -2,50 +2,49 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Logazmic.Core.Log;
-using Logazmic.Settings;
 
 namespace Logazmic.Core.Filters
 {
     public class FiltersProfile 
     {
-        private List<LogLevelFilter> enabledLogLevels;
-        private List<MessageFilter> messageFilters;
-        private SourceFilter sourceFilterRoot;
-        private string name;
+        private List<LogLevelFilter> _enabledLogLevels;
+        private List<MessageFilter> _messageFilters;
+        private SourceFilter _sourceFilterRoot;
+        private string _name;
 
         public string Name
         {
             get
             {
-                if (string.IsNullOrEmpty(name))
+                if (string.IsNullOrEmpty(_name))
                 {
-                    name = "New profile";
+                    _name = "New profile";
                 }
-                return name;
+                return _name;
             }
-            set { name = value; }
+            set => _name = value;
         }
 
         public LogLevel MinLogLevel { get; set; } = LogLevel.Trace;
 
         public List<LogLevelFilter> LogLevels
         {
-            get { return enabledLogLevels ?? (enabledLogLevels = AvailibleLogLevels().Select(l => new LogLevelFilter(l)).ToList()); }
-            set { enabledLogLevels = value; }
+            get { return _enabledLogLevels ?? (_enabledLogLevels = AvailibleLogLevels().Select(l => new LogLevelFilter(l)).ToList()); }
+            set => _enabledLogLevels = value;
         }
 
         public List<MessageFilter> MessageFilters
         {
-            get { return messageFilters ?? (messageFilters = new List<MessageFilter>()); }
-            set { messageFilters = value; }
+            get => _messageFilters ?? (_messageFilters = new List<MessageFilter>());
+            set => _messageFilters = value;
         }
 
         public string FilterText { get; set; }
 
         public SourceFilter SourceFilterRoot
         {
-            get { return sourceFilterRoot ?? (sourceFilterRoot = new SourceFilter{ Name = "Root" }); }
-            set { sourceFilterRoot = value; }
+            get => _sourceFilterRoot ?? (_sourceFilterRoot = new SourceFilter{ Name = "Root" });
+            set => _sourceFilterRoot = value;
         }
 
         public static IEnumerable<LogLevel> AvailibleLogLevels()

@@ -23,7 +23,7 @@
         public static readonly DependencyProperty AutoscrollProperty = DependencyProperty.RegisterAttached(
             "Autoscroll", typeof(bool), typeof(DataGridBehavior), new PropertyMetadata(default(bool), AutoscrollChangedCallback));
 
-        private static readonly Dictionary<DataGrid, DataGridInfo> infoDict = new Dictionary<DataGrid, DataGridInfo>();
+        private static readonly Dictionary<DataGrid, DataGridInfo> InfoDict = new Dictionary<DataGrid, DataGridInfo>();
 
         private static void AutoscrollChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
@@ -49,13 +49,13 @@
 
         private static void Subscribe(DataGrid dataGrid)
         {
-            if (infoDict.ContainsKey(dataGrid))
+            if (InfoDict.ContainsKey(dataGrid))
                 return;
 
             var timer = new DispatcherTimer(DispatcherPriority.Background);
             var handler = new NotifyCollectionChangedEventHandler((sender, eventArgs) => timer.Start());
 
-            infoDict.Add(dataGrid, new DataGridInfo(handler, timer));
+            InfoDict.Add(dataGrid, new DataGridInfo(handler, timer));
 
             timer.Tick += (sender, args) => ScrollToEnd(dataGrid);
             ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged += handler;
@@ -66,10 +66,10 @@
         private static void Unsubscribe(DataGrid dataGrid)
         {
             DataGridInfo info;
-            if (infoDict.TryGetValue(dataGrid, out info))
+            if (InfoDict.TryGetValue(dataGrid, out info))
             {
                 ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged -= info.Handler;
-                infoDict.Remove(dataGrid);
+                InfoDict.Remove(dataGrid);
 
                 info.Timer.Stop();
             }
@@ -95,7 +95,7 @@
 
         private static void ScrollToEnd(DataGrid datagrid)
         {
-            infoDict[datagrid].Timer.Stop();
+            InfoDict[datagrid].Timer.Stop();
 
             if (datagrid.Items.Count == 0)
             {

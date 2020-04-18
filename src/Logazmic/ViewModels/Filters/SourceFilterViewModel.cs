@@ -8,22 +8,22 @@ namespace Logazmic.ViewModels.Filters
 {
     public class SourceFilterViewModel : PropertyChangedBase
     {
-        private SourceFilter sourceFilter;
-        private readonly LogPaneServices logPaneServices;
+        private SourceFilter _sourceFilter;
+        private readonly LogPaneServices _logPaneServices;
 
         public SourceFilterViewModel(SourceFilter sourceFilter, LogPaneServices logPaneServices)
         {
-            this.sourceFilter = sourceFilter;
-            this.logPaneServices = logPaneServices;
+            _sourceFilter = sourceFilter;
+            _logPaneServices = logPaneServices;
         }
 
         public void Rebuild(SourceFilter rootSourceFilter)
         {
-            this.sourceFilter = rootSourceFilter;
+            _sourceFilter = rootSourceFilter;
 
             Children.Clear();
 
-            foreach (var child in sourceFilter.Children)
+            foreach (var child in _sourceFilter.Children)
             {
                 AddChild(child);
             }
@@ -35,7 +35,7 @@ namespace Logazmic.ViewModels.Filters
 
         private void AddChild(SourceFilter child)
         {
-            var childViewModel = new SourceFilterViewModel(child, logPaneServices);
+            var childViewModel = new SourceFilterViewModel(child, _logPaneServices);
             Children.Add(childViewModel);
 
             foreach (var subChild in child.Children)
@@ -48,24 +48,21 @@ namespace Logazmic.ViewModels.Filters
 
         public bool IsChecked
         {
-            get { return sourceFilter.IsChecked; }
+            get => _sourceFilter.IsChecked;
             set
             {
-                sourceFilter.IsChecked = value;
+                _sourceFilter.IsChecked = value;
                 foreach (var child in Children)
                 {
                     child.IsChecked = value;
                 }
 
-                logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Full);
+                _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Full);
             }
         }
 
-        public string Name
-        {
-            get { return sourceFilter.Name; }
-        }
-        
+        public string Name => _sourceFilter.Name;
+
         public BindableCollection<SourceFilterViewModel> Children { get; } = new BindableCollection<SourceFilterViewModel>();
 
         public SourceFilterViewModel Find(IReadOnlyList<string> loggerNames)
@@ -85,13 +82,13 @@ namespace Logazmic.ViewModels.Filters
 
             if (sourceFilterViewModel == null)
             {
-                var newSourceFilter = new SourceFilter(parent.sourceFilter)
+                var newSourceFilter = new SourceFilter(parent._sourceFilter)
                 {
                     Name = name
                 };
-                parent.sourceFilter.Children.Add(newSourceFilter);
+                parent._sourceFilter.Children.Add(newSourceFilter);
 
-                sourceFilterViewModel = new SourceFilterViewModel(newSourceFilter, logPaneServices);
+                sourceFilterViewModel = new SourceFilterViewModel(newSourceFilter, _logPaneServices);
                 parent.Children.Add(sourceFilterViewModel);
             }
 

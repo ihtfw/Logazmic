@@ -39,13 +39,17 @@
 
     public class GridSplitterData
     {
-        private List<DtoGridLength> rows;
+        private List<DtoGridLength> _rows;
 
-        private List<DtoGridLength> cols;
+        private List<DtoGridLength> _cols;
 
-        public List<DtoGridLength> Rows { get { return rows ?? (rows = new List<DtoGridLength>()); } set { rows = value; } }
+        public List<DtoGridLength> Rows { get => _rows ?? (_rows = new List<DtoGridLength>());
+            set => _rows = value;
+        }
 
-        public List<DtoGridLength> Cols { get { return cols ?? (cols = new List<DtoGridLength>()); } set { cols = value; } }
+        public List<DtoGridLength> Cols { get => _cols ?? (_cols = new List<DtoGridLength>());
+            set => _cols = value;
+        }
 
         public void Update(GridSplitter gs, Grid grid)
         {
@@ -84,21 +88,23 @@
     {
         #region Singleton
 
-        private static readonly Lazy<GridSplitterSizes> instance = new Lazy<GridSplitterSizes>(() => Load<GridSplitterSizes>(path));
+        private static readonly Lazy<GridSplitterSizes> LazyInstance = new Lazy<GridSplitterSizes>(() => Load<GridSplitterSizes>(SettingsFilePath));
 
-        public static GridSplitterSizes Instance { get { return instance.Value; } }
+        public static GridSplitterSizes Instance => LazyInstance.Value;
 
         #endregion
 
-        private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\ui_settings.json");
+        private static readonly string SettingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\ui_settings.json");
 
-        private Dictionary<string, GridSplitterData> gridSplitters;
+        private Dictionary<string, GridSplitterData> _gridSplitters;
         
-        public Dictionary<string, GridSplitterData> GridSplitters { get { return gridSplitters ?? (gridSplitters = new Dictionary<string, GridSplitterData>()); } set { gridSplitters = value; } }
+        public Dictionary<string, GridSplitterData> GridSplitters { get => _gridSplitters ?? (_gridSplitters = new Dictionary<string, GridSplitterData>());
+            set => _gridSplitters = value;
+        }
 
         public override void Save()
         {
-            Save(path);
+            Save(SettingsFilePath);
         }
     }
 
@@ -142,6 +148,7 @@
                 }
                 catch
                 {
+                    //ignore
                 }
             };
 
@@ -153,6 +160,7 @@
                 }
                 catch
                 {
+                    //ignore
                 }
             };
         }

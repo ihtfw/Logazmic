@@ -8,26 +8,26 @@ namespace Logazmic.ViewModels.Filters
 {
     public class ProfilesFiltersViewModel : PropertyChangedBase,IActivate
     {
-        private readonly FiltersProfile filtersProfile;
-        private readonly LogPaneServices logPaneServices;
+        private readonly FiltersProfile _filtersProfile;
+        private readonly LogPaneServices _logPaneServices;
 
         public ProfilesFiltersViewModel(FiltersProfile filtersProfile, LogPaneServices logPaneServices)
         {
-            this.filtersProfile = filtersProfile;
-            this.logPaneServices = logPaneServices;
+            _filtersProfile = filtersProfile;
+            _logPaneServices = logPaneServices;
         }
         
         public string ProfileName
         {
-            get { return filtersProfile.Name; }
-            set { filtersProfile.Name = value; }
+            get => _filtersProfile.Name;
+            set => _filtersProfile.Name = value;
         }
         
         public BindableCollection<string> ProfileNames { get; } = new BindableCollection<string>();
         
         public void SaveCurrentProfile()
         {
-            FiltersProfiles.Instance.Replace(filtersProfile);
+            FiltersProfiles.Instance.Replace(_filtersProfile);
             ReloadProfileNames();
         }
 
@@ -37,11 +37,11 @@ namespace Logazmic.ViewModels.Filters
             if (profile == null)
                 return;
 
-            filtersProfile.Apply(profile);
+            _filtersProfile.Apply(profile);
 
             NotifyOfPropertyChange(nameof(ProfileName));
 
-            logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Filters);
+            _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Filters);
         }
 
         public void RemoveProfile(string profileName)

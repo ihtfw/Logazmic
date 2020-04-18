@@ -9,8 +9,8 @@ namespace Logazmic.Controls
 
     public class TwoColumnGrid : Panel
     {
-        private double Column1Width;
-        private List<Double> RowHeights = new List<double>();
+        private double _column1Width;
+        private readonly List<double> _rowHeights = new List<double>();
 
         public TwoColumnGrid()
         {
@@ -22,8 +22,8 @@ namespace Logazmic.Controls
         /// </summary>
         public double RowSpacing
         {
-            get { return (double)GetValue(RowSpacingProperty); }
-            set { SetValue(RowSpacingProperty, value); }
+            get => (double)GetValue(RowSpacingProperty);
+            set => SetValue(RowSpacingProperty, value);
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace Logazmic.Controls
         /// </summary>
         public double ColumnSpacing
         {
-            get { return (double)GetValue(ColumnSpacingProperty); }
-            set { SetValue(ColumnSpacingProperty, value); }
+            get => (double)GetValue(ColumnSpacingProperty);
+            set => SetValue(ColumnSpacingProperty, value);
         }
 
         /// <summary>
@@ -59,14 +59,14 @@ namespace Logazmic.Controls
         {
             double col1Width = 0;
             double col2Width = 0;
-            RowHeights.Clear();
+            _rowHeights.Clear();
             // First, measure all the left column children
             for (int i = 0; i < VisualChildrenCount; i += 2)
             {
                 var child = Children[i];
                 child.Measure(constraint);
                 col1Width = Math.Max(child.DesiredSize.Width, col1Width);
-                RowHeights.Add(child.DesiredSize.Height);
+                _rowHeights.Add(child.DesiredSize.Height);
             }
             // Then, measure all the right column children, they get whatever remains in width
             var newWidth = Math.Max(0, constraint.Width - col1Width - ColumnSpacing);
@@ -76,13 +76,13 @@ namespace Logazmic.Controls
                 var child = Children[i];
                 child.Measure(newConstraint);
                 col2Width = Math.Max(child.DesiredSize.Width, col2Width);
-                RowHeights[i / 2] = Math.Max(RowHeights[i / 2], child.DesiredSize.Height);
+                _rowHeights[i / 2] = Math.Max(_rowHeights[i / 2], child.DesiredSize.Height);
             }
 
-            Column1Width = col1Width;
+            _column1Width = col1Width;
             return new Size(
                 col1Width + ColumnSpacing + col2Width,
-                RowHeights.Sum() + ((RowHeights.Count - 1) * RowSpacing));
+                _rowHeights.Sum() + ((_rowHeights.Count - 1) * RowSpacing));
         }
 
         /// <summary>
@@ -96,17 +96,17 @@ namespace Logazmic.Controls
             for (int i = 0; i < VisualChildrenCount; i++)
             {
                 var child = Children[i];
-                double height = RowHeights[i / 2];
+                double height = _rowHeights[i / 2];
                 if (i % 2 == 0)
                 {
                     // Left child
-                    var r = new Rect(0, y, Column1Width, height);
+                    var r = new Rect(0, y, _column1Width, height);
                     child.Arrange(r);
                 }
                 else
                 {
                     // Right child
-                    var r = new Rect(Column1Width + ColumnSpacing, y, arrangeSize.Width - Column1Width - ColumnSpacing, height);
+                    var r = new Rect(_column1Width + ColumnSpacing, y, arrangeSize.Width - _column1Width - ColumnSpacing, height);
                     child.Arrange(r);
                     y += height;
                     y += RowSpacing;

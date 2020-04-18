@@ -6,6 +6,10 @@
 
     public class LogMessage
     {
+        private string _messageSingleLine;
+
+        private string _loggerName;
+
         /// <summary>
         /// The Line Number of the Log Message
         /// </summary>
@@ -14,11 +18,11 @@
         /// <summary>
         /// Logger Name.
         /// </summary>
-        public string LoggerName { get { return loggerName; }
+        public string LoggerName { get => _loggerName;
             set
             {
-                loggerName = value ?? string.Empty;
-                LoggerNames = loggerName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                _loggerName = value ?? string.Empty;
+                LoggerNames = _loggerName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 LastLoggerName = LoggerNames.LastOrDefault();
             } }
 
@@ -37,11 +41,11 @@
         {
             get
             {
-                if (messageSingleLine == null)
+                if (_messageSingleLine == null)
                 {
-                    messageSingleLine = Message.Replace('\n', ' ').Replace('\r', ' ');
+                    _messageSingleLine = Message.Replace('\n', ' ').Replace('\r', ' ');
                 }
-                return messageSingleLine;
+                return _messageSingleLine;
             }
         }
 
@@ -60,9 +64,6 @@
         /// </summary>
         public Dictionary<string, string> Properties = new Dictionary<string, string>();
 
-        private string messageSingleLine;
-
-        private string loggerName;
 
         /// <summary>
         /// An exception message to associate to this message.

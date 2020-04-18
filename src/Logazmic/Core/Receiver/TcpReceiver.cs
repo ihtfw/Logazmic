@@ -1,16 +1,14 @@
-﻿using Logazmic.Core.Readers;
+﻿using System;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 
-namespace Logazmic.Core.Reciever
+namespace Logazmic.Core.Receiver
 {
-    using System;
-    using System.IO;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Threading;
-
     public class TcpReceiver : ReceiverBase
     {
-        private Socket server;
+        private Socket _server;
 
         public int Port { get; set; }
         public bool IpV6 { get; set; }
@@ -24,35 +22,35 @@ namespace Logazmic.Core.Reciever
 
         protected override void DoInitialize()
         {
-            if (server != null) return;
+            if (_server != null) return;
 
-            server = new Socket(IpV6 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork, SocketType.Stream,
+            _server = new Socket(IpV6 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork, SocketType.Stream,
                 ProtocolType.Tcp);
 
             // allow other apps listen the same port
-            server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ExclusiveAddressUse, false);
-            server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            _server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ExclusiveAddressUse, false);
+            _server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
             var endpoint = new IPEndPoint(IpV6 ? IPAddress.IPv6Any : IPAddress.Any, Port);
-            server.Bind(endpoint);
-            server.Listen(100);
-            server.ReceiveBufferSize = BufferSize;
+            _server.Bind(endpoint);
+            _server.Listen(100);
+            _server.ReceiveBufferSize = BufferSize;
             
             var args = new SocketAsyncEventArgs();
             args.Completed += AcceptAsyncCompleted;
 
-            server.AcceptAsync(args);
+            _server.AcceptAsync(args);
         }
 
         void AcceptAsyncCompleted(object sender, SocketAsyncEventArgs e)
         {
-            if (server == null || e.SocketError != SocketError.Success) return;
+            if (_server == null || e.SocketError != SocketError.Success) return;
 
             //This is original from Log2Console source
             new Thread(Start) { IsBackground = true }.Start(e.AcceptSocket);
 
             e.AcceptSocket = null;
-            server.AcceptAsync(e);
+            _server.AcceptAsync(e);
         }
 
         void Start(object newSocket)
@@ -74,7 +72,7 @@ namespace Logazmic.Core.Reciever
                                 logMessage.LoggerName = string.Format(":{1}.{0}", logMessage.LoggerName, Port);
                                 OnNewMessage(logMessage);
                             }
-                        } while (server != null && bytesRead > 0);
+                        } while (_server != null && bytesRead > 0);
                     }
                 }
             }
@@ -90,10 +88,10 @@ namespace Logazmic.Core.Reciever
 
         public override void Terminate()
         {
-            if (server == null) return;
+            if (_server == null) return;
 
-            server.Close();
-            server = null;
+            _server.Close();
+            _server = null;
         }
     }
 }

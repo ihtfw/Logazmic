@@ -16,7 +16,7 @@ namespace Logazmic.Settings
 
     public abstract class JsonSettingsBase : INotifyPropertyChanged
     {
-        protected readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        protected readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         [JsonIgnore]
         public readonly object SyncRoot = new object();

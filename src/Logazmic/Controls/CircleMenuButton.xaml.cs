@@ -21,11 +21,15 @@ namespace Logazmic.Controls
         public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
             "IsExpanded", typeof(bool), typeof(CircleMenuButton), new PropertyMetadata(default(bool)));
 
-        private ToggleButton toggleButton;
+        private ToggleButton _toggleButton;
 
-        public bool IsExpanded { get { return (bool)GetValue(IsExpandedProperty); } set { SetValue(IsExpandedProperty, value); } }
+        public bool IsExpanded { get => (bool)GetValue(IsExpandedProperty);
+            set => SetValue(IsExpandedProperty, value);
+        }
 
-        public Visual Visual { get { return (Visual)GetValue(VisualProperty); } set { SetValue(VisualProperty, value); } }
+        public Visual Visual { get => (Visual)GetValue(VisualProperty);
+            set => SetValue(VisualProperty, value);
+        }
 
         public CircleMenuButton()
         {
@@ -34,17 +38,12 @@ namespace Logazmic.Controls
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Bindable(true)]
-        public new ItemCollection Items{
-            get
-            {
-                return toggleButton.ContextMenu.Items;
-            }
-        }
+        public new ItemCollection Items => _toggleButton.ContextMenu?.Items;
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            toggleButton = (ToggleButton)GetTemplateChild("PART_ToggleButton");
+            _toggleButton = (ToggleButton)GetTemplateChild("PART_ToggleButton");
             MouseRightButtonUp += (sender, args) => args.Handled = true;
         }
     }

@@ -10,32 +10,32 @@ namespace Logazmic.Utils
 
     public class ThrottleHelper : IDisposable
     {
-        private readonly HashSet<object> objects = new HashSet<object>();
-        private readonly Action<List<object>> action;
+        private readonly HashSet<object> _objects = new HashSet<object>();
+        private readonly Action<List<object>> _action;
 
-        private readonly object dispObject = new object();
-        private readonly object syncObject = new object();
+        private readonly object _dispObject = new object();
+        private readonly object _syncObject = new object();
 
-        private Timer timer;
+        private Timer _timer;
         
         public ThrottleHelper(int timeInMs, Action<List<object>> action)
         {
-            this.action = action;
-            timer = new Timer(timeInMs);
-            timer.Elapsed += TimerOnElapsed;
+            _action = action;
+            _timer = new Timer(timeInMs);
+            _timer.Elapsed += TimerOnElapsed;
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            lock (dispObject)
+            lock (_dispObject)
             {
-                if (timer == null)
+                if (_timer == null)
                     return;
 
-                timer.Stop();
+                _timer.Stop();
             }
 
-            if (!Monitor.TryEnter(syncObject))
+            if (!Monitor.TryEnter(_syncObject))
             {
                 Do();
                 return;
@@ -43,16 +43,16 @@ namespace Logazmic.Utils
             try
             {
                 List<object> data = null;
-                lock (objects)
+                lock (_objects)
                 {
-                    if (objects.Any())
+                    if (_objects.Any())
                     {
-                        data = objects.ToList();
-                        objects.Clear();
+                        data = _objects.ToList();
+                        _objects.Clear();
                     }
                 }
 
-                action(data);
+                _action(data);
             }
             catch (Exception e)
             {
@@ -60,32 +60,32 @@ namespace Logazmic.Utils
             }
             finally
             {
-                Monitor.Exit(syncObject);
+                Monitor.Exit(_syncObject);
             }
         }
 
         public void Do(object obj = null)
         {
-            lock (dispObject)
+            lock (_dispObject)
             {
-                if (timer == null)
+                if (_timer == null)
                     return;
             }
 
             if (obj != null)
             {
-                lock (objects)
+                lock (_objects)
                 {
-                    objects.Add(obj);
+                    _objects.Add(obj);
                 }
             }
-            lock (dispObject)
+            lock (_dispObject)
             {
-                if (timer == null)
+                if (_timer == null)
                     return;
 
-                timer.Stop();
-                timer.Start();
+                _timer.Stop();
+                _timer.Start();
             }
         }
 
@@ -99,13 +99,13 @@ namespace Logazmic.Utils
 
         public void Dispose()
         {
-            lock (dispObject)
+            lock (_dispObject)
             {
-                if (timer != null)
+                if (_timer != null)
                 {
-                    timer.Elapsed -= TimerOnElapsed;
-                    timer?.Dispose();
-                    timer = null;
+                    _timer.Elapsed -= TimerOnElapsed;
+                    _timer?.Dispose();
+                    _timer = null;
                 }
             }
         }

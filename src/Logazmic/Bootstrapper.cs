@@ -14,7 +14,7 @@ namespace Logazmic
 
     public class Bootstrapper : BootstrapperBase
     {
-        private bool wasException = false;
+        private bool _wasException;
         public Bootstrapper()
         {
             Initialize();
@@ -68,13 +68,13 @@ namespace Logazmic
         }
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            if (wasException)
+            if (_wasException)
             {
                 base.OnUnhandledException(sender, e);
                 return;
             }
 
-            wasException = true;
+            _wasException = true;
 
             var msg = e.Exception.Message;
             if (string.IsNullOrEmpty(msg))
@@ -107,7 +107,7 @@ namespace Logazmic
 
             if (e.Handled)
             {
-                wasException = false;
+                _wasException = false;
             }
             base.OnUnhandledException(sender, e);
         }

@@ -7,12 +7,12 @@ using NUnit.Framework;
 namespace Logazmic.Tests.Core.Readers.Parsers
 {
     [TestFixture]
-    public class Log4jParserTests
+    public class Log4JParserTests
     {
         [Test]
         public void ParseLogEvent_Success_Test()
         {
-            var sut = new Log4jParser();
+            var sut = new Log4JParser();
 
             var text = @"<log4j:event logger=""My.Super.App"" level=""INFO"" timestamp=""1574396643885"" thread=""1""><log4j:message>Hello world!</log4j:message><log4j:properties><log4j:data name=""log4japp"" value=""My.Super.APp.exe(7944)"" /><log4j:data name=""log4jmachinename"" value=""DESKTOP-E10B4T4"" /></log4j:properties></log4j:event>";
             var logEvent = sut.ParseLogEvent(text);
@@ -22,27 +22,27 @@ namespace Logazmic.Tests.Core.Readers.Parsers
             Assert.AreEqual("App", logEvent.LastLoggerName);
             Assert.AreEqual(LogLevel.Info, logEvent.LogLevel);
             Assert.AreEqual("Hello world!", logEvent.Message);
-            Assert.AreEqual(Log4jParser.ToDateTime(1574396643885), logEvent.TimeStamp);
+            Assert.AreEqual(Log4JParser.ToDateTime(1574396643885), logEvent.TimeStamp);
             Assert.AreEqual("1", logEvent.ThreadName);
         }
 
         [Test]
         public void ParseLogEvent_Fail_Test()
         {
-            var sut = new Log4jParser();
+            var sut = new Log4JParser();
 
             var text = @"<log4j:even logger=""My.Super.App"" level=""INFO"" timestamp=""1574396643885"" thread=""1""><log4j:message>Hello world!</log4j:message><log4j:properties><log4j:data name=""log4japp"" value=""My.Super.APp.exe(7944)"" /><log4j:data name=""log4jmachinename"" value=""DESKTOP-E10B4T4"" /></log4j:properties></log4j:event>";
 
             Assert.Throws<Exception>(() =>
             {
-                var logEvent = sut.ParseLogEvent(text);
+                sut.ParseLogEvent(text);
             });
         }
 
         [Test]
         public void SplitToLogEventParseItems()
         {
-            var sut = new Log4jParser();
+            var sut = new Log4JParser();
 
             var text = @"<log4j:event logger=""My.Super.App"" level=""INFO"" timestamp=""1574396643885"" thread=""1""><log4j:message>Hello world!</log4j:message><log4j:properties><log4j:data name=""log4japp"" value=""My.Super.APp.exe(7944)"" /><log4j:data name=""log4jmachinename"" value=""DESKTOP-E10B4T4"" /></log4j:properties></log4j:event>";
             var items = sut.SplitToLogEventParseItems(text).ToList();
@@ -54,7 +54,7 @@ namespace Logazmic.Tests.Core.Readers.Parsers
         [Test]
         public void SplitToLogEventParseItems_TwoItems()
         {
-            var sut = new Log4jParser();
+            var sut = new Log4JParser();
 
             var text = @"<log4j:event logger=""My.Super.App"" level=""INFO"" timestamp=""1574396643885"" thread=""1""><log4j:message>Hello world!</log4j:message><log4j:properties><log4j:data name=""log4japp"" value=""My.Super.APp.exe(7944)"" /><log4j:data name=""log4jmachinename"" value=""DESKTOP-E10B4T4"" /></log4j:properties></log4j:event>";
             var items = sut.SplitToLogEventParseItems(text + text).ToList();
@@ -67,7 +67,7 @@ namespace Logazmic.Tests.Core.Readers.Parsers
         [Test]
         public void SplitToLogEventParseItems_WithTail()
         {
-            var sut = new Log4jParser();
+            var sut = new Log4JParser();
 
             var text = @"<log4j:event logger=""My.Super.App"" level=""INFO"" timestamp=""1574396643885"" thread=""1""><log4j:message>Hello world!</log4j:message><log4j:properties><log4j:data name=""log4japp"" value=""My.Super.APp.exe(7944)"" /><log4j:data name=""log4jmachinename"" value=""DESKTOP-E10B4T4"" /></log4j:properties></log4j:event>";
             var tail = @"<log4j:event logger=""My.Super.App"" level=""INFO"" timestamp=""1574396643885"" thread=""1""><log4j:message>Hello world!</log4j:message><log4j:pro";
@@ -80,7 +80,7 @@ namespace Logazmic.Tests.Core.Readers.Parsers
         [Test]
         public void SplitToLogEventParseItems_TwoOpenings()
         {
-            var sut = new Log4jParser();
+            var sut = new Log4JParser();
 
             var opening = @"<log4j:event logger=""My.Super.App"" level=""INFO"" timestamp=""1574396643885"" thread=""1"">";
             var text = $@"{opening}{opening}<log4j:message>Hello world!</log4j:message><log4j:properties><log4j:data name=""log4japp"" value=""My.Super.APp.exe(7944)"" /><log4j:data name=""log4jmachinename"" value=""DESKTOP-E10B4T4"" /></log4j:properties></log4j:event>";

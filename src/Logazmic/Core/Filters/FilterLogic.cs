@@ -8,13 +8,13 @@ namespace Logazmic.Core.Filters
 {
     public class FilterLogic
     {
-        private readonly FiltersProfile filtersProfile;
+        private readonly FiltersProfile _filtersProfile;
 
-        private readonly HashSet<string> logSourceLeaves = new HashSet<string>();
+        private readonly HashSet<string> _logSourceLeaves = new HashSet<string>();
 
         public FilterLogic(FiltersProfile filtersProfile)
         {
-            this.filtersProfile = filtersProfile;
+            _filtersProfile = filtersProfile;
         }
 
         public bool IsFiltered(LogMessage logMessage)
@@ -24,17 +24,17 @@ namespace Logazmic.Core.Filters
                 return true;
             }
 
-            if (logMessage.LogLevel < filtersProfile.MinLogLevel)
+            if (logMessage.LogLevel < _filtersProfile.MinLogLevel)
             {
                 return true;
             }
 
-            if (!filtersProfile.LogLevels.First(l => l.LogLevel == logMessage.LogLevel).IsEnabled)
+            if (!_filtersProfile.LogLevels.First(l => l.LogLevel == logMessage.LogLevel).IsEnabled)
             {
                 return true;
             }
 
-            foreach (var messageFilter in filtersProfile.MessageFilters.Where(mf => mf.IsEnabled))
+            foreach (var messageFilter in _filtersProfile.MessageFilters.Where(mf => mf.IsEnabled))
             {
                 if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, messageFilter.Message, CompareOptions.IgnoreCase) >= 0)
                 {
@@ -42,15 +42,15 @@ namespace Logazmic.Core.Filters
                 }
             }
 
-            if (!string.IsNullOrEmpty(filtersProfile.FilterText))
+            if (!string.IsNullOrEmpty(_filtersProfile.FilterText))
             {
-                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, filtersProfile.FilterText, CompareOptions.IgnoreCase) < 0)
+                if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, _filtersProfile.FilterText, CompareOptions.IgnoreCase) < 0)
                 {
                     return true;
                 }
             }
 
-            if (!logSourceLeaves.Contains(logMessage.LoggerName))
+            if (!_logSourceLeaves.Contains(logMessage.LoggerName))
             {
                 return true;
             }
@@ -59,8 +59,8 @@ namespace Logazmic.Core.Filters
 
         public void RebuildLeaves()
         {
-            logSourceLeaves.Clear();
-            logSourceLeaves.AddRange(filtersProfile.SourceFilterRoot.Leaves().Where(l => l.IsChecked).Select(c => c.FullName));
+            _logSourceLeaves.Clear();
+            _logSourceLeaves.AddRange(_filtersProfile.SourceFilterRoot.Leaves().Where(l => l.IsChecked).Select(c => c.FullName));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Windows;
+﻿using System.Windows;
 using Logazmic.Converters;
 using Microsoft.Shell;
 
@@ -19,7 +18,7 @@ namespace Logazmic
     /// </summary>
     public partial class App: ISingleInstanceApp
     {
-        private const string guid = "83FD7350-9ED4-4F41-BA38-A40017DFD8A8";
+        private const string Guid = "83FD7350-9ED4-4F41-BA38-A40017DFD8A8";
 
         public App()
         {
@@ -45,7 +44,8 @@ namespace Logazmic
             base.OnStartup(e);
             SetDateTimeToStringConverterOptions();
             ChangeTheme();
-            if (SingleInstance<App>.InitializeAsFirstInstance(guid))
+            if (SingleInstance<App>.InitializeAsFirstInstance(Guid))
+                // ReSharper disable once ObjectCreationAsStatement
                 new Bootstrapper();
             else
                 Shutdown();

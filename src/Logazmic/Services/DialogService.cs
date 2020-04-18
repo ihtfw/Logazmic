@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Logazmic.Services
@@ -10,20 +8,20 @@ namespace Logazmic.Services
 
         #region Ambient Context
 
-        private static DialogService current;
+        private static DialogService _current;
 
         public static DialogService Current
         {
-            get { return current ?? (current = new MetroDialogService()); }
+            get => _current ?? (_current = new MetroDialogService());
             set
             {
                 if (value == null)
                 {
                     throw new ArgumentNullException("value");
                 }
-                if (current != null)
+                if (_current != null)
                     throw new InvalidOperationException("You cannot set ambient context twice");
-                current = value;
+                _current = value;
             }
         }
 

@@ -1,11 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using Logazmic.Core.Readers;
 
-namespace Logazmic.Core.Reciever
+namespace Logazmic.Core.Receiver
 {
-    using System;
-    using System.IO;
-
     /// <summary>
     ///     This receiver watch a given file, like a 'tail' program, with one log event by line.
     ///     Ideally the log events should use the log4j XML Schema layout.
@@ -23,10 +22,6 @@ namespace Logazmic.Core.Reciever
         private long _lastFileLength;
         private ILogStreamReader _logStreamReader;
 
-        public FileReceiver()
-        {
-        }
-
         public string FileToWatch
         {
             get => _fileToWatch;
@@ -37,15 +32,15 @@ namespace Logazmic.Core.Reciever
             }
         }
 
-        public override string Description { get { return FileToWatch; } }
-        
+        public override string Description => FileToWatch;
+
         #region AReceiver Members
 
         protected override void DoInitialize()
         {
             if (!File.Exists(FileToWatch))
             {
-                throw new ApplicationException(string.Format("File \"{0}\" does not exist.", FileToWatch));
+                throw new ApplicationException($"File \"{FileToWatch}\" does not exist.");
             }
 
             _logStreamReader = LogReaderFactory.LogStreamReader(LogFormat);

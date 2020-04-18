@@ -18,7 +18,7 @@ namespace Logazmic.Core.Readers
                     return new FlatLogParser();
             }
 
-            return new Log4jParser();
+            return new Log4JParser();
         }
 
         public string GetLogFormatByFileExtension(string extension)
@@ -30,7 +30,7 @@ namespace Logazmic.Core.Readers
                 case ".4JXML":
                 case ".LOG4JXML":
                 case ".LOG4J":
-                    return LogFormats.Log4j;
+                    return LogFormats.Log4J;
                 default:
                     return LogFormats.Flat;
             }

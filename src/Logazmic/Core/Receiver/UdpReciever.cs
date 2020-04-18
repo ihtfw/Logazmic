@@ -1,25 +1,22 @@
-﻿using Logazmic.Core.Readers;
+﻿using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+using Logazmic.Core.Log;
 using Logazmic.Core.Readers.Parsers;
 
-namespace Logazmic.Core.Reciever
+namespace Logazmic.Core.Receiver
 {
-    using System;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Threading.Tasks;
-
-    using Log;
-
     public class UdpReceiver : ReceiverBase
     {
-        private IPEndPoint remoteEndPoint;
+        private IPEndPoint _remoteEndPoint;
 
-        private UdpClient udpClient;
+        private UdpClient _udpClient;
 
         public UdpReceiver()
         {
             BufferSize = 10000;
-            Address = String.Empty;
+            Address = string.Empty;
             Port = 7071;
         }
 
@@ -35,17 +32,17 @@ namespace Logazmic.Core.Reciever
 
         public override void Terminate()
         {
-            udpClient.Close();
+            _udpClient.Close();
         }
 
         protected override void DoInitialize()
         {
-            remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-            udpClient = IpV6 ? new UdpClient(Port, AddressFamily.InterNetworkV6) : new UdpClient(Port);
-            udpClient.Client.ReceiveBufferSize = BufferSize;
-            if (!String.IsNullOrEmpty(Address))
+            _remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            _udpClient = IpV6 ? new UdpClient(Port, AddressFamily.InterNetworkV6) : new UdpClient(Port);
+            _udpClient.Client.ReceiveBufferSize = BufferSize;
+            if (!string.IsNullOrEmpty(Address))
             {
-                udpClient.JoinMulticastGroup(IPAddress.Parse(Address));
+                _udpClient.JoinMulticastGroup(IPAddress.Parse(Address));
             }
             Task.Factory.StartNew(Start);
         }
@@ -60,11 +57,11 @@ namespace Logazmic.Core.Reciever
             {
                 try
                 {
-                    byte[] buffer = udpClient.Receive(ref remoteEndPoint);
+                    byte[] buffer = _udpClient.Receive(ref _remoteEndPoint);
                     string loggingEvent = System.Text.Encoding.UTF8.GetString(buffer);
 
                     LogMessage logMsg = logParser.TryParseLogEvent(loggingEvent, "UdpLogger");
-                    logMsg.LoggerName = string.Format("{0}_{1}", remoteEndPoint.Address.ToString().Replace(".", "-"), logMsg.LoggerName);
+                    logMsg.LoggerName = string.Format("{0}_{1}", _remoteEndPoint.Address.ToString().Replace(".", "-"), logMsg.LoggerName);
                     OnNewMessage(logMsg);
                 }
                 catch (SocketException)

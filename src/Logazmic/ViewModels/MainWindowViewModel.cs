@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Logazmic.Core.Readers;
+using Logazmic.Core.Receiver;
 using NLog;
 
 namespace Logazmic.ViewModels
@@ -11,8 +12,6 @@ namespace Logazmic.ViewModels
     using System.Windows;
 
     using Caliburn.Micro;
-
-    using Core.Reciever;
     using Services;
     using Settings;
     using MahApps.Metro.Controls;
@@ -26,7 +25,7 @@ namespace Logazmic.ViewModels
 
         #region Singleton
 
-        private static readonly Lazy<MainWindowViewModel> instance = new Lazy<MainWindowViewModel>(CreateMainWindowViewModel);
+        private static readonly Lazy<MainWindowViewModel> LazyInstance = new Lazy<MainWindowViewModel>(CreateMainWindowViewModel);
 
         private static MainWindowViewModel CreateMainWindowViewModel()
         {
@@ -34,7 +33,7 @@ namespace Logazmic.ViewModels
             return new MainWindowViewModel(logReaderFactory);
         }
 
-        public static MainWindowViewModel Instance => instance.Value;
+        public static MainWindowViewModel Instance => LazyInstance.Value;
 
         #endregion
 
@@ -203,9 +202,9 @@ namespace Logazmic.ViewModels
 
         #region Actions
         
-        public async void AddTCPReciever()
+        public async void AddTCPReceiver()
         {
-            var result = await DialogService.Current.ShowInputDialog("TCP Reciever", "Enter port:");
+            var result = await DialogService.Current.ShowInputDialog("TCP Receiver", "Enter port:");
             if (result != null)
             {
                 ushort port;
@@ -218,9 +217,9 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public async void AddUDPReciever()
+        public async void AddUDPReceiver()
         {
-            var result = await DialogService.Current.ShowInputDialog("UDP Reciever", "Enter port:");
+            var result = await DialogService.Current.ShowInputDialog("UDP Receiver", "Enter port:");
             if (result != null)
             {
                 ushort port;

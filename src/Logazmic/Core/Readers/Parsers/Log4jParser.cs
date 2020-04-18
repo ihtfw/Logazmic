@@ -5,7 +5,7 @@ using Logazmic.Core.Log;
 
 namespace Logazmic.Core.Readers.Parsers
 {
-    public class Log4jParser : AXmlLogParser
+    public class Log4JParser : AXmlLogParser
     {
         const string Log4JNamespace = "http://jakarta.apache.org/log4j/";
         const string NlogNamespace = "http://nlog-project.org";
@@ -14,7 +14,7 @@ namespace Logazmic.Core.Readers.Parsers
         
         readonly XmlParserContext _xmlContext = CreateContext();
 
-        public Log4jParser() : base("log4j:event")
+        public Log4JParser() : base("log4j:event")
         {
         }
 
@@ -55,7 +55,7 @@ namespace Logazmic.Core.Readers.Parsers
             var logMsg = new LogMessage
             {
                 LoggerName = reader.GetAttribute("logger"),
-                LogLevel = (LogLevel) Enum.Parse(typeof(LogLevel), reader.GetAttribute("level"), true),
+                LogLevel = (LogLevel) Enum.Parse(typeof(LogLevel), reader.GetAttribute("level") ?? nameof(LogLevel.Trace), true),
                 ThreadName = reader.GetAttribute("thread")
             };
             
@@ -101,13 +101,16 @@ namespace Logazmic.Core.Readers.Parsers
                             {
                                 string name = reader.GetAttribute("name");
                                 string value = reader.GetAttribute("value");
-                                if (name != null && name.ToLower().Equals("exceptions"))
+                                if (name != null)
                                 {
-                                    logMsg.ExceptionString = value;
-                                }
-                                else
-                                {
-                                    logMsg.Properties[name] = value;
+                                    if (name.ToLower().Equals("exceptions"))
+                                    {
+                                        logMsg.ExceptionString = value;
+                                    }
+                                    else
+                                    {
+                                        logMsg.Properties[name] = value;
+                                    }
                                 }
 
                                 reader.Read();

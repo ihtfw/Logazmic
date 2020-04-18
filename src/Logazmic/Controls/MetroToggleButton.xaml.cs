@@ -10,7 +10,9 @@
     {
         public static readonly DependencyProperty VisualProperty = VisualBrush.VisualProperty.AddOwner(typeof(MetroToggleButton));
 
-        public Visual Visual { get { return (Visual)GetValue(VisualProperty); } set { SetValue(VisualProperty, value); } }
+        public Visual Visual { get => (Visual)GetValue(VisualProperty);
+            set => SetValue(VisualProperty, value);
+        }
         
         public MetroToggleButton()
         {

@@ -46,7 +46,7 @@
                 throw new LogazmicIntegrationException("Setup file not found");
 
             var process = Process.Start(pathToSetup);
-            process.WaitForExit();
+            process?.WaitForExit();
         }
     }
 }

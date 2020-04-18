@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Logazmic.Core.Readers;
 using Logazmic.Core.Readers.Parsers;
 using NUnit.Framework;
@@ -29,7 +25,7 @@ namespace Logazmic.Tests.Core.Readers
         [Test]
         public void NextLogEvents_Empty()
         {
-            var sut = new LogStreamReader(new Log4jParser());
+            var sut = new LogStreamReader(new Log4JParser());
 
             using (var ms = new MemoryStream())
             {
@@ -42,7 +38,7 @@ namespace Logazmic.Tests.Core.Readers
         [Test]
         public void NextLogEvents_SingleEvent()
         {
-            var sut = new LogStreamReader(new Log4jParser());
+            var sut = new LogStreamReader(new Log4JParser());
 
             var text = @"<log4j:event logger=""My.Super.App"" level=""INFO"" timestamp=""1574396643885"" thread=""1""><log4j:message>Hello world!</log4j:message><log4j:properties><log4j:data name=""log4japp"" value=""My.Super.APp.exe(7944)"" /><log4j:data name=""log4jmachinename"" value=""DESKTOP-E10B4T4"" /></log4j:properties></log4j:event>";
             using (var ms = Utils.GenerateStreamFromString(text))

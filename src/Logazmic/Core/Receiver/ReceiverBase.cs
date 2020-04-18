@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Logazmic.Core.Log;
 using Logazmic.Core.Readers;
+using Newtonsoft.Json;
 
-namespace Logazmic.Core.Reciever
+namespace Logazmic.Core.Receiver
 {
-    using System;
-
-    using Log;
-
-    using Newtonsoft.Json;
-
     public abstract class ReceiverBase : IDisposable
     {
         public bool IsInitialized { get; private set; }
@@ -16,8 +13,8 @@ namespace Logazmic.Core.Reciever
         public string DisplayName { get; set; }
 
         [JsonIgnore]
-        public virtual string Description { get { return null; } }
-        
+        public virtual string Description => null;
+
         /// <summary>
         /// Must be set externally!
         /// </summary>

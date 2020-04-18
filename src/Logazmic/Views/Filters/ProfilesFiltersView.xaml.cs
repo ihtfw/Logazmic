@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Logazmic.Views.Filters
@@ -8,7 +7,7 @@ namespace Logazmic.Views.Filters
     /// <summary>
     /// Interaction logic for ProfilesFiltersView.xaml
     /// </summary>
-    public partial class ProfilesFiltersView : UserControl
+    public partial class ProfilesFiltersView
     {
         public ProfilesFiltersView()
         {

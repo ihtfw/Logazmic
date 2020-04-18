@@ -1,16 +1,15 @@
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace Logazmic.Core.Filters
 {
     public class SourceFilter
     {
-        private string fullName;
+        private string _fullName;
 
         public SourceFilter(SourceFilter parent = null)
         {
-            fullName = null;
+            _fullName = null;
             Parent = parent;
             Children = new List<SourceFilter>();
             IsChecked = true;
@@ -25,32 +24,32 @@ namespace Logazmic.Core.Filters
         {
             get
             {
-                if (fullName == null)
+                if (_fullName == null)
                 {
                     if (Parent != null)
                     {
                         if (string.IsNullOrEmpty(Parent.FullName))
                         {
-                            fullName = Name;
+                            _fullName = Name;
                         }
                         else
                         {
-                            fullName += Parent.FullName + "." + Name;
+                            _fullName += Parent.FullName + "." + Name;
                         }
                     }
                     else
                     {
                         if (Name == "Root")
                         {
-                            fullName = string.Empty;
+                            _fullName = string.Empty;
                         }
                         else
                         {
-                            fullName = Name;
+                            _fullName = Name;
                         }
                     }
                 }
-                return fullName;
+                return _fullName;
             }
         }
 

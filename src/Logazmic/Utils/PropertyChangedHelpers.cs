@@ -9,16 +9,16 @@
     {
         private class Disposable: IDisposable
         {
-            private readonly Action action;
+            private readonly Action _action;
 
             public Disposable(Action action)
             {
-                this.action = action;
+                _action = action;
             }
 
             public void Dispose()
             {
-                action();
+                _action();
             }
         }
 
@@ -30,15 +30,15 @@
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
             if (propertySelector == null)
             {
-                throw new ArgumentNullException("propertySelector");
+                throw new ArgumentNullException(nameof(propertySelector));
             }
             if (onChanged == null)
             {
-                throw new ArgumentNullException("onChanged");
+                throw new ArgumentNullException(nameof(onChanged));
             }
 
             var subscribedPropertyName = GetPropertyName(propertySelector);
@@ -64,15 +64,15 @@
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
             if (propertySelector == null)
             {
-                throw new ArgumentNullException("propertySelector");
+                throw new ArgumentNullException(nameof(propertySelector));
             }
             if (onChanging == null)
             {
-                throw new ArgumentNullException("onChanged");
+                throw new ArgumentNullException(nameof(onChanging));
             }
 
             var subscribedPropertyName = GetPropertyName(propertySelector);
@@ -96,14 +96,14 @@
 
             if (memberExpr == null)
             {
-                throw new ArgumentException("must be a member accessor", "propertySelector");
+                throw new ArgumentException(@"must be a member accessor", nameof(propertySelector));
             }
 
             var propertyInfo = memberExpr.Member as PropertyInfo;
 
             if (propertyInfo == null || propertyInfo.DeclaringType != typeof(TSource))
             {
-                throw new ArgumentException("must yield a single property on the given object", "propertySelector");
+                throw new ArgumentException(@"must yield a single property on the given object", nameof(propertySelector));
             }
 
             return propertyInfo.Name;

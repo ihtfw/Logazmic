@@ -207,13 +207,13 @@
     <Compile Include="Core\Readers\Parsers\AXmlLogParser.cs" />
     <Compile Include="Core\Readers\Parsers\FlatLogParser.cs" />
     <Compile Include="Core\Readers\Parsers\ILogParser.cs" />
-    <Compile Include="Core\Readers\Parsers\Log4jParser.cs" />
+    <Compile Include="Core\Readers\Parsers\Log4JParser.cs" />
     <Compile Include="Core\Readers\Parsers\LogEventParseItem.cs" />
     <Compile Include="Core\Readers\ILogReaderFactory.cs" />
     <Compile Include="Core\Readers\ILogStreamReader.cs" />
     <Compile Include="Core\Readers\LogStreamReader.cs" />
     <Compile Include="Core\Readers\Parsers\LogParserExtensions.cs" />
-    <Compile Include="Core\Reciever\UdpReciever.cs" />
+    <Compile Include="Core\Receiver\UdpReciever.cs" />
     <Compile Include="InputBindingTrigger.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\MetroDialogService.cs" />
@@ -329,9 +329,9 @@
   <ItemGroup>
     <Compile Include="Core\Log\LogLevel.cs" />
     <Compile Include="Core\Log\LogMessage.cs" />
-    <Compile Include="Core\Reciever\ReceiverBase.cs" />
-    <Compile Include="Core\Reciever\FileReceiver.cs" />
-    <Compile Include="Core\Reciever\TcpReceiver.cs" />
+    <Compile Include="Core\Receiver\ReceiverBase.cs" />
+    <Compile Include="Core\Receiver\FileReceiver.cs" />
+    <Compile Include="Core\Receiver\TcpReceiver.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

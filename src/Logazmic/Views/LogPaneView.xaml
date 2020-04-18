@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settings="clr-namespace:Logazmic.Settings"
-             xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:log="clr-namespace:Logazmic.Core.Log"
              xmlns:controls="clr-namespace:Logazmic.Controls"
              xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
@@ -23,6 +22,7 @@
 
         <Style x:Key="RowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MetroDataGridRow}">
             <Style.Triggers>
+                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                 <DataTrigger Binding="{Binding LogLevel, Mode=OneTime}" Value="{x:Static log:LogLevel.Trace}">
                     <Setter Property="Foreground" Value="{DynamicResource TraceColor}" />
                 </DataTrigger>
@@ -43,6 +43,7 @@
                     <Setter Property="Foreground" Value="{DynamicResource FatalColor}" />
                     <Setter Property="FontWeight" Value="Bold" />
                 </DataTrigger>
+                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
             </Style.Triggers>
         </Style>
 
@@ -79,6 +80,7 @@
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
+                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                 <DataGridTextColumn IsReadOnly="True" Header="Time"
                                     Binding="{Binding Path=TimeStamp, Converter={StaticResource DateTimeToStringConverter}}" />
                 <DataGridTextColumn IsReadOnly="True" Header="Level"
@@ -89,6 +91,7 @@
                                     Binding="{Binding Path=ThreadName}" />
                 <DataGridTextColumn IsReadOnly="True" Header="Message" Width="*"
                                     Binding="{Binding Path=MessageSingleLine}" />
+                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
             </DataGrid.Columns>
         </DataGrid>
 
@@ -116,10 +119,10 @@
             </TreeView>
         </Grid>
 
-        <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" Height="3" VerticalAlignment="Stretch"
+        <GridSplitter Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="1" Height="3" VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch" behaviours:GridSplitterBehaviour.SaveSizeWithName="MainWindow.Description" />
 
-        <Grid x:Name="Details" Grid.Row="2" Grid.ColumnSpan="3">
+        <Grid x:Name="Details" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0">
             <TextBox FontFamily="Courier New" Style="{StaticResource DetailsTextBlock}"
                          FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=DescriptionFontSize}"
                          VerticalAlignment="Top"

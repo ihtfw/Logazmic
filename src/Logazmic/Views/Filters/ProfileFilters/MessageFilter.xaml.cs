@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Logazmic.Views.Filters.ProfileFilters
@@ -8,7 +7,7 @@ namespace Logazmic.Views.Filters.ProfileFilters
     /// <summary>
     /// Interaction logic for MessageFilter.xaml
     /// </summary>
-    public partial class MessageFilter : UserControl
+    public partial class MessageFilter
     {
         public MessageFilter()
         {

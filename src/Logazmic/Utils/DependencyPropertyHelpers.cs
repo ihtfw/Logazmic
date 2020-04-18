@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Logazmic.Utils
+﻿namespace Logazmic.Utils
 {
     using System.Windows;
     using System.Windows.Media;
@@ -28,9 +22,9 @@ namespace Logazmic.Utils
             for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
                 var child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is TChildItem)
+                if (child is TChildItem childItem)
                 {
-                    return (TChildItem)child;
+                    return childItem;
                 }
                 var childOfChild = FindVisualChild<TChildItem>(child);
                 if (childOfChild != null)

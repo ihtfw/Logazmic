@@ -1,5 +1,5 @@
-using Logazmic.Core.Filters;
 using Logazmic.Core.Readers;
+using Logazmic.Core.Receiver;
 
 namespace Logazmic.Settings
 {
@@ -8,22 +8,20 @@ namespace Logazmic.Settings
     using System.IO;
     using System.Windows.Controls;
 
-    using Core.Reciever;
 
-    
     public class LogazmicSettings : JsonSettingsBase
     {
         #region Singleton
 
-        private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\settings.json");
+        private static readonly string SettingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\settings.json");
 
-        private static readonly Lazy<LogazmicSettings> instance = new Lazy<LogazmicSettings>(() => Load<LogazmicSettings>(path));
+        private static readonly Lazy<LogazmicSettings> LazyInstance = new Lazy<LogazmicSettings>(() => Load<LogazmicSettings>(SettingsFilePath));
 
-        public static LogazmicSettings Instance => instance.Value;
+        public static LogazmicSettings Instance => LazyInstance.Value;
 
         public override void Save()
         {
-            Save(path);
+            Save(SettingsFilePath);
         }
 
         #endregion
@@ -56,6 +54,6 @@ namespace Logazmic.Settings
 
         public int SelfLoggingPort { get; set; } = 6789;
 
-        public string LogFormat { get; set; } = LogFormats.Log4j;
+        public string LogFormat { get; set; } = LogFormats.Log4J;
     }
 }

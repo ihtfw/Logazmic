@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="Core\Readers\LogStreamReaderTests.cs" />
     <Compile Include="Core\Readers\Parsers\FlatLogParserTests.cs" />
-    <Compile Include="Core\Readers\Parsers\Log4jParserTests.cs" />
+    <Compile Include="Core\Readers\Parsers\Log4JParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

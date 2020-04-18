@@ -1,8 +1,6 @@
 ﻿namespace Logazmic.Services
 {
-    using System;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
 
@@ -93,7 +91,7 @@
 
             path = lPath;
 
-            return res.Value;
+            return res ?? false;
         }
     }
 }

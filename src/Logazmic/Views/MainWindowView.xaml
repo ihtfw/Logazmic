@@ -36,11 +36,11 @@
             <controls:MetroButton cal:Message.Attach="Open" ToolTip="Open File. Control+O"
                                   Visual="{DynamicResource appbar_folder_open}" />
 
-            <controls:CircleMenuButton Visual="{DynamicResource appbar_add}" ToolTip="Add reciever">
+            <controls:CircleMenuButton Visual="{DynamicResource appbar_add}" ToolTip="Add receiver">
                 <controls:CircleMenuButton.ItemsSource>
                     <CompositeCollection> <!--TODO: why does just the content property doesn't work?-->
-                        <MenuItem Header="TCP" cal:Message.Attach="AddTCPReciever" />
-                        <MenuItem Header="UDP" cal:Message.Attach="AddUDPReciever" />
+                        <MenuItem Header="TCP" cal:Message.Attach="AddTCPReceiver" />
+                        <MenuItem Header="UDP" cal:Message.Attach="AddUDPReceiver" />
                     </CompositeCollection>
                 </controls:CircleMenuButton.ItemsSource>
             </controls:CircleMenuButton>
