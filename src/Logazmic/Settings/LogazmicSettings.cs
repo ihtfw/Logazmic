@@ -15,10 +15,34 @@ namespace Logazmic.Settings
 
         private static readonly string SettingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\settings.json");
 
-        private static readonly Lazy<LogazmicSettings> LazyInstance = new Lazy<LogazmicSettings>(() => Load<LogazmicSettings>(SettingsFilePath));
+        private static readonly Lazy<LogazmicSettings> LazyInstance = new Lazy<LogazmicSettings>(Load);
 
         public static LogazmicSettings Instance => LazyInstance.Value;
 
+        private static LogazmicSettings Load()
+        {
+            try
+            {
+                return Load<LogazmicSettings>(SettingsFilePath);
+            }
+            catch
+            {
+                //it's can be because of rename
+                if (File.Exists(SettingsFilePath))
+                {
+                    var text = File.ReadAllText(SettingsFilePath);
+                    var newText = text.Replace("Reciever", "Receiver");
+                    if (newText != text)
+                    {
+                        File.WriteAllText(SettingsFilePath, newText);
+                        return Load();
+                    }
+                }
+            }
+
+            //something went wrong, just use new settings
+            return new LogazmicSettings();
+        }
         public override void Save()
         {
             Save(SettingsFilePath);
@@ -51,6 +75,8 @@ namespace Logazmic.Settings
         public bool? AutoUpdate { get; set; }
 
         public bool EnableSelfLogging { get; set; }
+
+        public bool SingleWindowMode { get; set; } = true;
 
         public int SelfLoggingPort { get; set; } = 6789;
 

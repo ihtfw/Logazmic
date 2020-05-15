@@ -32,7 +32,7 @@ namespace Logazmic
                 Resources.MergedDictionaries.Remove(oldTheme);
 
             var themeFile = LogazmicSettings.Instance.UseDarkTheme ? "Styles/DarkTheme.xaml" : "Styles/LightTheme.xaml";
-            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(themeFile, UriKind.Relative) });
+            Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(themeFile, UriKind.Relative) });
 
             var appTheme = ThemeManager.GetAppTheme(LogazmicSettings.Instance.UseDarkTheme ? "BaseDark" : "BaseLight");
             var accent = ThemeManager.GetAccent("Cyan");
@@ -44,11 +44,19 @@ namespace Logazmic
             base.OnStartup(e);
             SetDateTimeToStringConverterOptions();
             ChangeTheme();
-            if (SingleInstance<App>.InitializeAsFirstInstance(Guid))
-                // ReSharper disable once ObjectCreationAsStatement
-                new Bootstrapper();
+
+            if (LogazmicSettings.Instance.SingleWindowMode)
+            {
+                if (SingleInstance<App>.InitializeAsFirstInstance(Guid))
+                    // ReSharper disable once ObjectCreationAsStatement
+                    new Bootstrapper();
+                else
+                    Shutdown();
+            }
             else
-                Shutdown();
+            {
+                new Bootstrapper();
+            }
         }
 
         private void SetDateTimeToStringConverterOptions()
