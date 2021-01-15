@@ -61,33 +61,6 @@ namespace Logazmic.Core.Readers.Parsers
             };
         }
 
-        private static LogLevel TryParseLogLevel(string logEvent)
-        {
-            switch (logEvent.Trim().ToUpperInvariant())
-            {
-                case "TCE":
-                case "TRC":
-                case "TRACE":
-                    return LogLevel.Trace;
-                case "DBG":
-                case "DEBUG":
-                    return LogLevel.Debug;
-                case "INF":
-                case "INFO":
-                case "INFORMATION":
-                    return LogLevel.Info;
-                case "WRN":
-                case "WARN":
-                case "WARNING":
-                    return LogLevel.Warn;
-                case "FTL":
-                case "FATAL":
-                    return LogLevel.Fatal;
-                default:
-                    return LogLevel.None;
-            }
-        }
-
         public IEnumerable<LogEventParseItem> SplitToLogEventParseItems(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -110,6 +83,38 @@ namespace Logazmic.Core.Readers.Parsers
             if (start < text.Length)
             {
                 yield return new LogEventParseItem(start, text.Length - start);
+            }
+        }
+
+        private static LogLevel TryParseLogLevel(string logEvent)
+        {
+            switch (logEvent.Trim().ToUpperInvariant())
+            {
+                case "TCE":
+                case "TRC":
+                case "TRACE":
+                case "VRB":
+                case "VERBOSE":
+                    return LogLevel.Trace;
+                case "DBG":
+                case "DEBUG":
+                    return LogLevel.Debug;
+                case "INF":
+                case "INFO":
+                case "INFORMATION":
+                    return LogLevel.Info;
+                case "WRN":
+                case "WARN":
+                case "WARNING":
+                    return LogLevel.Warn;
+                case "ERR":
+                case "ERROR":
+                    return LogLevel.Error;
+                case "FTL":
+                case "FATAL":
+                    return LogLevel.Fatal;
+                default:
+                    return LogLevel.None;
             }
         }
     }
