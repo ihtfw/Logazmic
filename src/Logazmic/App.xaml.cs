@@ -105,5 +105,7 @@ namespace Logazmic
         public bool UtcTime => _logazmicSettings.UtcTime;
 
         public bool Use24HourFormat => _logazmicSettings.Use24HourFormat;
+
+        public bool DisplayingMilliseconds => _logazmicSettings.DisplayingMilliseconds;
     }
 }

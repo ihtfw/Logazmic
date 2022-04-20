@@ -9,6 +9,9 @@ namespace Logazmic.Converters
         bool UtcTime { get; }
 
         bool Use24HourFormat { get; }
+
+        bool DisplayingMilliseconds { get; }
+
     }
 
     public class DateTimeToStringConverter : IValueConverter
@@ -17,6 +20,11 @@ namespace Logazmic.Converters
 
         public string Format(DateTime dateTime)
         {
+            if (Options.DisplayingMilliseconds)
+            {
+                return dateTime.ToString("dd/MM/yyyy HH:mm:ss:fff", CultureInfo.InvariantCulture);
+            }
+
             if (Options.Use24HourFormat)
             {
                 return dateTime.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);

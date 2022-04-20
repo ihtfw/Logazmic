@@ -23,7 +23,8 @@
                    [Shortcut Control+F4] = [Action CloseActiveTab()];"
                    WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
                    Icon="../Resources/appbar.flag.bear.ico"
-                   ShowIconOnTitleBar="True">
+                   ShowIconOnTitleBar="True"
+                   x:Name="MetroWindow">
     <metro:MetroWindow.Flyouts>
         <metro:FlyoutsControl>
             <views:SettingsView />
@@ -119,6 +120,16 @@
                             <Setter.Value>
                                 <ContextMenu>
                                     <MenuItem Header="Rename" cal:Message.Attach="Rename" />
+                                    <MenuItem Header="Close All But This"  >
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Click">
+                                                <cal:ActionMessage MethodName="CloseAllButThis">
+                                                    <cal:Parameter Value="$DataContext" />
+                                                    <cal:Parameter Value="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" />
+                                                </cal:ActionMessage>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </MenuItem>
                                 </ContextMenu>
                             </Setter.Value>
                         </Setter>
