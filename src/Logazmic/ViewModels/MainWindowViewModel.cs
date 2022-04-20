@@ -301,9 +301,9 @@ namespace Logazmic.ViewModels
         public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
         {
             var pane = (LogPaneViewModel)args.ClosingTabItem.Content;
-            pane.TryClose();
+            DeactivateItem(pane, true);
         }
-
+       
         #endregion
 
         public void Dispose()

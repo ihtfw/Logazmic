@@ -66,9 +66,11 @@ namespace Logazmic.Settings
 
         public bool ShowStatusBar { get; set; } = true;
 
-        public bool UtcTime { get; set; } 
+        public bool UtcTime { get; set; }
 
         public bool Use24HourFormat { get; set; } = true;
+
+        public bool DisplayingMilliseconds { get; set; }
 
         public DataGridGridLinesVisibility GridLinesVisibility { get; set; } = DataGridGridLinesVisibility.None;
 

@@ -162,7 +162,17 @@ namespace Logazmic.ViewModels
             DisplayName = newName;
             LogazmicSettings.Instance.Save();
         }
-        
+
+        public void CloseAllButThis(LogPaneViewModel pane, MainWindowViewModel  mainWindowViewModel)
+        {
+            foreach (var logPaneViewModel in mainWindowViewModel.Items.Where(i => i != pane).ToList())
+            {
+                mainWindowViewModel.DeactivateItem(logPaneViewModel, true);
+            }
+            LogazmicSettings.Instance.Save();
+
+        }
+
         public void FindNext()
         {
             OnSearchTextChanged();
