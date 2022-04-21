@@ -63,6 +63,9 @@
             <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">24H time format:</TextBlock>
             <ma:ToggleSwitch IsChecked="{Binding Use24HourFormat}" />
 
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Displaying milliseconds:</TextBlock>
+            <ma:ToggleSwitch IsChecked="{Binding DisplayingMilliseconds}" />
+
             <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Single window:</TextBlock>
             <ma:ToggleSwitch IsChecked="{Binding SingleWindowMode}" />
         </controls:TwoColumnGrid>
