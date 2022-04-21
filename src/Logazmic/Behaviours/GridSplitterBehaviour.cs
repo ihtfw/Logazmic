@@ -143,8 +143,6 @@
                 try
                 {
                     values.Update(gs, grid);
-
-                    GridSplitterSizes.Instance.Save();
                 }
                 catch
                 {

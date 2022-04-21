@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using Logazmic.Behaviours;
+using Logazmic.Core.Filters;
 using Logazmic.Core.Readers;
 using Logazmic.Core.Receiver;
 using NLog;
@@ -158,6 +160,13 @@ namespace Logazmic.ViewModels
                 item.Deactivated -= OnTabDeactivated;
             }
             base.OnDeactivate(close);
+
+            if (close)
+            {
+                LogazmicSettings.Instance.Save();
+                GridSplitterSizes.Instance.Save();
+                FiltersProfiles.Instance.Save();
+            }
         }
 
         private void OnTabDeactivated(object sender, DeactivationEventArgs args)
@@ -165,7 +174,7 @@ namespace Logazmic.ViewModels
             if (!args.WasClosed) return;
 
             var pane = (LogPaneViewModel)sender;
-            Items.Remove(pane);
+            //Items.Remove(pane);
 
             Task.Factory.StartNew(() =>
             {
@@ -210,8 +219,6 @@ namespace Logazmic.ViewModels
             {
                 DeactivateItem(logPaneViewModel, true);
             }
-
-            LogazmicSettings.Instance.Save();
         }
 
         public void CloseAllTabsOnTheLeft(LogPaneViewModel pane)
@@ -222,8 +229,6 @@ namespace Logazmic.ViewModels
             {
                 DeactivateItem(logPaneViewModel, true);
             }
-
-            LogazmicSettings.Instance.Save();
         }
 
         public void CloseAllTabsOnTheRight(LogPaneViewModel pane)
@@ -234,8 +239,6 @@ namespace Logazmic.ViewModels
             {
                 DeactivateItem(logPaneViewModel, true);
             }
-
-            LogazmicSettings.Instance.Save();
         }
 
         public async Task AddTCPReceiver()

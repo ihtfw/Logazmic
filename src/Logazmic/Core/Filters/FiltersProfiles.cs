@@ -52,7 +52,6 @@ namespace Logazmic.Core.Filters
             {
                 if (Profiles.Remove(profile))
                 {
-                    Save();
                     return true;
                 }
             }
@@ -70,8 +69,6 @@ namespace Logazmic.Core.Filters
 
             Remove(filtersProfile.Name);
             Profiles.Add(copy);
-
-            Save();
         }
     }
 }

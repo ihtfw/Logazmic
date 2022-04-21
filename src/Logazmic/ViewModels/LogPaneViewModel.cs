@@ -161,7 +161,6 @@ namespace Logazmic.ViewModels
                 return;
             }
             DisplayName = newName;
-            LogazmicSettings.Instance.Save();
         }
         
         public void FindNext()

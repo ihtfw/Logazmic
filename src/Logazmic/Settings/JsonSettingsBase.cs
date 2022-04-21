@@ -49,18 +49,6 @@ namespace Logazmic.Settings
             return settings;
         }
         
-        private void SetupAutoSave()
-        {
-            PropertyChanged += (sender, args) => Save();
-            var notifyCollectionChangedProperties = GetType().GetProperties().Where(p => typeof(INotifyCollectionChanged).IsAssignableFrom(p.PropertyType));
-            foreach (var propertyInfo in notifyCollectionChangedProperties)
-            {
-                var collectionChanged = ((INotifyCollectionChanged)propertyInfo.GetValue(this));
-                if(collectionChanged != null)
-                    collectionChanged.CollectionChanged += (_,__) => Save();
-            }
-        }
-
         private void SetDefaults()
         {
             lock (SyncRoot)
@@ -100,7 +88,6 @@ namespace Logazmic.Settings
             }
 
             settings.SetDefaults();
-            settings.SetupAutoSave();
 
             return settings;
         }

@@ -8,7 +8,6 @@ namespace Logazmic.Settings
     using System.IO;
     using System.Windows.Controls;
 
-
     public class LogazmicSettings : JsonSettingsBase
     {
         #region Singleton
@@ -57,7 +56,7 @@ namespace Logazmic.Settings
             get => _receivers ?? (_receivers = new ObservableCollection<ReceiverBase>());
             set => _receivers = value;
         }
-
+        
         public int GridFontSize { get; set; } = 12;
 
         public int DescriptionFontSize { get; set; } = 18;
