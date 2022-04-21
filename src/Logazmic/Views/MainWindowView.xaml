@@ -120,16 +120,17 @@
                             <Setter.Value>
                                 <ContextMenu>
                                     <MenuItem Header="Rename" cal:Message.Attach="Rename" />
-                                    <MenuItem Header="Close All But This"  >
-                                        <i:Interaction.Triggers>
-                                            <i:EventTrigger EventName="Click">
-                                                <cal:ActionMessage MethodName="CloseAllButThis">
-                                                    <cal:Parameter Value="$DataContext" />
-                                                    <cal:Parameter Value="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" />
-                                                </cal:ActionMessage>
-                                            </i:EventTrigger>
-                                        </i:Interaction.Triggers>
-                                    </MenuItem>
+                                    <MenuItem Header="Close All But This" 
+                                              cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" 
+                                              cal:Message.Attach="CloseAllButThis($dataContext)"/>
+
+                                    <MenuItem Header="Close all tabs on the Left"  
+                                              cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" 
+                                              cal:Message.Attach="CloseAllTabsOnTheLeft($dataContext)"/>
+
+                                    <MenuItem Header="Close all tabs on the Right"  
+                                              cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" 
+                                              cal:Message.Attach="CloseAllTabsOnTheRight($dataContext)"/>
                                 </ContextMenu>
                             </Setter.Value>
                         </Setter>

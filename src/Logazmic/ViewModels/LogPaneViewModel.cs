@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Logazmic.Core.Filters;
 using Logazmic.Core.Receiver;
@@ -78,7 +79,7 @@ namespace Logazmic.ViewModels
         }
 
         public bool AutoScroll { get; set; }
-
+        
         public int TotalLogMessages => LogMessages.Count;
 
         public int ShownLogMessages => _collectionViewSource?.View?.Cast<LogMessage>().Count() ?? 0;
@@ -152,7 +153,7 @@ namespace Logazmic.ViewModels
             }
         }
         
-        public async void Rename()
+        public async Task Rename()
         {
             var newName = await DialogService.Current.ShowInputDialog("Rename", "Enter new name:");
             if (string.IsNullOrEmpty(newName))
@@ -162,17 +163,7 @@ namespace Logazmic.ViewModels
             DisplayName = newName;
             LogazmicSettings.Instance.Save();
         }
-
-        public void CloseAllButThis(LogPaneViewModel pane, MainWindowViewModel  mainWindowViewModel)
-        {
-            foreach (var logPaneViewModel in mainWindowViewModel.Items.Where(i => i != pane).ToList())
-            {
-                mainWindowViewModel.DeactivateItem(logPaneViewModel, true);
-            }
-            LogazmicSettings.Instance.Save();
-
-        }
-
+        
         public void FindNext()
         {
             OnSearchTextChanged();

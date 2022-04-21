@@ -201,14 +201,49 @@ namespace Logazmic.ViewModels
         }
 
         #region Actions
-        
-        public async void AddTCPReceiver()
+
+        public void CloseAllButThis(LogPaneViewModel pane)
+        {
+            if (pane == null) return;
+
+            foreach (var logPaneViewModel in Items.Where(i => i != pane).ToList())
+            {
+                DeactivateItem(logPaneViewModel, true);
+            }
+
+            LogazmicSettings.Instance.Save();
+        }
+
+        public void CloseAllTabsOnTheLeft(LogPaneViewModel pane)
+        {
+            if (pane == null) return;
+
+            foreach (var logPaneViewModel in Items.TakeWhile(i => i != pane).ToList())
+            {
+                DeactivateItem(logPaneViewModel, true);
+            }
+
+            LogazmicSettings.Instance.Save();
+        }
+
+        public void CloseAllTabsOnTheRight(LogPaneViewModel pane)
+        {
+            if (pane == null) return;
+
+            foreach (var logPaneViewModel in Items.SkipWhile(i => i != pane).Skip(1).ToList())
+            {
+                DeactivateItem(logPaneViewModel, true);
+            }
+
+            LogazmicSettings.Instance.Save();
+        }
+
+        public async Task AddTCPReceiver()
         {
             var result = await DialogService.Current.ShowInputDialog("TCP Receiver", "Enter port:");
             if (result != null)
             {
-                ushort port;
-                if (!ushort.TryParse(result, out port))
+                if (!ushort.TryParse(result, out var port))
                 {
                     DialogService.Current.ShowErrorMessageBox("Wrong port");
                     return;
@@ -217,13 +252,12 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public async void AddUDPReceiver()
+        public async Task AddUDPReceiver()
         {
             var result = await DialogService.Current.ShowInputDialog("UDP Receiver", "Enter port:");
             if (result != null)
             {
-                ushort port;
-                if (!ushort.TryParse(result, out port))
+                if (!ushort.TryParse(result, out var port))
                 {
                     DialogService.Current.ShowErrorMessageBox("Wrong port");
                     return;
@@ -263,8 +297,7 @@ namespace Logazmic.ViewModels
 
         public void Open()
         {
-            string path;
-            var res = DialogService.Current.ShowOpenDialog(out path, ".log4j", "Nlog log4jxml|*.log4jxml;*.log4j|Flat|*.log");
+            var res = DialogService.Current.ShowOpenDialog(out var path, ".log4j", "Nlog log4jxml|*.log4jxml;*.log4j|Flat|*.log");
             if (!res)
             {
                 return;
