@@ -220,7 +220,7 @@ namespace Logazmic.ViewModels
             e.Accepted = true;
         }
         
-        protected override void DoUpdate(bool full)
+        protected override void DoUpdate(bool full, bool scrollIntoSelected)
         {
             if (full)
             {
@@ -250,9 +250,11 @@ namespace Logazmic.ViewModels
                     }
                 }
                 NotifyOfPropertyChange(nameof(ShownLogMessages));
+                if (scrollIntoSelected)
+                {
+                    ScrollIntoSelected(true);
+                }
             });
-
-           // ScrollIntoSelected();
         }
 
         public void ScrollIntoSelected(bool forced = false)
@@ -300,7 +302,7 @@ namespace Logazmic.ViewModels
             {
                 ProfileFiltersViewModel.UpdateFilters();
             }
-            Update(message.IsFull);
+            Update(message.IsFull, true);
         }
 
         public void Dispose()

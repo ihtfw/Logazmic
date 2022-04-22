@@ -13,6 +13,7 @@ namespace Logazmic.ViewModels
     public class UpdatableScreen : Screen
     {
         private bool _needToUpdate;
+        private bool _needToScrollIntoSelected;
 
         private bool _fullUpdate;
 
@@ -49,7 +50,7 @@ namespace Logazmic.ViewModels
             {
                 try
                 {
-                    DoUpdate(l);
+                    DoUpdate(l, _needToScrollIntoSelected);
                 }
                 finally
                 {
@@ -62,7 +63,7 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public void Update(bool full = false)
+        public void Update(bool full = false, bool scrollIntoSelected = false)
         {
             lock (_timer)
             {
@@ -74,11 +75,13 @@ namespace Logazmic.ViewModels
                     _fullUpdate = full;
                 }
 
+                _needToScrollIntoSelected = scrollIntoSelected;
+
                 _timer.Start();
             }
         }
 
-        protected virtual void DoUpdate(bool full)
+        protected virtual void DoUpdate(bool full, bool scrollIntoSelected)
         {
         }
     }
