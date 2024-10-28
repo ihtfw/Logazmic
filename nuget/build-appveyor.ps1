@@ -12,7 +12,7 @@ $nupkgPath = ($curDir + "\" + $projName + "." + $version + ".nupkg")
 
 Set-Location $curDir
 
-Write-Host "------------------Setting nuspec version($vesrsion)------------------"
+Write-Host "------------------Setting nuspec version($version)------------------"
 [xml]$nuspec = Get-Content $nuspecPath
 $nuspec.package.metadata.version = $version
 $nuspec.Save($nuspecPath)

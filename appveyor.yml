@@ -3,7 +3,7 @@ os: Visual Studio 2019
 init:
   - ps: Update-AppveyorBuild -Version "$(Get-Date -format yyyy.M.d).$env:appveyor_build_number"
 before_build:
-- nuget restore src/Logazmic.sln
+  - cmd: nuget restore src/Logazmic.sln
 configuration:
   - Release
 build:
