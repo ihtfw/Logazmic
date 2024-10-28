@@ -3,7 +3,9 @@ os: Visual Studio 2019
 init:
   - ps: Update-AppveyorBuild -Version "$(Get-Date -format yyyy.M.d).$env:appveyor_build_number"
 before_build:
-  - cmd: nuget restore src/Logazmic.sln
+  - ps: Write-Host "Starting NuGet package restore for Logazmic.sln"
+  - nuget restore src/Logazmic.sln -Verbosity detailed 
+  - ps: Write-Host "Restoring NuGet packages is completed"
 configuration:
   - Release
 build:
