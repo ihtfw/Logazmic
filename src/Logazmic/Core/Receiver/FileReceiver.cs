@@ -11,6 +11,7 @@ namespace Logazmic.Core.Receiver
     /// </summary>
     public class FileReceiver : ReceiverBase
     {
+        private readonly object _readingLock = new object();
         private StreamReader _fileReader;
 
         private string _fileToWatch;
@@ -50,7 +51,8 @@ namespace Logazmic.Core.Receiver
 
             _lastFileLength = 0;
 
-            ReadFile();
+            // Tab was closed while reading
+            if (!ReadFile()) return;
 
             string path = Path.GetDirectoryName(FileToWatch);
             _filename = Path.GetFileName(FileToWatch);
@@ -68,11 +70,15 @@ namespace Logazmic.Core.Receiver
             {
                 _fileWatcher.EnableRaisingEvents = false;
                 _fileWatcher.Changed -= OnFileChanged;
+                _fileWatcher.Dispose();
                 _fileWatcher = null;
             }
 
-            _fileReader?.Close();
-            _fileReader = null;
+            lock (_readingLock)
+            {
+                _fileReader?.Close();
+                _fileReader = null;
+            }
 
             _lastFileLength = 0;
         }
@@ -89,26 +95,38 @@ namespace Logazmic.Core.Receiver
             ReadFile();
         }
 
-        private void ReadFile()
+        /// <summary>
+        /// </summary>
+        /// <returns>True if success reading</returns>
+        private bool ReadFile()
         {
-            if ((_fileReader == null) || (_fileReader.BaseStream.Length == _lastFileLength))
+            lock (_readingLock)
             {
-                return;
+                if (_fileReader == null) return false;
+                if (_fileReader.BaseStream.Length == _lastFileLength) return true;
+
+                // Seek to the last file length
+                _fileReader.BaseStream.Seek(_lastFileLength, SeekOrigin.Begin);
             }
 
-            // Seek to the last file length
-            _fileReader.BaseStream.Seek(_lastFileLength, SeekOrigin.Begin);
 
             int bytesRead;
             do
             {
-                var nextLogEvents = _logStreamReader.NextLogEvents(_fileReader.BaseStream, out bytesRead).ToList();
-                if (nextLogEvents.Any())
-                    OnNewMessages(nextLogEvents);
+                lock (_readingLock)
+                {
+                    if (_fileReader == null) return false;
 
-                // Update the last file length
-                _lastFileLength = _fileReader.BaseStream.Position;
+                    var nextLogEvents = _logStreamReader.NextLogEvents(_fileReader.BaseStream, out bytesRead).ToList();
+                    if (nextLogEvents.Any())
+                        OnNewMessages(nextLogEvents);
+
+                    // Update the last file length
+                    _lastFileLength = _fileReader.BaseStream.Position;
+                }
             } while (bytesRead > 0);
+
+            return true;
         }
     }
 }
