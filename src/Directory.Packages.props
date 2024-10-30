@@ -16,7 +16,7 @@
     <PackageVersion Include="NUnit" Version="4.2.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="PropertyChanged.Fody" Version="4.1.0" />
-    <PackageVersion Include="squirrel.windows" Version="1.9.1" />
+    <PackageVersion Include="squirrel.windows" Version="2.0.1" />
     <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 </Project>
