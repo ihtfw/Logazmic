@@ -24,6 +24,6 @@ deploy:
   description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
   provider: GitHub
   auth_token:
-    secure: avB/QSAB0oqYutIGEeLkfdv9b3hJOhFv+RWVoL6916LEZcjVozeLkLTneC6OL9cl
+    secure: %GITHUB_TOKEN%
   on:
     branch: master
