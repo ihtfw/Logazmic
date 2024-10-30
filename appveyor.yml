@@ -23,7 +23,7 @@ deploy:
   release: Logazmic - $(appveyor_build_version)
   description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
   provider: GitHub
-  auth_token:  
+  auth_token:
     secure: ZErE0U1rBowxMBa8bpQgNtwKMR2KdMGz+d8VLOFlZDRM2kl+YLsiQm4yNRZai2AgNPwjcaoXDzzQgeBjC2DCIaUbWGHD4mfnmIwMAj7wXrrdF2vSYA5HMxtEv9Ewd2Dl
   on:
     branch: master

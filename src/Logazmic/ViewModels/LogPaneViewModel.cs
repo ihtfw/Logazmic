@@ -261,7 +261,11 @@ namespace Logazmic.ViewModels
         {
             if (forced || !AutoScroll)
             {
-                ((dynamic)GetView())?.ScrollIntoSelected();
+                var view = GetView();
+                if (view is IScrollableView scrollableView)
+                {
+                    scrollableView.ScrollIntoSelected();
+                }
             }
         }
 

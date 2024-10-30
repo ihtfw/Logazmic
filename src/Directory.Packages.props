@@ -6,16 +6,16 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Caliburn.Micro" Version="3.2.0" />
-    <PackageVersion Include="Fody" Version="6.1.1" />
+    <PackageVersion Include="Fody" Version="6.8.2" />
     <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
     <PackageVersion Include="MahApps.Metro" Version="1.6.5" />
     <PackageVersion Include="MahApps.Metro.Resources" Version="0.6.1.0" />
     <PackageVersion Include="NDesk.Options" Version="0.2.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="NLog" Version="4.7.0" />
+    <PackageVersion Include="NLog" Version="5.3.4" />
     <PackageVersion Include="NUnit" Version="4.2.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageVersion Include="PropertyChanged.Fody" Version="3.2.8" />
+    <PackageVersion Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageVersion Include="squirrel.windows" Version="1.9.1" />
     <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Logazmic.Utils;
+using Logazmic.ViewModels;
 
 namespace Logazmic.Views
 {
@@ -10,7 +11,7 @@ namespace Logazmic.Views
     /// <summary>
     /// Interaction logic for LogPaneView.xaml
     /// </summary>
-    public partial class LogPaneView
+    public partial class LogPaneView : IScrollableView
     {
         private ThrottleHelper _throttleHelper;
 

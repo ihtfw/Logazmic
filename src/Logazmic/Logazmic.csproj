@@ -50,7 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro" />
-    <PackageReference Include="Fody" />
+    <PackageReference Include="Fody">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="MahApps.Metro" />
     <PackageReference Include="MahApps.Metro.Resources" />
