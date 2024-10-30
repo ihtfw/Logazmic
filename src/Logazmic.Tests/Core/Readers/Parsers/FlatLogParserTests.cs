@@ -16,8 +16,8 @@ namespace Logazmic.Tests.Core.Readers.Parsers
             var text = @"Hello";
             var logEvent = sut.ParseLogEvent(text);
 
-            Assert.AreEqual(LogLevel.Info, logEvent.LogLevel);
-            Assert.AreEqual(text, logEvent.Message);
+            Assert.That(logEvent.LogLevel, Is.EqualTo(LogLevel.Info));
+            Assert.That(logEvent.Message, Is.EqualTo(text));
         }
         
         [Test]
@@ -29,7 +29,7 @@ namespace Logazmic.Tests.Core.Readers.Parsers
             var items = sut.SplitToLogEventParseItems(text).ToList();
 
             Assert.That(items.Count, Is.EqualTo(1));
-            Assert.AreEqual(new LogEventParseItem(0, text.Length), items.First());
+            Assert.That(items.First(), Is.EqualTo(new LogEventParseItem(0, text.Length)));
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace Logazmic.Tests.Core.Readers.Parsers
             var items = sut.SplitToLogEventParseItems(text).ToList();
 
             Assert.That(items.Count, Is.EqualTo(2));
-            Assert.AreEqual(new LogEventParseItem(0, 3), items[0]);
-            Assert.AreEqual(new LogEventParseItem(4, 2), items[1]);
+            Assert.That(items[0], Is.EqualTo(new LogEventParseItem(0, 3)));
+            Assert.That(items[1], Is.EqualTo(new LogEventParseItem(4, 2)));
         }
 
         [Test]
@@ -54,9 +54,9 @@ namespace Logazmic.Tests.Core.Readers.Parsers
             var items = sut.SplitToLogEventParseItems(text).ToList();
 
             Assert.That(items.Count, Is.EqualTo(3));
-            Assert.AreEqual(new LogEventParseItem(0, 3), items[0]);
-            Assert.AreEqual(new LogEventParseItem(4, 2), items[1]);
-            Assert.AreEqual(new LogEventParseItem(7, 1), items[2]);
+            Assert.That(items[0], Is.EqualTo(new LogEventParseItem(0, 3)));
+            Assert.That(items[1], Is.EqualTo(new LogEventParseItem(4, 2)));
+            Assert.That(items[2], Is.EqualTo(new LogEventParseItem(7, 1)));
         }
     }
 }

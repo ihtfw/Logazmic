@@ -30,8 +30,8 @@ namespace Logazmic.Tests.Core.Readers
             using (var ms = new MemoryStream())
             {
                 var logMessages = sut.NextLogEvents(ms, out var bytesRead).ToList();
-                Assert.IsEmpty(logMessages);
-                Assert.AreEqual(0, bytesRead);
+                Assert.That(logMessages, Is.Empty);
+                Assert.That(bytesRead, Is.Zero);
             }
         }
 
