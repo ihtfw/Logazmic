@@ -3,9 +3,6 @@ branches:
   only:
   - master
   
-environment:
-  GITHUB_TOKEN: %GITHUB_TOKEN%
-  
 image: Visual Studio 2022
 
 init:
@@ -27,6 +24,6 @@ deploy:
   description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
   provider: GitHub
   auth_token:
-    secure: %GITHUB_TOKEN%
+    secure: '%GITHUB_TOKEN%'
   on:
     branch: master
