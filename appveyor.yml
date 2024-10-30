@@ -7,9 +7,6 @@ image: Visual Studio 2022
 
 init:
 - pwsh: Update-AppveyorBuild -Version "$(Get-Date -format yyyy.M.d).$env:appveyor_build_number"
-  
-install:
-- pwsh: Install-Product dotnet "8.0.x"
 
 build_script:
 - pwsh: dotnet restore src/Logazmic/Logazmic.csproj
