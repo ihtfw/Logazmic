@@ -61,6 +61,5 @@
     <PackageReference Include="NLog" />
     <PackageReference Include="PropertyChanged.Fody" />
     <PackageReference Include="squirrel.windows" />
-    <PackageReference Include="System.ValueTuple" />
   </ItemGroup>
 </Project>

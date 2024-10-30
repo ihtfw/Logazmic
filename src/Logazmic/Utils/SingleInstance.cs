@@ -10,6 +10,9 @@
 
 // ReSharper disable once CheckNamespace
 // ReSharper disable InconsistentNaming
+
+using System.Threading.Tasks;
+
 namespace Microsoft.Shell
 {
     using System;
@@ -192,7 +195,7 @@ namespace Microsoft.Shell
 
     public interface ISingleInstanceApp
     {
-        bool SignalExternalCommandLineArgs(IList<string> args);
+        Task<bool> SignalExternalCommandLineArgs(IList<string> args);
     }
 
     /// <summary>

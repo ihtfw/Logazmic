@@ -57,7 +57,7 @@ namespace Logazmic.ViewModels.Filters
                     child.IsChecked = value;
                 }
 
-                _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Full);
+                _logPaneServices.EventAggregator.PublishOnCurrentThreadAsync(RefreshEvent.Full);
             }
         }
 

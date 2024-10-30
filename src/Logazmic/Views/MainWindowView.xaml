@@ -8,8 +8,8 @@
                    xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
                    xmlns:controls="clr-namespace:Logazmic.Controls"
                    xmlns:views="clr-namespace:Logazmic.Views"
-                   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:settings="clr-namespace:Logazmic.Settings"
+                   xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
                    AllowDrop="True"
@@ -105,13 +105,13 @@
 
         <Grid x:Name="Main">
             <metro:MetroTabControl x:Name="Items">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="TabItemClosingEvent">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="TabItemClosingEvent">
                         <cal:ActionMessage MethodName="CloseTab">
                             <cal:Parameter Value="$eventArgs" />
                         </cal:ActionMessage>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
                 <metro:MetroTabControl.Resources>
                     <Style TargetType="metro:MetroTabItem">
                         <Setter Property="ToolTip" Value="{Binding ToolTip}" />

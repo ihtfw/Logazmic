@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Logazmic.Core.Filters;
 using Logazmic.ViewModels.Events;
 
 namespace Logazmic.ViewModels.Filters
 {
-    public class ProfilesFiltersViewModel : PropertyChangedBase,IActivate
+    public class ProfilesFiltersViewModel : PropertyChangedBase, IActivate
     {
         private readonly FiltersProfile _filtersProfile;
         private readonly LogPaneServices _logPaneServices;
@@ -41,7 +43,7 @@ namespace Logazmic.ViewModels.Filters
 
             NotifyOfPropertyChange(nameof(ProfileName));
 
-            _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Filters);
+            _logPaneServices.EventAggregator.PublishOnCurrentThreadAsync(RefreshEvent.Filters);
         }
 
         public void RemoveProfile(string profileName)
@@ -53,11 +55,13 @@ namespace Logazmic.ViewModels.Filters
             ProfileNames.Remove(profileName);
         }
 
-        public void Activate()
+        public Task ActivateAsync(CancellationToken cancellationToken)
         {
             ReloadProfileNames();
 
             Activated?.Invoke(this, new ActivationEventArgs());
+
+            return Task.CompletedTask;
         }
 
         private void ReloadProfileNames()

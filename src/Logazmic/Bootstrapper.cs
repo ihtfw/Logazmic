@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows;
 using System.Windows.Threading;
 using Logazmic.Services;
 using Logazmic.Settings;
@@ -18,8 +19,7 @@ namespace Logazmic
         public Bootstrapper()
         {
             Initialize();
-            
-            IoC.Get<IWindowManager>().ShowWindow(MainWindowViewModel.Instance);
+            IoC.Get<IWindowManager>().ShowWindowAsync(MainWindowViewModel.Instance);
         }
 
         protected override void Configure()

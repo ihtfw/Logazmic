@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Logazmic.Core.Filters;
@@ -191,7 +192,7 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public void Initialize()
+        public async Task Initialize()
         {
             try
             {
@@ -204,7 +205,7 @@ namespace Logazmic.ViewModels
             catch (Exception e)
             {
                 DialogService.Current.ShowErrorMessageBox(e);
-                TryClose();
+                await TryCloseAsync();
                 throw;
             }
         }
@@ -300,13 +301,15 @@ namespace Logazmic.ViewModels
 
         #endregion
         
-        public void Handle(RefreshEvent message)
+        public Task HandleAsync(RefreshEvent message, CancellationToken cancellationToken)
         {
             if (message.IsFilters)
             {
                 ProfileFiltersViewModel.UpdateFilters();
             }
             Update(message.IsFull, true);
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()

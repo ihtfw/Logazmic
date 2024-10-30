@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using Logazmic.Converters;
 using Microsoft.Shell;
 
@@ -65,12 +66,12 @@ namespace Logazmic
             dateTimeToStringConverter.Options = new DateTimeToStringConverterOptions(LogazmicSettings.Instance);
         }
 
-        public bool SignalExternalCommandLineArgs(IList<string> args)
+        public async Task<bool> SignalExternalCommandLineArgs(IList<string> args)
         {
             if(MainWindow != null)
                 ActivateWindow(MainWindow);
             if (args.Count > 1)
-                MainWindowViewModel.Instance.LoadFile(args[1]);
+                await MainWindowViewModel.Instance.LoadFile(args[1]);
             return true;
         }
 

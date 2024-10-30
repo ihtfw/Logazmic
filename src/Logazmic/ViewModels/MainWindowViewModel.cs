@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading;
 using Logazmic.Behaviours;
 using Logazmic.Core.Filters;
 using Logazmic.Core.Readers;
@@ -43,6 +44,7 @@ namespace Logazmic.ViewModels
         {
             _logReaderFactory = logReaderFactory;
             DisplayName = "Logazmic";
+
             LoadReciversFromSettings();
         }
 
@@ -121,15 +123,15 @@ namespace Logazmic.ViewModels
             return "1.0.0";
         }
 
-        private void LoadReciversFromSettings()
+        private async Task LoadReciversFromSettings()
         {
             foreach (var receiver in LogazmicSettings.Instance.Receivers)
             {
-                AddReceiver(receiver);
+                await AddReceiver(receiver);
             }
         }
 
-        public void AddReceiver(ReceiverBase receiver)
+        public async Task AddReceiver(ReceiverBase receiver)
         {
             receiver.LogReaderFactory = _logReaderFactory;
             if (string.IsNullOrEmpty(receiver.LogFormat))
@@ -145,21 +147,23 @@ namespace Logazmic.ViewModels
             var logPaneViewModel = new LogPaneViewModel(receiver);
             logPaneViewModel.Deactivated += OnTabDeactivated;
             Items.Add(logPaneViewModel);
-            ActivateItem(logPaneViewModel);
-            Task.Factory.StartNew(logPaneViewModel.Initialize).ContinueWith(t =>
+            await ActivateItemAsync(logPaneViewModel);
+
+            await logPaneViewModel.Initialize().ContinueWith(t =>
             {
                 if(t.Exception != null)
                     LogazmicSettings.Instance.Receivers.Remove(receiver);
             });
         }
 
-        protected override void OnDeactivate(bool close)
+
+        protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             foreach (var item in Items)
             {
                 item.Deactivated -= OnTabDeactivated;
             }
-            base.OnDeactivate(close);
+            await base.OnDeactivateAsync(close, cancellationToken);
 
             if (close)
             {
@@ -169,9 +173,9 @@ namespace Logazmic.ViewModels
             }
         }
 
-        private void OnTabDeactivated(object sender, DeactivationEventArgs args)
+        private Task OnTabDeactivated(object sender, DeactivationEventArgs args)
         {
-            if (!args.WasClosed) return;
+            if (!args.WasClosed) return Task.CompletedTask;
 
             var pane = (LogPaneViewModel)sender;
             //Items.Remove(pane);
@@ -188,9 +192,11 @@ namespace Logazmic.ViewModels
                     Logger.Error(e, "Failed to remove or dispose receiver");
                 }
             });
+
+            return Task.CompletedTask;
         }
 
-        public void OnDrop(DragEventArgs e)
+        public async Task OnDrop(DragEventArgs e)
         {
             var dataObject = e.Data as DataObject;
             if (dataObject == null)
@@ -204,40 +210,40 @@ namespace Logazmic.ViewModels
 
                 foreach (var fileName in fileNames)
                 {
-                    LoadFile(fileName);
+                    await LoadFile(fileName);
                 }
             }
         }
 
         #region Actions
 
-        public void CloseAllButThis(LogPaneViewModel pane)
+        public async Task CloseAllButThis(LogPaneViewModel pane)
         {
             if (pane == null) return;
 
             foreach (var logPaneViewModel in Items.Where(i => i != pane).ToList())
             {
-                DeactivateItem(logPaneViewModel, true);
+                await DeactivateItemAsync(logPaneViewModel, true);
             }
         }
 
-        public void CloseAllTabsOnTheLeft(LogPaneViewModel pane)
+        public async Task CloseAllTabsOnTheLeft(LogPaneViewModel pane)
         {
             if (pane == null) return;
 
             foreach (var logPaneViewModel in Items.TakeWhile(i => i != pane).ToList())
             {
-                DeactivateItem(logPaneViewModel, true);
+                await DeactivateItemAsync(logPaneViewModel, true);
             }
         }
 
-        public void CloseAllTabsOnTheRight(LogPaneViewModel pane)
+        public async Task CloseAllTabsOnTheRight(LogPaneViewModel pane)
         {
             if (pane == null) return;
 
             foreach (var logPaneViewModel in Items.SkipWhile(i => i != pane).Skip(1).ToList())
             {
-                DeactivateItem(logPaneViewModel, true);
+                await DeactivateItemAsync(logPaneViewModel, true);
             }
         }
 
@@ -251,7 +257,7 @@ namespace Logazmic.ViewModels
                     DialogService.Current.ShowErrorMessageBox("Wrong port");
                     return;
                 }
-                AddReceiver(new TcpReceiver { Port = port, DisplayName = $"TCP({port})" });
+                await AddReceiver(new TcpReceiver { Port = port, DisplayName = $"TCP({port})" });
             }
         }
 
@@ -265,11 +271,11 @@ namespace Logazmic.ViewModels
                     DialogService.Current.ShowErrorMessageBox("Wrong port");
                     return;
                 }
-                AddReceiver(new UdpReceiver { Port = port, DisplayName = $"UDP({port})" });
+                await AddReceiver(new UdpReceiver { Port = port, DisplayName = $"UDP({port})" });
             }
         }
 
-        public void LoadFile(string path)
+        public async Task LoadFile(string path)
         {
             try
             {
@@ -281,7 +287,7 @@ namespace Logazmic.ViewModels
                 var alreadyOpened = Items.FirstOrDefault(it => it.ToolTip == path);
                 if (alreadyOpened != null)
                 {
-                    ActivateItem(alreadyOpened);
+                    await ActivateItemAsync(alreadyOpened);
                     return;
                 }
 
@@ -290,7 +296,7 @@ namespace Logazmic.ViewModels
                     FileToWatch = path,
                     LogFormat = _logReaderFactory.GetLogFormatByFileExtension(Path.GetExtension(path))
                 };
-                AddReceiver(fileReceiver);
+                await AddReceiver(fileReceiver);
             }
             catch (Exception e)
             {
@@ -298,7 +304,7 @@ namespace Logazmic.ViewModels
             }
         }
 
-        public void Open()
+        public async Task Open()
         {
             var res = DialogService.Current.ShowOpenDialog(out var path, ".log4j", "Nlog log4jxml|*.log4jxml;*.log4j|Flat|*.log");
             if (!res)
@@ -306,7 +312,7 @@ namespace Logazmic.ViewModels
                 return;
             }
 
-            LoadFile(path);
+            await LoadFile(path);
         }
 
         public void ExcludeLogEntry()
@@ -329,15 +335,18 @@ namespace Logazmic.ViewModels
             ActiveItem?.FindNext();
         }
 
-        public void CloseActiveTab()
+        public async Task CloseActiveTab()
         {
-            ActiveItem?.TryClose();
+            var activeItem = ActiveItem;
+            if (activeItem == null) return;
+
+            await activeItem.TryCloseAsync();
         }
 
-        public void CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
+        public async Task CloseTab(BaseMetroTabControl.TabItemClosingEventArgs args)
         {
             var pane = (LogPaneViewModel)args.ClosingTabItem.Content;
-            DeactivateItem(pane, true);
+            await DeactivateItemAsync(pane, true);
         }
        
         #endregion

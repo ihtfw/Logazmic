@@ -1,9 +1,10 @@
+using Microsoft.Xaml.Behaviors;
+
 namespace Logazmic
 {
     using System;
     using System.Linq;
     using System.Windows.Input;
-    using System.Windows.Interactivity;
 
     internal static class ShortcutParser
     {

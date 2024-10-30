@@ -37,7 +37,7 @@ namespace Logazmic.ViewModels.Filters
             {
                 FiltersProfile.FilterText = value;
                 
-                _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+                _logPaneServices.EventAggregator.PublishOnCurrentThreadAsync(RefreshEvent.Partial);
             }
         }
         public BindableCollection<LogLevelFilterViewModel> LogLevels { get; }
@@ -51,7 +51,7 @@ namespace Logazmic.ViewModels.Filters
                 if (_minLogLevel != null)
                 {
                     FiltersProfile.MinLogLevel = _minLogLevel.LogLevel;
-                    _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+                    _logPaneServices.EventAggregator.PublishOnCurrentThreadAsync(RefreshEvent.Partial);
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace Logazmic.ViewModels.Filters
             var messageFilterViewModel = new MessageFilterViewModel(_logPaneServices, filter);
             MessageFilters.Add(messageFilterViewModel);
 
-            _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+            _logPaneServices.EventAggregator.PublishOnCurrentThreadAsync(RefreshEvent.Partial);
         }
 
         public void RemoveMessageFilter(MessageFilterViewModel messageFilterViewModel)
@@ -87,7 +87,7 @@ namespace Logazmic.ViewModels.Filters
             FiltersProfile.MessageFilters.Remove(messageFilterViewModel.MessageFilter);
             MessageFilters.Remove(messageFilterViewModel);
 
-            _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+            _logPaneServices.EventAggregator.PublishOnCurrentThreadAsync(RefreshEvent.Partial);
         }
         
         public void UpdateFilters()

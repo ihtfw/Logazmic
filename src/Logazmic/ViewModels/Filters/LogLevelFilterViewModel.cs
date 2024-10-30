@@ -24,7 +24,7 @@ namespace Logazmic.ViewModels.Filters
             set
             {
                 _logLevelFilter.IsEnabled = value;
-                _logPaneServices.EventAggregator.PublishOnCurrentThread(RefreshEvent.Partial);
+                _logPaneServices.EventAggregator.PublishOnCurrentThreadAsync(RefreshEvent.Partial);
             }
         }
     }
