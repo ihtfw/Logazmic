@@ -2,7 +2,10 @@ version: .{build}
 branches:
   only:
   - master
-
+  
+environment:
+  GITHUB_TOKEN: %GITHUB_TOKEN%
+  
 image: Visual Studio 2022
 
 init:
