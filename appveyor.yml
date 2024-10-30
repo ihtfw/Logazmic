@@ -1,18 +1,27 @@
-version: .{build}
-os: Visual Studio 2022
+image: Visual Studio 2022
+  
 init:
   - ps: Update-AppveyorBuild -Version "$(Get-Date -format yyyy.M.d).$env:appveyor_build_number"
+  
+before_build:
+  - ps: Install-Product dotnet "8.0.x"
+ 
 configuration:
   - Release
+  
 build_script:
   - cmd: dotnet publish src\Logazmic\Logazmic.csproj -c Release -r win-x64
   - ps: squirrel/build-appveyor.ps1
+  
 artifacts:
   - path: squirrel/Releases/*
+  
 branches:
   only: 
     - master
+    
 skip_tags: true
+
 deploy:
   tag: $(appveyor_build_version)
   release: Logazmic - $(appveyor_build_version)
