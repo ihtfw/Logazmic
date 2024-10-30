@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>11</LangVersion>
+    <Authors>Logazmic Team</Authors>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://github.com/ihtfw/Logazmic</RepositoryUrl>
+    <!-- CS1591 missing xml document -->
+    <NoWarn>$(NoWarn);NU1507;CS1591</NoWarn>
+    <!-- NU1008 - should not define the version on the PackageReference items but on the PackageVersion items -->
+    <!-- NU1504 - Duplicate 'PackageReference' items found -->
+    <!-- NU1506 - Duplicate 'PackageVersion' items found -->
+    <WarningsAsErrors>$(WarningsAsErrors);NU1506;NU1008;NU1504</WarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- Documentation only in release -->
+  <PropertyGroup Condition=" '$(Configuration.ToLower())' == 'release' ">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>
