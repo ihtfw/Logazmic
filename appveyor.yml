@@ -1,17 +1,11 @@
 version: .{build}
-os: Visual Studio 2019
+os: Visual Studio 2022
 init:
   - ps: Update-AppveyorBuild -Version "$(Get-Date -format yyyy.M.d).$env:appveyor_build_number"
-before_build:
-  - ps: Write-Host "Starting NuGet package restore for Logazmic.sln"
-  - nuget restore src/Logazmic.sln -Verbosity detailed 
-  - ps: Write-Host "Restoring NuGet packages is completed"
 configuration:
   - Release
-build:
-  project: src/Logazmic.sln
-  verbosity: normal
-after_build:
+build_script:
+  - cmd: dotnet publish src\Logazmic\Logazmic.csproj -c Release -r win-x64
   - ps: squirrel/build-appveyor.ps1
 artifacts:
   - path: squirrel/Releases/*
@@ -28,5 +22,3 @@ deploy:
     secure: avB/QSAB0oqYutIGEeLkfdv9b3hJOhFv+RWVoL6916LEZcjVozeLkLTneC6OL9cl
   on:
     branch: master
-cache:
-  - src/packages

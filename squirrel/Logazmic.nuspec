@@ -2,19 +2,23 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Logazmic</id>
-    <version>0.0.0</version>
+    <version>2410.30.1</version>
     <title>Logazmic</title>
-    <authors>ihtfw &amp; susloparovdenis</authors>
-    <owners>ihtfw &amp; susloparovdenis</owners>
+    <authors>Logazmic Team</authors>
+    <owners>Logazmic Team</owners>
     <projectUrl>https://github.com/ihtfw/Logazmic</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/appbar.flag.bear.png</iconUrl>
+    <icon>docs/app.ico</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is based on Log2console. UI is rewritten in WPF with usage of MahApps.Metro</description>
+    <dependencies>
+      <group targetFramework=".NETFramework4.7.2">
+      </group>
+    </dependencies>
   </metadata>
   <files>
-    <file src="..\src\Logazmic\bin\Release\Resources\*" target="lib\net472\Resources\" />	
-    <file src="..\src\Logazmic\bin\Release\*.dll" target="lib\net472\" />
-    <file src="..\src\Logazmic\bin\Release\*.exe" target="lib\net472\" />
-    <file src="..\src\Logazmic\bin\Release\*.config" target="lib\net472\" />
+    <file src="..\src\Logazmic\bin\Release\net472\win-x64\publish\**" target="lib\net472" exclude="**\*.pdb" />
+    <file src=".\bin\Squirrel.exe" target="lib\net472" />
+    <file src=".\app.ico" target="docs" />
   </files>
 </package>

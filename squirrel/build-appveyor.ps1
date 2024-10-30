@@ -1,9 +1,13 @@
+# for debugging 
+# $env:appveyor_build_number = "1"
+
 $projDirName = "Logazmic"
 $projName = "Logazmic"
 
 $curDir = (Split-Path -Path $MyInvocation.MyCommand.Definition -Parent)
 $slnDir = $curDir + "\..\src\"
-$projDir = $slnDir + $projDirName+ "\"
+$projDir = $slnDir + $projDirName + "\"
+$setupIconPath = $curDir + "\app.ico"  
 
 $version = (Get-Date -format yyMM.d) + "." + $env:appveyor_build_number;
 
@@ -22,7 +26,7 @@ Write-Host "------------------Create nupkg------------------"
 
 Write-Host "------------------Release------------------"
 Write-Host $nupkgPath
-& ($curDir + "\bin\squirrel.exe") --releasify $nupkgPath --no-msi --framework-version=net472  | Out-Null
+& ($curDir + "\bin\squirrel.exe") --releasify $nupkgPath --no-msi --framework-version=net472 --setupIcon $setupIconPath | Out-Null
 Write-Host "------------------Completed------------------"
 
 
