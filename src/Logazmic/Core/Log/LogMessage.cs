@@ -62,7 +62,7 @@
         /// <summary>
         /// Properties collection.
         /// </summary>
-        public Dictionary<string, string> Properties = new Dictionary<string, string>();
+        public Dictionary<string, string> Properties = new();
 
 
         /// <summary>

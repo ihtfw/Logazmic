@@ -11,7 +11,7 @@ namespace Logazmic.Core.Receiver
     /// </summary>
     public class FileReceiver : ReceiverBase
     {
-        private readonly object _readingLock = new object();
+        private readonly object _readingLock = new();
         private StreamReader _fileReader;
 
         private string _fileToWatch;

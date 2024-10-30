@@ -28,7 +28,7 @@ namespace Logazmic.ViewModels
 
         #region Singleton
 
-        private static readonly Lazy<MainWindowViewModel> LazyInstance = new Lazy<MainWindowViewModel>(CreateMainWindowViewModel);
+        private static readonly Lazy<MainWindowViewModel> LazyInstance = new(CreateMainWindowViewModel);
 
         private static MainWindowViewModel CreateMainWindowViewModel()
         {

@@ -14,7 +14,7 @@ namespace Logazmic.Settings
 
         private static readonly string SettingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\settings.json");
 
-        private static readonly Lazy<LogazmicSettings> LazyInstance = new Lazy<LogazmicSettings>(Load);
+        private static readonly Lazy<LogazmicSettings> LazyInstance = new(Load);
 
         public static LogazmicSettings Instance => LazyInstance.Value;
 

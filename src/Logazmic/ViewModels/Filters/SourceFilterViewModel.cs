@@ -63,7 +63,7 @@ namespace Logazmic.ViewModels.Filters
 
         public string Name => _sourceFilter.Name;
 
-        public BindableCollection<SourceFilterViewModel> Children { get; } = new BindableCollection<SourceFilterViewModel>();
+        public BindableCollection<SourceFilterViewModel> Children { get; } = new();
 
         public SourceFilterViewModel Find(IReadOnlyList<string> loggerNames)
         {

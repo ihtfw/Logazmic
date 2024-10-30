@@ -10,7 +10,7 @@ namespace Logazmic.Core.Readers.Parsers
         const string Log4JNamespace = "http://jakarta.apache.org/log4j/";
         const string NlogNamespace = "http://nlog-project.org";
 
-        static readonly DateTime S1970 = new DateTime(1970, 1, 1);
+        static readonly DateTime S1970 = new(1970, 1, 1);
         
         readonly XmlParserContext _xmlContext = CreateContext();
 

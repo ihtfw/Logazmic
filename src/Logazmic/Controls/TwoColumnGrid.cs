@@ -10,7 +10,7 @@ namespace Logazmic.Controls
     public class TwoColumnGrid : Panel
     {
         private double _column1Width;
-        private readonly List<double> _rowHeights = new List<double>();
+        private readonly List<double> _rowHeights = new();
 
         public TwoColumnGrid()
         {
@@ -30,7 +30,7 @@ namespace Logazmic.Controls
         /// Identifies the ColumnSpacing dependency property
         /// </summary>
         public static readonly DependencyProperty RowSpacingProperty =
-            DependencyProperty.Register("RowSpacing", typeof(double), typeof(TwoColumnGrid),
+            DependencyProperty.Register(nameof(RowSpacing), typeof(double), typeof(TwoColumnGrid),
             new FrameworkPropertyMetadata(0.0d, FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Logazmic.Controls
         /// Identifies the ColumnSpacing dependency property
         /// </summary>
         public static readonly DependencyProperty ColumnSpacingProperty =
-            DependencyProperty.Register("ColumnSpacing", typeof(double), typeof(TwoColumnGrid),
+            DependencyProperty.Register(nameof(ColumnSpacing), typeof(double), typeof(TwoColumnGrid),
             new FrameworkPropertyMetadata(0.0d, FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
 

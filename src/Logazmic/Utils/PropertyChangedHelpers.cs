@@ -43,7 +43,7 @@
 
             var subscribedPropertyName = GetPropertyName(propertySelector);
 
-            PropertyChangedEventHandler handler = (s, e) =>
+            PropertyChangedEventHandler handler = (_, e) =>
             {
                 if (string.Equals(e.PropertyName, subscribedPropertyName, StringComparison.InvariantCulture))
                 {
@@ -77,7 +77,7 @@
 
             var subscribedPropertyName = GetPropertyName(propertySelector);
 
-            PropertyChangingEventHandler handler = (s, e) =>
+            PropertyChangingEventHandler handler = (_, e) =>
             {
                 if (string.Equals(e.PropertyName, subscribedPropertyName, StringComparison.InvariantCulture))
                 {

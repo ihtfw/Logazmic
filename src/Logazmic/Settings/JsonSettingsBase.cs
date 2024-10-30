@@ -4,7 +4,6 @@ using NLog;
 namespace Logazmic.Settings
 {
     using System;
-    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.IO;
     using System.Linq;
@@ -19,7 +18,7 @@ namespace Logazmic.Settings
         protected readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         [JsonIgnore]
-        public readonly object SyncRoot = new object();
+        public readonly object SyncRoot = new();
         
         public static JsonSerializer CreateJsonSerializer()
         {
@@ -98,14 +97,11 @@ namespace Logazmic.Settings
             {
                 new FileInfo(path).Directory?.Create();
 
-                using (var streamWriter = new StreamWriter(path))
-                {
-                    using (var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.Indented })
-                    {
-                        var jsonSerializer = CreateJsonSerializer();
-                        jsonSerializer.Serialize(jsonTextWriter, this);
-                    }
-                }
+                using var streamWriter = new StreamWriter(path);
+                using var jsonTextWriter = new JsonTextWriter(streamWriter);
+                jsonTextWriter.Formatting = Formatting.Indented;
+                var jsonSerializer = CreateJsonSerializer();
+                jsonSerializer.Serialize(jsonTextWriter, this);
             }
 
             Logger.Trace("Saved!");

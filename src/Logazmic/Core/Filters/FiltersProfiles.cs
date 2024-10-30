@@ -13,7 +13,7 @@ namespace Logazmic.Core.Filters
 
         private static readonly string SettingFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\filters_profiles.json");
 
-        private static readonly Lazy<FiltersProfiles> LazyInstance = new Lazy<FiltersProfiles>(() => Load<FiltersProfiles>(SettingFilePath));
+        private static readonly Lazy<FiltersProfiles> LazyInstance = new(() => Load<FiltersProfiles>(SettingFilePath));
 
         public static FiltersProfiles Instance => LazyInstance.Value;
 

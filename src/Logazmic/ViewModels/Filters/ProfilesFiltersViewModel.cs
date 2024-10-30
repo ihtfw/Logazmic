@@ -25,7 +25,7 @@ namespace Logazmic.ViewModels.Filters
             set => _filtersProfile.Name = value;
         }
         
-        public BindableCollection<string> ProfileNames { get; } = new BindableCollection<string>();
+        public BindableCollection<string> ProfileNames { get; } = new();
         
         public void SaveCurrentProfile()
         {

@@ -56,7 +56,7 @@ namespace Logazmic.ViewModels.Filters
             }
         }
 
-        public BindableCollection<MessageFilterViewModel> MessageFilters { get; } = new BindableCollection<MessageFilterViewModel>();
+        public BindableCollection<MessageFilterViewModel> MessageFilters { get; } = new();
 
         public void AddMessageFilter(string messageFilter)
         {

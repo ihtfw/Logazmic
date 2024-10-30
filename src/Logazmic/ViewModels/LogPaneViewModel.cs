@@ -22,7 +22,6 @@ namespace Logazmic.ViewModels
     
     using Core.Log;
     using Services;
-    using Settings;
 
     public class LogPaneViewModel : UpdatableScreen, IHandle<RefreshEvent>, IDisposable
     {
@@ -69,7 +68,7 @@ namespace Logazmic.ViewModels
             return CultureInfo.InvariantCulture.CompareInfo.IndexOf(logMessage.Message, ProfileFiltersViewModel.SearchText, CompareOptions.IgnoreCase) >= 0;
         }
 
-        public LogPaneServices LogPaneServices { get; } = new LogPaneServices();
+        public LogPaneServices LogPaneServices { get; } = new();
         public ProfileFiltersViewModel ProfileFiltersViewModel { get; }
         public ProfilesFiltersViewModel ProfilesFiltersViewModel { get; } 
 
@@ -91,7 +90,7 @@ namespace Logazmic.ViewModels
         
         public ReceiverBase Receiver { get; }
 
-        public BindableCollection<LogMessage> LogMessages { get; } =new BindableCollection<LogMessage>();
+        public BindableCollection<LogMessage> LogMessages { get; } =new();
 
         public LogMessage SelectedLogMessage { get; set; }
 

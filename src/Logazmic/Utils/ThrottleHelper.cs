@@ -10,11 +10,11 @@ namespace Logazmic.Utils
 
     public class ThrottleHelper : IDisposable
     {
-        private readonly HashSet<object> _objects = new HashSet<object>();
+        private readonly HashSet<object> _objects = new();
         private readonly Action<List<object>> _action;
 
-        private readonly object _dispObject = new object();
-        private readonly object _syncObject = new object();
+        private readonly object _dispObject = new();
+        private readonly object _syncObject = new();
 
         private Timer _timer;
         

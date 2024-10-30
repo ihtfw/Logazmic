@@ -10,7 +10,7 @@ namespace Logazmic
     public class InputBindingTrigger : TriggerBase<FrameworkElement>, ICommand
     {
         public static readonly DependencyProperty InputBindingProperty =
-            DependencyProperty.Register("InputBinding", typeof(InputBinding)
+            DependencyProperty.Register(nameof(InputBinding), typeof(InputBinding)
                 , typeof(InputBindingTrigger)
                 , new UIPropertyMetadata(null));
 

@@ -23,7 +23,7 @@
         public static readonly DependencyProperty AutoscrollProperty = DependencyProperty.RegisterAttached(
             "Autoscroll", typeof(bool), typeof(DataGridBehavior), new PropertyMetadata(default(bool), AutoscrollChangedCallback));
 
-        private static readonly Dictionary<DataGrid, DataGridInfo> InfoDict = new Dictionary<DataGrid, DataGridInfo>();
+        private static readonly Dictionary<DataGrid, DataGridInfo> InfoDict = new();
 
         private static void AutoscrollChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
@@ -53,11 +53,11 @@
                 return;
 
             var timer = new DispatcherTimer(DispatcherPriority.Background);
-            var handler = new NotifyCollectionChangedEventHandler((sender, eventArgs) => timer.Start());
+            var handler = new NotifyCollectionChangedEventHandler((_, _) => timer.Start());
 
             InfoDict.Add(dataGrid, new DataGridInfo(handler, timer));
 
-            timer.Tick += (sender, args) => ScrollToEnd(dataGrid);
+            timer.Tick += (_, _) => ScrollToEnd(dataGrid);
             ((INotifyCollectionChanged)dataGrid.Items).CollectionChanged += handler;
             
             timer.Start();

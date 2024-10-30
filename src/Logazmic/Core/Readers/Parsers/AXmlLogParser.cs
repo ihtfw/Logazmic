@@ -18,8 +18,8 @@ namespace Logazmic.Core.Readers.Parsers
 
         public LogMessage ParseLogEvent(string logEvent)
         {
-            using (var reader = new XmlTextReader(logEvent, XmlNodeType.Element, GetXmlParserContext()))
-                return ParseLogEvent(reader);
+            using var reader = new XmlTextReader(logEvent, XmlNodeType.Element, GetXmlParserContext());
+            return ParseLogEvent(reader);
         }
 
         protected abstract LogMessage ParseLogEvent(XmlReader xmlTextReader);

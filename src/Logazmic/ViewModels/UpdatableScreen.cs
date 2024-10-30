@@ -17,10 +17,10 @@ namespace Logazmic.ViewModels
 
         private bool _fullUpdate;
 
-        private readonly object _updateLock = new object();
+        private readonly object _updateLock = new();
 
-        private readonly Timer _timer = new Timer(150);
-        private readonly Timer _forceTimer = new Timer(1500);
+        private readonly Timer _timer = new(150);
+        private readonly Timer _forceTimer = new(1500);
 
         protected UpdatableScreen()
         {

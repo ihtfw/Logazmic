@@ -16,10 +16,10 @@ namespace Logazmic.Controls
     public partial class CircleMenuButton
     {
         public static readonly DependencyProperty VisualProperty = DependencyProperty.Register(
-            "Visual", typeof(Visual), typeof(CircleMenuButton), new PropertyMetadata(default(Visual)));
+            nameof(Visual), typeof(Visual), typeof(CircleMenuButton), new PropertyMetadata(default(Visual)));
 
         public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
-            "IsExpanded", typeof(bool), typeof(CircleMenuButton), new PropertyMetadata(default(bool)));
+            nameof(IsExpanded), typeof(bool), typeof(CircleMenuButton), new PropertyMetadata(default(bool)));
 
         private ToggleButton _toggleButton;
 
@@ -44,7 +44,7 @@ namespace Logazmic.Controls
         {
             base.OnApplyTemplate();
             _toggleButton = (ToggleButton)GetTemplateChild("PART_ToggleButton");
-            MouseRightButtonUp += (sender, args) => args.Handled = true;
+            MouseRightButtonUp += (_, args) => args.Handled = true;
         }
     }
 }

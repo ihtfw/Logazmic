@@ -59,15 +59,13 @@ namespace Logazmic.Integration
             try
             {
                 var downloadUrl = ConvertUrl(latestReleaseUrl);
-                using (var client = new WebClient())
+                using var client = new WebClient();
+                if (WebProxy != null)
                 {
-                    if (WebProxy != null)
-                    {
-                        client.Proxy = WebProxy;
-                    }
-
-                    await client.DownloadFileTaskAsync(downloadUrl, fileName);
+                    client.Proxy = WebProxy;
                 }
+
+                await client.DownloadFileTaskAsync(downloadUrl, fileName);
             }
             catch (Exception e)
             {

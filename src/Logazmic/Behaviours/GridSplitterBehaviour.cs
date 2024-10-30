@@ -88,7 +88,7 @@
     {
         #region Singleton
 
-        private static readonly Lazy<GridSplitterSizes> LazyInstance = new Lazy<GridSplitterSizes>(() => Load<GridSplitterSizes>(SettingsFilePath));
+        private static readonly Lazy<GridSplitterSizes> LazyInstance = new(() => Load<GridSplitterSizes>(SettingsFilePath));
 
         public static GridSplitterSizes Instance => LazyInstance.Value;
 
@@ -138,7 +138,7 @@
                 sizes.Add(name, values);
             }
 
-            gs.DragCompleted += (sender, eventArgs) =>
+            gs.DragCompleted += (_, _) =>
             {
                 try
                 {
@@ -150,7 +150,7 @@
                 }
             };
 
-            gs.Loaded += (sender, eventArgs) =>
+            gs.Loaded += (_, _) =>
             {
                 try
                 {

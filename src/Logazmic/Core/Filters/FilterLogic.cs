@@ -10,7 +10,7 @@ namespace Logazmic.Core.Filters
     {
         private readonly FiltersProfile _filtersProfile;
 
-        private readonly HashSet<string> _logSourceLeaves = new HashSet<string>();
+        private readonly HashSet<string> _logSourceLeaves = new();
 
         public FilterLogic(FiltersProfile filtersProfile)
         {

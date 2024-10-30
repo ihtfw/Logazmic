@@ -60,21 +60,17 @@ namespace Logazmic.Core.Receiver
                 var logStreamReader = LogReaderFactory.LogStreamReader(LogFormat);
                 logStreamReader.DefaultLogger = "TcpLogger";
 
-                using (var socket = (Socket) newSocket)
+                using var socket = (Socket) newSocket;
+                using var ns = new NetworkStream(socket, FileAccess.Read, false);
+                int bytesRead;
+                do
                 {
-                    using (var ns = new NetworkStream(socket, FileAccess.Read, false))
+                    foreach (var logMessage in logStreamReader.NextLogEvents(ns, out bytesRead))
                     {
-                        int bytesRead;
-                        do
-                        {
-                            foreach (var logMessage in logStreamReader.NextLogEvents(ns, out bytesRead))
-                            {
-                                logMessage.LoggerName = string.Format(":{1}.{0}", logMessage.LoggerName, Port);
-                                OnNewMessage(logMessage);
-                            }
-                        } while (_server != null && bytesRead > 0);
+                        logMessage.LoggerName = string.Format(":{1}.{0}", logMessage.LoggerName, Port);
+                        OnNewMessage(logMessage);
                     }
-                }
+                } while (_server != null && bytesRead > 0);
             }
             catch (IOException e)
             {
