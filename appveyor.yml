@@ -10,7 +10,8 @@ configuration:
   - Release
   
 build_script:
-  - cmd: dotnet publish src\Logazmic\Logazmic.csproj -c Release -r win-x64
+  - cmd: dotnet restore src/Logazmic/Logazmic.csproj
+  - cmd: dotnet publish src/Logazmic/Logazmic.csproj -c Release -r win-x64
   - ps: squirrel/build-appveyor.ps1
   
 artifacts:
