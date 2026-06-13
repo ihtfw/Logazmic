@@ -148,7 +148,7 @@ namespace Logazmic.ViewModels
             ActivateItem(logPaneViewModel);
             Task.Factory.StartNew(logPaneViewModel.Initialize).ContinueWith(t =>
             {
-                if(t.Exception != null)
+                if (t.Exception != null)
                     LogazmicSettings.Instance.Receivers.Remove(receiver);
             });
         }
