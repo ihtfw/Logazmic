@@ -120,12 +120,35 @@ namespace Logazmic.ViewModels
         {
             get
             {
-                var format = "LogFormat: " + Receiver.LogFormat;
+                var receiverInfo = "LogFormat: " + Receiver.LogFormat;
                 if (string.IsNullOrEmpty(Receiver.Description))
                 {
-                    return format;
+                    string port = string.Empty;
+                    string type = string.Empty;
+                    string buffer = string.Empty;
+                    string ipv6 = string.Empty;
+                    switch (Receiver)
+                    {
+                        case TcpReceiver tcpReceiver:
+                            port = tcpReceiver.Port.ToString();
+                            type = "TCP";
+                            buffer = tcpReceiver.BufferSize.ToString();
+                            ipv6 = tcpReceiver.IpV6 ? "true" : "false";
+                            break;
+                        case UdpReceiver udpReceiver:
+                            port = udpReceiver.Port.ToString();
+                            type = "UDP";
+                            buffer = udpReceiver.BufferSize.ToString();
+                            ipv6 = udpReceiver.IpV6 ? "true" : "false";
+                            break;
+                    }
+                    receiverInfo += Environment.NewLine + "Port: " + port;
+                    receiverInfo += Environment.NewLine + "Type: " + type;
+                    receiverInfo += Environment.NewLine + "Buffer: " + buffer;
+                    receiverInfo += Environment.NewLine + "IpV6: " + ipv6;
+                    return receiverInfo;
                 }
-                return Receiver.Description + Environment.NewLine + format;
+                return Receiver.Description + Environment.NewLine + receiverInfo;
             }
         }
 
@@ -189,6 +212,24 @@ namespace Logazmic.ViewModels
             {
                 DialogService.Current.ShowErrorMessageBox(e);
             }
+        }
+
+        public string CurrentToText()
+        {
+            try
+            {
+                var sb = new StringBuilder();
+                foreach (var row in CollectionViewSource.View.OfType<LogMessage>())
+                {
+                    sb.AppendLine(row.MessageSingleLine);
+                }
+                return sb.ToString();
+            }
+            catch (Exception e)
+            {
+                DialogService.Current.ShowErrorMessageBox(e);
+            }
+            return null;
         }
 
         public void Initialize()
