@@ -1,4 +1,4 @@
-﻿namespace Logazmic.Behaviours
+namespace Logazmic.Behaviours
 {
     using System;
     using System.Collections.Generic;
@@ -7,6 +7,7 @@
     using System.Windows;
     using System.Windows.Controls;
 
+    using NLog;
     using Settings;
     using Utils;
 
@@ -110,6 +111,8 @@
 
     public static class GridSplitterBehaviour
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Name must be unique. Best choice is use full name of view with namespace
         /// </summary>
@@ -144,9 +147,9 @@
                 {
                     values.Update(gs, grid);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //ignore
+                    Logger.Debug(ex, "Failed to save grid splitter size for '{0}'", name);
                 }
             };
 
@@ -156,9 +159,9 @@
                 {
                     values.Restore(gs, grid);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //ignore
+                    Logger.Debug(ex, "Failed to restore grid splitter size for '{0}'", name);
                 }
             };
         }

@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Logazmic.Core.Log;
 using Logazmic.Core.Readers.Parsers;
+using NLog;
 
 namespace Logazmic.Core.Receiver
 {
     public class UdpReceiver : ReceiverBase
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private IPEndPoint _remoteEndPoint;
 
         private UdpClient _udpClient;
@@ -70,7 +72,7 @@ namespace Logazmic.Core.Receiver
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    Logger.Error(ex, "Unexpected error in UdpReceiver receive loop. Port={0}", Port);
                     return;
                 }
             }

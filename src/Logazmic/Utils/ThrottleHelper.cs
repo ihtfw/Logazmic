@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Timers;
+using NLog;
 
 namespace Logazmic.Utils
 {
@@ -10,6 +11,7 @@ namespace Logazmic.Utils
 
     public class ThrottleHelper : IDisposable
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly HashSet<object> _objects = new HashSet<object>();
         private readonly Action<List<object>> _action;
 
@@ -56,6 +58,7 @@ namespace Logazmic.Utils
             }
             catch (Exception e)
             {
+                Logger.Error(e, "ThrottleHelper action threw an exception");
                 OnError(e);
             }
             finally

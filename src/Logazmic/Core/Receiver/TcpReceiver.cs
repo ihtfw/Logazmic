@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using NLog;
 
 namespace Logazmic.Core.Receiver
 {
     public class TcpReceiver : ReceiverBase
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private Socket _server;
 
         public int Port { get; set; }
@@ -78,11 +80,11 @@ namespace Logazmic.Core.Receiver
             }
             catch (IOException e)
             {
-                Console.WriteLine(e);
+                Logger.Warn(e, "TCP client disconnected (IO error). Port={0}", Port);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error(e, "Unexpected error in TcpReceiver. Port={0}", Port);
             }
         }
 
