@@ -66,8 +66,9 @@ namespace Logazmic.Core.Receiver
                     logMsg.LoggerName = string.Format("{0}_{1}", _remoteEndPoint.Address.ToString().Replace(".", "-"), logMsg.LoggerName);
                     OnNewMessage(logMsg);
                 }
-                catch (SocketException)
+                catch (SocketException ex)
                 {
+                    Logger.Debug(ex, "UdpReceiver socket closed. Port={0}", Port);
                     return;
                 }
                 catch (Exception ex)

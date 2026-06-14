@@ -212,6 +212,7 @@ namespace Logazmic.ViewModels
             }
             catch (Exception e)
             {
+                Logger.Error(e, "Failed to copy log entries to clipboard");
                 DialogService.Current.ShowErrorMessageBox(e);
             }
         }
@@ -229,6 +230,7 @@ namespace Logazmic.ViewModels
             }
             catch (Exception e)
             {
+                Logger.Error(e, "Failed to export log entries to text");
                 DialogService.Current.ShowErrorMessageBox(e);
             }
             return null;
