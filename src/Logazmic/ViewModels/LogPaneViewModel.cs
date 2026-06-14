@@ -142,9 +142,9 @@ namespace Logazmic.ViewModels
                             ipv6 = udpReceiver.IpV6 ? "true" : "false";
                             break;
                     }
-                    receiverInfo += Environment.NewLine + "Port:" + port;
-                    receiverInfo += Environment.NewLine + "Type:" + type;
-                    receiverInfo += Environment.NewLine + "Buffer:" + buffer;
+                    receiverInfo += Environment.NewLine + "Port: " + port;
+                    receiverInfo += Environment.NewLine + "Type: " + type;
+                    receiverInfo += Environment.NewLine + "Buffer: " + buffer;
                     receiverInfo += Environment.NewLine + "IpV6: " + ipv6;
                     return receiverInfo;
                 }
