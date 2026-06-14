@@ -155,7 +155,7 @@ namespace Logazmic.ViewModels
         
         public async Task Rename()
         {
-            var newName = await DialogService.Current.ShowInputDialog("Rename", "Enter new name:");
+            var newName = await DialogService.Current.ShowInputDialog($"Rename: {DisplayName}", "Enter new name:");
             if (string.IsNullOrEmpty(newName))
             {
                 return;

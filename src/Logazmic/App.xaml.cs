@@ -28,7 +28,7 @@ namespace Logazmic
         private void ChangeTheme()
         {
             var oldTheme = Resources.MergedDictionaries.SingleOrDefault(d => d.Source != null && d.Source.OriginalString.Contains("Theme"));
-            if(oldTheme != null)
+            if (oldTheme != null)
                 Resources.MergedDictionaries.Remove(oldTheme);
 
             var themeFile = LogazmicSettings.Instance.UseDarkTheme ? "Styles/DarkTheme.xaml" : "Styles/LightTheme.xaml";
@@ -67,7 +67,7 @@ namespace Logazmic
 
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
-            if(MainWindow != null)
+            if (MainWindow != null)
                 ActivateWindow(MainWindow);
             if (args.Count > 1)
                 MainWindowViewModel.Instance.LoadFile(args[1]);
