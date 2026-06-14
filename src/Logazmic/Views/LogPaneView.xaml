@@ -69,7 +69,7 @@
         <DataGrid x:Name="LogDataGrid" ItemsSource="{Binding Path=CollectionViewSource.View}"
                   SelectedItem="{Binding Path=SelectedLogMessage}" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
-                  CanUserResizeRows="False" SelectionMode="Single"
+                  CanUserResizeRows="False" SelectionMode="Extended"
                   GridLinesVisibility="{Binding  Source={x:Static settings:LogazmicSettings.Instance}, Path=GridLinesVisibility}"
                   FontSize="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=GridFontSize}"
                   CellStyle="{StaticResource CellStyle}" RowStyle="{StaticResource RowStyle}"
