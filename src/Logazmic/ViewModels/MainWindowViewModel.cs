@@ -1,4 +1,5 @@
-﻿using System.Net;
+using System.Diagnostics;
+using System.Net;
 using Logazmic.Behaviours;
 using Logazmic.Core.Filters;
 using Logazmic.Core.Readers;
@@ -54,6 +55,7 @@ namespace Logazmic.ViewModels
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
+            Logger.Info("MainWindow view loaded");
             CheckAutoUpdateSettings();
             Version = await CheckForUpdates();
         }
@@ -123,6 +125,7 @@ namespace Logazmic.ViewModels
 
         private void LoadReciversFromSettings()
         {
+            Logger.Info("Loading {0} receivers from settings", LogazmicSettings.Instance.Receivers.Count);
             foreach (var receiver in LogazmicSettings.Instance.Receivers)
             {
                 AddReceiver(receiver);
@@ -142,6 +145,9 @@ namespace Logazmic.ViewModels
                 LogazmicSettings.Instance.Receivers.Add(receiver);
             }
 
+            Logger.Info("Adding receiver: DisplayName={0}, Type={1}, LogFormat={2}",
+                receiver.DisplayName, receiver.GetType().Name, receiver.LogFormat);
+
             var logPaneViewModel = new LogPaneViewModel(receiver);
             logPaneViewModel.Deactivated += OnTabDeactivated;
             Items.Add(logPaneViewModel);
@@ -149,7 +155,10 @@ namespace Logazmic.ViewModels
             Task.Factory.StartNew(logPaneViewModel.Initialize).ContinueWith(t =>
             {
                 if (t.Exception != null)
+                {
+                    Logger.Error(t.Exception, "Failed to initialize receiver '{0}'", receiver.DisplayName);
                     LogazmicSettings.Instance.Receivers.Remove(receiver);
+                }
             });
         }
 
@@ -163,6 +172,7 @@ namespace Logazmic.ViewModels
 
             if (close)
             {
+                Logger.Info("MainWindow deactivating, saving settings");
                 LogazmicSettings.Instance.Save();
                 GridSplitterSizes.Instance.Save();
                 FiltersProfiles.Instance.Save();
@@ -174,12 +184,12 @@ namespace Logazmic.ViewModels
             if (!args.WasClosed) return;
 
             var pane = (LogPaneViewModel)sender;
-            //Items.Remove(pane);
 
             Task.Factory.StartNew(() =>
             {
                 try
                 {
+                    Logger.Info("Removing receiver: {0}", pane.Receiver.DisplayName);
                     LogazmicSettings.Instance.Receivers.Remove(pane.Receiver);
                     pane.Dispose();
                 }
@@ -206,6 +216,30 @@ namespace Logazmic.ViewModels
                 {
                     LoadFile(fileName);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Opens the log file directory in Windows Explorer for easy user access.
+        /// </summary>
+        public void OpenLogFolder()
+        {
+            try
+            {
+                var logDir = Bootstrapper.LogDirectory;
+                if (Directory.Exists(logDir))
+                {
+                    Process.Start("explorer.exe", logDir);
+                }
+                else
+                {
+                    Process.Start("explorer.exe", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Logazmic"));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Failed to open log folder");
+                DialogService.Current.ShowErrorMessageBox("Failed to open log folder: " + ex.Message);
             }
         }
 

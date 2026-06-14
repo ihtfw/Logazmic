@@ -64,6 +64,11 @@
 
             <Rectangle Width="15" />
 
+            <controls:MetroButton cal:Message.Attach="OpenLogFolder"
+                                  Visual="{DynamicResource appbar_folder_open}" ToolTip="Open Logazmic logs directory" />
+
+            <Rectangle Width="15" />
+
             <controls:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"
                                         Visual="{DynamicResource appbar_settings}" ToolTip="Settings" />
 

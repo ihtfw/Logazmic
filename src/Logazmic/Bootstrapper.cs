@@ -1,10 +1,13 @@
-﻿using System.Runtime.InteropServices;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Threading;
 using Logazmic.Services;
 using Logazmic.Settings;
 using NLog;
 using NLog.Config;
+using NLog.Layouts;
 using NLog.Targets;
 
 namespace Logazmic
@@ -14,7 +17,14 @@ namespace Logazmic
 
     public class Bootstrapper : BootstrapperBase
     {
+        private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private bool _wasException;
+
+        /// <summary>
+        /// Gets the directory where log files are stored.
+        /// </summary>
+        public static string LogDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Logazmic", "logs");
+
         public Bootstrapper()
         {
             Initialize();
@@ -26,31 +36,100 @@ namespace Logazmic
         {
             base.Configure();
             SetupCaliburnShortcutMessage();
-            SetupSelfLogging();
+            SetupLogging();
+            LogStartupInfo();
         }
 
-        private static void SetupSelfLogging()
+        /// <summary>
+        /// Configures NLog with a file target (always-on) and an optional TCP self-logging target.
+        /// </summary>
+        private static void SetupLogging()
         {
-            if (!LogazmicSettings.Instance.EnableSelfLogging)
-                return;
+            var config = new LoggingConfiguration();
 
-            var config = new LoggingConfiguration(); 
-            
-            #region tcp
+            #region File target (always-on)
 
-            var tcpNetworkTarget = new NLogViewerTarget
+            var logDirectory = LogDirectory;
+            try
             {
-                Address = "tcp4://127.0.0.1:" + LogazmicSettings.Instance.SelfLoggingPort,
+                Directory.CreateDirectory(logDirectory);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to create log directory '{logDirectory}': {ex.Message}");
+                return;
+            }
+
+            var fileTarget = new FileTarget
+            {
+                Name = "LogFile",
+                FileName = Path.Combine(logDirectory, "Logazmic-${shortdate}.log4j"),
+                Layout = " ${log4jxmlevent}",
+                KeepFileOpen = false,
                 Encoding = Encoding.UTF8,
-                Name = "NLogViewer",
-                IncludeNLogData = false
+                ArchiveAboveSize = 10 * 1024 * 1024, // 10 MB
+                MaxArchiveFiles = 7,
+                ArchiveNumbering = ArchiveNumberingMode.Rolling,
+                ConcurrentWrites = true
             };
-            var tcpNetworkRule = new LoggingRule("*", LogLevel.Trace, tcpNetworkTarget);
-            config.LoggingRules.Add(tcpNetworkRule);
+            config.AddTarget(fileTarget);
+
+            var fileRule = new LoggingRule("*", LogLevel.Trace, fileTarget);
+            config.LoggingRules.Add(fileRule);
+
+            #endregion
+
+            #region TCP self-logging target (opt-in)
+
+            if (LogazmicSettings.Instance.EnableSelfLogging)
+            {
+                var tcpNetworkTarget = new NLogViewerTarget
+                {
+                    Address = "tcp4://127.0.0.1:" + LogazmicSettings.Instance.SelfLoggingPort,
+                    Encoding = Encoding.UTF8,
+                    Name = "NLogViewer",
+                    IncludeNLogData = false
+                };
+                config.AddTarget(tcpNetworkTarget);
+
+                var tcpNetworkRule = new LoggingRule("*", LogLevel.Trace, tcpNetworkTarget);
+                config.LoggingRules.Add(tcpNetworkRule);
+            }
 
             #endregion
 
             NLog.LogManager.Configuration = config;
+        }
+
+        /// <summary>
+        /// Logs structured startup context for diagnostics.
+        /// </summary>
+        private static void LogStartupInfo()
+        {
+            try
+            {
+                Logger.Info("=== Logazmic Starting ===");
+                Logger.Info("App Version: {0}", typeof(Bootstrapper).Assembly.GetName().Version);
+                Logger.Info("OS: {0}", Environment.OSVersion);
+                Logger.Info("64-bit OS: {0}", Environment.Is64BitOperatingSystem);
+                Logger.Info("64-bit Process: {0}", Environment.Is64BitProcess);
+                Logger.Info("CLR Version: {0}", Environment.Version);
+                Logger.Info("Processor Count: {0}", Environment.ProcessorCount);
+                Logger.Info("Working Set: {0:N0} bytes", Environment.WorkingSet);
+                Logger.Info("Settings: DarkTheme={0}, LogFormat={1}, SingleWindow={2}, AutoUpdate={3}",
+                    LogazmicSettings.Instance.UseDarkTheme,
+                    LogazmicSettings.Instance.LogFormat,
+                    LogazmicSettings.Instance.SingleWindowMode,
+                    LogazmicSettings.Instance.AutoUpdate);
+                Logger.Info("SelfLogging: Enabled={0}, Port={1}",
+                    LogazmicSettings.Instance.EnableSelfLogging,
+                    LogazmicSettings.Instance.SelfLoggingPort);
+                Logger.Info("Log Directory: {0}", LogDirectory);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Failed to log startup info");
+            }
         }
 
         private static void SetupCaliburnShortcutMessage()
@@ -66,10 +145,12 @@ namespace Logazmic
                 return currentParser(target, triggerText);
             };
         }
+
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             if (_wasException)
             {
+                Logger.Error(e.Exception, "Recursive unhandled exception");
                 base.OnUnhandledException(sender, e);
                 return;
             }
@@ -82,6 +163,9 @@ namespace Logazmic
                 base.OnUnhandledException(sender, e);
                 return;
             }
+
+            // Always log unhandled exceptions to the file log for diagnostics
+            Logger.Error(e.Exception, "Unhandled exception: {0}", msg);
 
             if (e.Exception is System.InvalidOperationException
                 && (msg.Contains("Нельзя задать Visibility или вызвать Show,") ||
@@ -110,6 +194,12 @@ namespace Logazmic
                 _wasException = false;
             }
             base.OnUnhandledException(sender, e);
+        }
+
+        protected override void OnExit(object sender, EventArgs e)
+        {
+            Logger.Info("=== Logazmic Shutting Down ===");
+            base.OnExit(sender, e);
         }
     }
 }

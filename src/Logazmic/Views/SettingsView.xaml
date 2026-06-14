@@ -95,6 +95,14 @@
         <controls:TwoColumnGrid>
             <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Autoupdate:</TextBlock>
             <ma:ToggleSwitch IsChecked="{Binding AutoUpdate}" />
+
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Self-logging:</TextBlock>
+            <ma:ToggleSwitch IsChecked="{Binding EnableSelfLogging}"
+                             ToolTip="View this app's own logs in a Logazmic tab (TCP receiver required)." />
+
+            <TextBlock Style="{StaticResource DescriptionSubHeaderStyle}">Self-logging port:</TextBlock>
+            <ma:NumericUpDown Value="{Binding SelfLoggingPort}" Minimum="1024" Maximum="65535"
+                              ToolTip="TCP port for self-logging (default: 6789). Requires self-logging to be enabled." />
         </controls:TwoColumnGrid>
     </StackPanel>
 </ma:Flyout>

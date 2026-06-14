@@ -7,6 +7,7 @@ using Logazmic.Core.Receiver;
 using Logazmic.Utils;
 using Logazmic.ViewModels.Events;
 using Logazmic.ViewModels.Filters;
+using NLog;
 
 namespace Logazmic.ViewModels
 {
@@ -25,6 +26,7 @@ namespace Logazmic.ViewModels
 
     public class LogPaneViewModel : UpdatableScreen, IHandle<RefreshEvent>, IDisposable
     {
+        private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private SourceFilterViewModel _selectedLogSource;
         private CollectionViewSource _collectionViewSource;
 
@@ -236,14 +238,17 @@ namespace Logazmic.ViewModels
         {
             try
             {
+                Logger.Info("Initializing receiver: {0} (Type={1})", Receiver.DisplayName, Receiver.GetType().Name);
                 Receiver.NewMessage += OnNewMessage;
                 Receiver.NewMessages += OnNewMessages;
                 Receiver.Initialize();
 
                 Update(true);
+                Logger.Info("Receiver initialized successfully: {0}", Receiver.DisplayName);
             }
             catch (Exception e)
             {
+                Logger.Error(e, "Failed to initialize receiver: {0}", Receiver.DisplayName);
                 DialogService.Current.ShowErrorMessageBox(e);
                 TryClose();
                 throw;
@@ -348,6 +353,7 @@ namespace Logazmic.ViewModels
 
         public void Dispose()
         {
+            Logger.Info("Disposing LogPane: {0}", Receiver?.DisplayName ?? "(null)");
             LogPaneServices.EventAggregator.Unsubscribe(this);
 
             _searchTextChangedSubscriber?.Dispose();
