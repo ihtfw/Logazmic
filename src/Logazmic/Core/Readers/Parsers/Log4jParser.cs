@@ -106,6 +106,11 @@ namespace Logazmic.Core.Readers.Parsers
                                     if (name.ToLower().Equals("exceptions"))
                                     {
                                         logMsg.ExceptionString = value;
+                                    }                                
+                                    else if (name.ToLower().Equals("sequenceid"))
+                                    {
+                                        if (ulong.TryParse(value, out ulong seq))
+                                            logMsg.SequenceNr = seq;
                                     }
                                     else
                                     {
