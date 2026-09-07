@@ -334,7 +334,7 @@ namespace Logazmic.ViewModels
 
         public void Open()
         {
-            var res = DialogService.Current.ShowOpenDialog(out var path, ".log4j", "Nlog log4jxml|*.log4jxml;*.log4j|Flat|*.log");
+            var res = DialogService.Current.ShowOpenDialog(out var path, ".log4j", "Nlog log4jxml|*.log4jxml;*.log4j|Flat|*.log;*.txt");
             if (!res)
             {
                 return;
