@@ -103,14 +103,19 @@ namespace Logazmic.Core.Readers.Parsers
                                 string value = reader.GetAttribute("value");
                                 if (name != null)
                                 {
-                                    if (name.ToLower().Equals("exceptions"))
+                                    if (name.Equals("exceptions", StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         logMsg.ExceptionString = value;
-                                    }                                
-                                    else if (name.ToLower().Equals("sequenceid"))
+                                    }
+                                    else if (name.Equals("sequenceid", StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         if (ulong.TryParse(value, out ulong seq))
                                             logMsg.SequenceNr = seq;
+                                    }
+                                    else if (name.Equals("counter", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        if (ulong.TryParse(value, out ulong counter))
+                                            logMsg.SequenceNr = counter;
                                     }
                                     else
                                     {
