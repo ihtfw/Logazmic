@@ -1,7 +1,7 @@
 Logazmic
 ========
 <img src="https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/appbar.flag.bear.png" alt="Icon" width="64px" height="64px" />
-<img src="https://ci.appveyor.com/api/projects/status/ns7gdofc8w4so32m?svg=true" width="300">
+<img src="https://github.com/ihtfw/Logazmic/actions/workflows/ci.yml/badge.svg" width="300">
 
 
 Minimalistic log viewer for nlog. Supports only log4j xml layout yet. Core is based on [Log2console](https://log2console.codeplex.com/). UI is rewritten in WPF with usage of [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
@@ -83,7 +83,7 @@ LogManager.Configuration = config;
 
 ### Logazmic.Integration
 <img src="https://raw.githubusercontent.com/ihtfw/Logazmic/master/docs/appbar.flag.bear.png" alt="Icon" width="64px" height="64px" />
-<img src="https://ci.appveyor.com/api/projects/status/n45ye34e920c7c5k?svg=true" width="300">
+<img src="https://github.com/ihtfw/Logazmic/actions/workflows/ci.yml/badge.svg" width="300">
 
 Install nuget package <a href="https://www.nuget.org/packages/Logazmic.Integration/">Logazmic.Integration</a>. In your code to install, run and open log file
 ```csharp

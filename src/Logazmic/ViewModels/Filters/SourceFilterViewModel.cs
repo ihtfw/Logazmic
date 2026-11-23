@@ -45,7 +45,7 @@ namespace Logazmic.ViewModels.Filters
         }
 
         public bool IsSelected { get; set; }
-
+        public bool IsExpanded { get; set; } = true;
         public bool IsChecked
         {
             get => _sourceFilter.IsChecked;
@@ -62,6 +62,8 @@ namespace Logazmic.ViewModels.Filters
         }
 
         public string Name => _sourceFilter.Name;
+
+        public string FullName => _sourceFilter.FullName;
 
         public BindableCollection<SourceFilterViewModel> Children { get; } = new BindableCollection<SourceFilterViewModel>();
 

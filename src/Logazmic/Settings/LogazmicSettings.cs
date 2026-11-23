@@ -1,5 +1,6 @@
 using Logazmic.Core.Readers;
 using Logazmic.Core.Receiver;
+using NLog;
 
 namespace Logazmic.Settings
 {
@@ -10,6 +11,8 @@ namespace Logazmic.Settings
 
     public class LogazmicSettings : JsonSettingsBase
     {
+        private static readonly Logger StaticLogger = LogManager.GetCurrentClassLogger();
+
         #region Singleton
 
         private static readonly string SettingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Logazmic\settings.json");
@@ -24,8 +27,9 @@ namespace Logazmic.Settings
             {
                 return Load<LogazmicSettings>(SettingsFilePath);
             }
-            catch
+            catch (Exception ex)
             {
+                StaticLogger.Warn(ex, "Failed to load settings from '{0}', attempting rename fix", SettingsFilePath);
                 //it's can be because of rename
                 if (File.Exists(SettingsFilePath))
                 {

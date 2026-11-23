@@ -7,6 +7,7 @@ using Logazmic.Core.Receiver;
 using Logazmic.Utils;
 using Logazmic.ViewModels.Events;
 using Logazmic.ViewModels.Filters;
+using NLog;
 
 namespace Logazmic.ViewModels
 {
@@ -25,6 +26,7 @@ namespace Logazmic.ViewModels
 
     public class LogPaneViewModel : UpdatableScreen, IHandle<RefreshEvent>, IDisposable
     {
+        private static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private SourceFilterViewModel _selectedLogSource;
         private CollectionViewSource _collectionViewSource;
 
@@ -61,6 +63,8 @@ namespace Logazmic.ViewModels
 
         private void OnSearchTextChanged()
         {
+            if (string.IsNullOrEmpty(ProfileFiltersViewModel.SearchText))
+                return;
             IEnumerable<LogMessage> searchCollection = LogMessages;
             if (SelectedLogMessage != null && ContainsCaseInsesetive(SelectedLogMessage))
             {
@@ -106,25 +110,117 @@ namespace Logazmic.ViewModels
 
         public LogMessage SelectedLogMessage { get; set; }
 
+        public string SearchSourceText { get; set; }
+
+        private void OnSearchSourceTextChanged()
+        {
+            if (string.IsNullOrWhiteSpace(SearchSourceText))
+            {
+                OnSelectedLogMessageChanged();
+                return;
+            }
+
+            var searchText = SearchSourceText.Trim();
+            var path = FindBestSourcePath(searchText);
+            var source = path == null ? null : path[path.Count - 1];
+
+            if (path != null)
+            {
+                for (var i = 0; i < path.Count - 1; i++)
+                {
+                    path[i].IsExpanded = true;
+                }
+            }
+
+            SelectLogSource(source);
+        }
+
+        private List<SourceFilterViewModel> FindBestSourcePath(string searchText)
+        {
+            var bestRank = int.MaxValue;
+            List<SourceFilterViewModel> bestPath = null;
+            var currentPath = new List<SourceFilterViewModel>();
+
+            FindBestSourcePath(
+                ProfileFiltersViewModel.SourceFilterRootViewModel.Children,
+                searchText,
+                currentPath,
+                ref bestRank,
+                ref bestPath);
+
+            return bestPath;
+        }
+
+        private static void FindBestSourcePath(
+            IEnumerable<SourceFilterViewModel> sources,
+            string searchText,
+            List<SourceFilterViewModel> currentPath,
+            ref int bestRank,
+            ref List<SourceFilterViewModel> bestPath)
+        {
+            foreach (var source in sources)
+            {
+                currentPath.Add(source);
+
+                var rank = GetSourceMatchRank(source, searchText);
+                if (rank < bestRank)
+                {
+                    bestRank = rank;
+                    bestPath = new List<SourceFilterViewModel>(currentPath);
+                }
+
+                FindBestSourcePath(source.Children, searchText, currentPath, ref bestRank, ref bestPath);
+                currentPath.RemoveAt(currentPath.Count - 1);
+            }
+        }
+
+        private static int GetSourceMatchRank(SourceFilterViewModel source, string searchText)
+        {
+            var name = source.Name ?? string.Empty;
+            var fullName = source.FullName ?? name;
+
+            if (string.Equals(fullName, searchText, StringComparison.OrdinalIgnoreCase))
+                return 0;
+            if (string.Equals(name, searchText, StringComparison.OrdinalIgnoreCase))
+                return 1;
+            if (fullName.StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
+                return 2;
+            if (name.StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
+                return 3;
+            if (fullName.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                return 4;
+            if (name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                return 5;
+
+            return int.MaxValue;
+        }
+
+        private void SelectLogSource(SourceFilterViewModel source)
+        {
+            if (_selectedLogSource != null)
+            {
+                _selectedLogSource.IsSelected = false;
+            }
+
+            _selectedLogSource = source;
+            if (_selectedLogSource != null)
+            {
+                _selectedLogSource.IsSelected = true;
+            }
+        }
+
+
         // Fody
         // ReSharper disable once UnusedMember.Local
         private void OnSelectedLogMessageChanged()
         {
             if (SelectedLogMessage == null)
             {
-                if (_selectedLogSource != null)
-                {
-                    _selectedLogSource.IsSelected = false;
-                }
-                _selectedLogSource = null;
+                SelectLogSource(null);
                 return;
             }
 
-            _selectedLogSource = ProfileFiltersViewModel.SourceFilterRootViewModel.Find(SelectedLogMessage.LoggerNames);
-            if (_selectedLogSource != null)
-            {
-                _selectedLogSource.IsSelected = true;
-            }
+            SelectLogSource(ProfileFiltersViewModel.SourceFilterRootViewModel.Find(SelectedLogMessage.LoggerNames));
             //SelectedLogMessage.LastLoggerName
         }
 
@@ -132,12 +228,35 @@ namespace Logazmic.ViewModels
         {
             get
             {
-                var format = "LogFormat: " + Receiver.LogFormat;
+                var receiverInfo = "LogFormat: " + Receiver.LogFormat;
                 if (string.IsNullOrEmpty(Receiver.Description))
                 {
-                    return format;
+                    string port = string.Empty;
+                    string type = string.Empty;
+                    string buffer = string.Empty;
+                    string ipv6 = string.Empty;
+                    switch (Receiver)
+                    {
+                        case TcpReceiver tcpReceiver:
+                            port = tcpReceiver.Port.ToString();
+                            type = "TCP";
+                            buffer = tcpReceiver.BufferSize.ToString();
+                            ipv6 = tcpReceiver.IpV6 ? "true" : "false";
+                            break;
+                        case UdpReceiver udpReceiver:
+                            port = udpReceiver.Port.ToString();
+                            type = "UDP";
+                            buffer = udpReceiver.BufferSize.ToString();
+                            ipv6 = udpReceiver.IpV6 ? "true" : "false";
+                            break;
+                    }
+                    receiverInfo += Environment.NewLine + "Port: " + port;
+                    receiverInfo += Environment.NewLine + "Type: " + type;
+                    receiverInfo += Environment.NewLine + "Buffer: " + buffer;
+                    receiverInfo += Environment.NewLine + "IpV6: " + ipv6;
+                    return receiverInfo;
                 }
-                return Receiver.Description + Environment.NewLine + format;
+                return Receiver.Description + Environment.NewLine + receiverInfo;
             }
         }
 
@@ -167,7 +286,7 @@ namespace Logazmic.ViewModels
         
         public async Task Rename()
         {
-            var newName = await DialogService.Current.ShowInputDialog("Rename", "Enter new name:");
+            var newName = await DialogService.Current.ShowInputDialog($"Rename: {DisplayName}", "Enter new name:");
             if (string.IsNullOrEmpty(newName))
             {
                 return;
@@ -200,22 +319,45 @@ namespace Logazmic.ViewModels
             }
             catch (Exception e)
             {
+                Logger.Error(e, "Failed to copy log entries to clipboard");
                 DialogService.Current.ShowErrorMessageBox(e);
             }
+        }
+
+        public string CurrentToText()
+        {
+            try
+            {
+                var sb = new StringBuilder();
+                foreach (var row in CollectionViewSource.View.OfType<LogMessage>())
+                {
+                    sb.AppendLine(row.MessageSingleLine);
+                }
+                return sb.ToString();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Failed to export log entries to text");
+                DialogService.Current.ShowErrorMessageBox(e);
+            }
+            return null;
         }
 
         public void Initialize()
         {
             try
             {
+                Logger.Info("Initializing receiver: {0} (Type={1})", Receiver.DisplayName, Receiver.GetType().Name);
                 Receiver.NewMessage += OnNewMessage;
                 Receiver.NewMessages += OnNewMessages;
                 Receiver.Initialize();
 
                 Update(true);
+                Logger.Info("Receiver initialized successfully: {0}", Receiver.DisplayName);
             }
             catch (Exception e)
             {
+                Logger.Error(e, "Failed to initialize receiver: {0}", Receiver.DisplayName);
                 DialogService.Current.ShowErrorMessageBox(e);
                 TryClose();
                 throw;
@@ -278,6 +420,33 @@ namespace Logazmic.ViewModels
             }
         }
 
+        public void CheckUncheck(bool value)
+        {
+            foreach (var sfvm in ProfileFiltersViewModel.SourceFilterRootViewModel.Children)
+            {
+                sfvm.IsChecked = value;
+            }
+        }
+
+        public void CollapseExpand(bool value)
+        {
+            SetExpanded(ProfileFiltersViewModel.SourceFilterRootViewModel.Children, value);
+        }
+
+        private static void SetExpanded(IEnumerable<SourceFilterViewModel> sources, bool value)
+        {
+            foreach (var source in sources)
+            {
+                source.IsExpanded = value;
+                SetExpanded(source.Children, value);
+            }
+        }
+
+        public void ClearSearchText()
+        {
+            SearchSourceText = string.Empty;
+        }
+
         #region OnNewMessages
 
         private void UpdateTimeRange(IEnumerable<LogMessage> messages)
@@ -337,6 +506,7 @@ namespace Logazmic.ViewModels
 
         public void Dispose()
         {
+            Logger.Info("Disposing LogPane: {0}", Receiver?.DisplayName ?? "(null)");
             LogPaneServices.EventAggregator.Unsubscribe(this);
 
             _searchTextChangedSubscriber?.Dispose();

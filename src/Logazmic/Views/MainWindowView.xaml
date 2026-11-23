@@ -83,11 +83,13 @@
 
             <Rectangle Width="15" />
 
-            <controls:MetroToggleButton
-                IsChecked="{Binding IsSettingsOpen}"
-                ToolTip="Settings"
-                Visual="{DynamicResource appbar_settings}" />
+            <controls:MetroButton cal:Message.Attach="OpenLogFolder"
+                                  Visual="{DynamicResource appbar_folder_open}" ToolTip="Open Logazmic logs directory" />
 
+            <Rectangle Width="15" />
+
+            <controls:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"
+                                        Visual="{DynamicResource appbar_settings}" ToolTip="Settings" />
 
             <ContentControl
                 Width="120"
@@ -157,11 +159,12 @@
                         <Setter Property="ContextMenu">
                             <Setter.Value>
                                 <ContextMenu>
-                                    <MenuItem cal:Message.Attach="Rename" Header="Rename" />
-                                    <MenuItem
-                                        cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}"
-                                        cal:Message.Attach="CloseAllButThis($dataContext)"
-                                        Header="Close All But This" />
+                                    <MenuItem Header="Rename"
+                                              cal:Action.Target="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              cal:Message.Attach="Rename" />
+                                    <MenuItem Header="Close All But This" 
+                                              cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" 
+                                              cal:Message.Attach="CloseAllButThis($dataContext)"/>
 
                                     <MenuItem
                                         cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}"

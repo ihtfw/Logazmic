@@ -9,7 +9,7 @@ $slnDir = $curDir + "\..\src\"
 $projDir = $slnDir + $projDirName + "\"
 $setupIconPath = $curDir + "\app.ico"  
 
-$version = (Get-Date -format yyMM.d) + "." + $env:appveyor_build_number;
+$version = (Get-Date -format yyMM.d) + "." + $env:BUILD_NUMBER;
 
 $nuspecPath = ($curDir + "\" + $projName + ".nuspec")
 $nupkgPath = ($curDir + "\" + $projName + "." + $version + ".nupkg")
