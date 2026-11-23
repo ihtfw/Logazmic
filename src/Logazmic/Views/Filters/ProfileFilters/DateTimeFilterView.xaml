@@ -1,0 +1,52 @@
+<UserControl
+    x:Class="Logazmic.Views.Filters.ProfileFilters.DateTimeFilterView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:controls="clr-namespace:Logazmic.Controls"
+    xmlns:filters="clr-namespace:Logazmic.ViewModels.Filters"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+    d:DataContext="{d:DesignInstance filters:TimeFilterViewModel}"
+    VerticalAlignment="Center"
+    mc:Ignorable="d">
+    <Grid>
+        <StackPanel x:Name="Fields" Orientation="Horizontal">
+            <controls:DateTimeTextBox
+                Width="200"
+                Style="{DynamicResource {x:Type TextBox}}"
+                VerticalAlignment="Center"
+                metro:TextBoxHelper.Watermark="{Binding StartWatermark}"
+                metro:TextBoxHelper.ClearTextButton="True"
+                Text="{Binding StartTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=150}"
+                Maximum="{Binding EndBoundary}"
+                ToolTip="Start (inclusive), as displayed in TIME. Follows loaded data until edited. Clear for no lower bound." />
+            <TextBlock Margin="5,0" VerticalAlignment="Center" Text="–" />
+            <controls:DateTimeTextBox
+                Width="200"
+                Style="{DynamicResource {x:Type TextBox}}"
+                VerticalAlignment="Center"
+                metro:TextBoxHelper.Watermark="{Binding EndWatermark}"
+                metro:TextBoxHelper.ClearTextButton="True"
+                Text="{Binding EndTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=150}"
+                Minimum="{Binding StartBoundary}"
+                ToolTip="End (inclusive), as displayed in TIME. Follows loaded data until edited. Clear for no upper bound." />
+        </StackPanel>
+        <Canvas Height="0" VerticalAlignment="Bottom" IsHitTestVisible="False">
+            <Canvas.Style>
+                <Style TargetType="Canvas">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasError}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Canvas.Style>
+            <Border Canvas.Top="1" Background="{DynamicResource WhiteBrush}" Padding="2">
+                <TextBlock MaxWidth="420" FontSize="10" Foreground="{DynamicResource ValidationBrush}"
+                           Text="{Binding Error}" TextWrapping="Wrap" />
+            </Border>
+        </Canvas>
+    </Grid>
+</UserControl>

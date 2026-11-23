@@ -24,6 +24,12 @@ namespace Logazmic.Core.Filters
                 return true;
             }
 
+            if ((_filtersProfile.StartTime.HasValue || _filtersProfile.EndTime.HasValue)
+                && !new TimeFilter(_filtersProfile.StartTime, _filtersProfile.EndTime).Contains(logMessage.TimeStamp))
+            {
+                return true;
+            }
+
             if (logMessage.LogLevel < _filtersProfile.MinLogLevel)
             {
                 return true;

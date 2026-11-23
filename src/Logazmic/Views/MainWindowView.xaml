@@ -1,30 +1,35 @@
-﻿<metro:MetroWindow x:Class="Logazmic.Views.MainWindowView"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:cal="http://www.caliburnproject.org"
-                   xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
-                   xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
-                   xmlns:controls="clr-namespace:Logazmic.Controls"
-                   xmlns:views="clr-namespace:Logazmic.Views"
-                   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                   xmlns:settings="clr-namespace:Logazmic.Settings"
-                   mc:Ignorable="d"
-                   d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-                   AllowDrop="True"
-                   cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];
-                   [Shortcut Control+O] = [Action Open];
-                   [Shortcut Control+E] = [Action ExcludeLogEntry];
-                   [Shortcut Control+X] = [Action Clear()];
-                   [Shortcut Control+L] = [Action ScrollIntoSelected()];
-                   [Shortcut F3] = [Action FindNext];
-                   [Shortcut Control+W] = [Action CloseActiveTab()];
-                   [Shortcut Control+F4] = [Action CloseActiveTab()];"
-                   WindowState="Maximized" WindowStartupLocation="CenterScreen" Height="768" Width="1024"
-                   Icon="../Resources/appbar.flag.bear.ico"
-                   ShowIconOnTitleBar="True"
-                   x:Name="MetroWindow">
+<metro:MetroWindow
+    x:Class="Logazmic.Views.MainWindowView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cal="http://www.caliburnproject.org"
+    xmlns:controls="clr-namespace:Logazmic.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:profilefilters="clr-namespace:Logazmic.Views.Filters.ProfileFilters"
+    xmlns:settings="clr-namespace:Logazmic.Settings"
+    xmlns:viewModels="clr-namespace:Logazmic.ViewModels"
+    xmlns:views="clr-namespace:Logazmic.Views"
+    x:Name="MetroWindow"
+    Width="1024"
+    Height="768"
+    cal:Message.Attach="[Event Drop] = [Action OnDrop($eventArgs)];
+						[Shortcut Control+O] = [Action Open];
+						[Shortcut Control+E] = [Action ExcludeLogEntry];
+						[Shortcut Control+X] = [Action Clear()];
+						[Shortcut Control+L] = [Action ScrollIntoSelected()];
+						[Shortcut F3] = [Action FindNext];
+						[Shortcut Control+W] = [Action CloseActiveTab()];
+						[Shortcut Control+F4] = [Action CloseActiveTab()];"
+    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
+    AllowDrop="True"
+    Icon="../Resources/appbar.flag.bear.ico"
+    ShowIconOnTitleBar="True"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
+    mc:Ignorable="d">
     <metro:MetroWindow.Flyouts>
         <metro:FlyoutsControl>
             <views:SettingsView />
@@ -34,58 +39,91 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
 
 
-            <controls:MetroButton cal:Message.Attach="Open" ToolTip="Open File. Control+O"
-                                  Visual="{DynamicResource appbar_folder_open}" />
+            <controls:MetroButton
+                cal:Message.Attach="Open"
+                ToolTip="Open File. Control+O"
+                Visual="{DynamicResource appbar_folder_open}" />
 
-            <controls:CircleMenuButton Visual="{DynamicResource appbar_add}" ToolTip="Add receiver">
+            <controls:CircleMenuButton ToolTip="Add receiver" Visual="{DynamicResource appbar_add}">
                 <controls:CircleMenuButton.ItemsSource>
-                    <CompositeCollection> <!--TODO: why does just the content property doesn't work?-->
-                        <MenuItem Header="TCP" cal:Message.Attach="AddTCPReceiver" />
-                        <MenuItem Header="UDP" cal:Message.Attach="AddUDPReceiver" />
+                    <CompositeCollection>
+                        <!--  TODO: why does just the content property doesn't work?  -->
+                        <MenuItem cal:Message.Attach="AddTCPReceiver" Header="TCP" />
+                        <MenuItem cal:Message.Attach="AddUDPReceiver" Header="UDP" />
                     </CompositeCollection>
                 </controls:CircleMenuButton.ItemsSource>
             </controls:CircleMenuButton>
 
             <Rectangle Width="15" />
 
-            <controls:MetroButton cal:Action.TargetWithoutContext="{Binding ActiveItem}" cal:Message.Attach="Clear" ToolTip="Clear log; Control+X"
-                                  Visual="{DynamicResource appbar_close}" />
+            <controls:MetroButton
+                cal:Action.TargetWithoutContext="{Binding ActiveItem}"
+                cal:Message.Attach="Clear"
+                ToolTip="Clear log; Control+X"
+                Visual="{DynamicResource appbar_close}" />
 
-            <controls:MetroButton cal:Action.TargetWithoutContext="{Binding ActiveItem}" cal:Message.Attach="CopyCurrentToClipboard" ToolTip="Copy current rows to clipboard"
-                                  Visual="{DynamicResource appbar_page_copy}" />
+            <controls:MetroButton
+                cal:Action.TargetWithoutContext="{Binding ActiveItem}"
+                cal:Message.Attach="CopyCurrentToClipboard"
+                ToolTip="Copy current rows to clipboard"
+                Visual="{DynamicResource appbar_page_copy}" />
 
 
-            <controls:MetroToggleButton IsChecked="{Binding ActiveItem.AutoScroll}"
-                                        Visual="{DynamicResource appbar_arrow_down}" ToolTip="Auto scroll" />
+            <controls:MetroToggleButton
+                IsChecked="{Binding ActiveItem.AutoScroll}"
+                ToolTip="Auto scroll"
+                Visual="{DynamicResource appbar_arrow_down}" />
 
 
-            <controls:MetroButton cal:Message.Attach="ScrollIntoSelected('true')" cal:Action.TargetWithoutContext="{Binding ActiveItem}" ToolTip="Scroll into selected item; Control+L"
-                                  Visual="{DynamicResource appbar_radar}" />
+            <controls:MetroButton
+                cal:Action.TargetWithoutContext="{Binding ActiveItem}"
+                cal:Message.Attach="ScrollIntoSelected('true')"
+                ToolTip="Scroll into selected item; Control+L"
+                Visual="{DynamicResource appbar_radar}" />
 
             <Rectangle Width="15" />
 
-            <controls:MetroToggleButton IsChecked="{Binding IsSettingsOpen}"
-                                        Visual="{DynamicResource appbar_settings}" ToolTip="Settings" />
+            <controls:MetroToggleButton
+                IsChecked="{Binding IsSettingsOpen}"
+                ToolTip="Settings"
+                Visual="{DynamicResource appbar_settings}" />
 
 
-            <ContentControl Margin="5,0,5,0" VerticalAlignment="Center" Width="120"
-                            cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
-                            cal:View.Context="LogLevels" />
+            <ContentControl
+                Width="120"
+                Margin="5,0,5,0"
+                VerticalAlignment="Center"
+                cal:View.Context="LogLevels"
+                cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}" />
 
-            <ContentControl Margin="5,0,5,0" VerticalAlignment="Center" Width="150"
-                            cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
-                            cal:View.Context="MessageFilter" />
+            <ContentControl
+                Width="150"
+                Margin="5,0,5,0"
+                VerticalAlignment="Center"
+                cal:View.Context="MessageFilter"
+                cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}" />
 
-            <ContentControl Margin="5,0,5,0" VerticalAlignment="Center" Width="150"
-                            cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
-                            cal:View.Context="FilterText" />
+            <ContentControl
+                Width="150"
+                Margin="5,0,5,0"
+                VerticalAlignment="Center"
+                cal:View.Context="FilterText"
+                cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}" />
 
-            <ContentControl Margin="5,0,5,0" Width="150" VerticalAlignment="Center"
-                            cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}"
-                            cal:View.Context="Search"/>
+            <ContentControl
+                Width="150"
+                Margin="5,0,5,0"
+                VerticalAlignment="Center"
+                cal:View.Context="Search"
+                cal:View.Model="{Binding Path=ActiveItem.ProfileFiltersViewModel}" />
 
-            <ContentControl Margin="5,0,5,0" Width="150" VerticalAlignment="Center"
-                            cal:View.Model="{Binding Path=ActiveItem.ProfilesFiltersViewModel}"/>
+            <ContentControl
+                Width="150"
+                Margin="5,0,5,0"
+                VerticalAlignment="Center"
+                cal:View.Model="{Binding Path=ActiveItem.ProfilesFiltersViewModel}" />
+
+            <profilefilters:DateTimeFilterView Margin="5,0" cal:Bind.Model="{Binding ActiveItem.ProfileFiltersViewModel.TimeFilter}" />
         </StackPanel>
         <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=ShowStatusBar, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StatusBarItem DockPanel.Dock="Right">
@@ -119,18 +157,21 @@
                         <Setter Property="ContextMenu">
                             <Setter.Value>
                                 <ContextMenu>
-                                    <MenuItem Header="Rename" cal:Message.Attach="Rename" />
-                                    <MenuItem Header="Close All But This" 
-                                              cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" 
-                                              cal:Message.Attach="CloseAllButThis($dataContext)"/>
+                                    <MenuItem cal:Message.Attach="Rename" Header="Rename" />
+                                    <MenuItem
+                                        cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}"
+                                        cal:Message.Attach="CloseAllButThis($dataContext)"
+                                        Header="Close All But This" />
 
-                                    <MenuItem Header="Close all tabs on the Left"  
-                                              cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" 
-                                              cal:Message.Attach="CloseAllTabsOnTheLeft($dataContext)"/>
+                                    <MenuItem
+                                        cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}"
+                                        cal:Message.Attach="CloseAllTabsOnTheLeft($dataContext)"
+                                        Header="Close all tabs on the Left" />
 
-                                    <MenuItem Header="Close all tabs on the Right"  
-                                              cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}" 
-                                              cal:Message.Attach="CloseAllTabsOnTheRight($dataContext)"/>
+                                    <MenuItem
+                                        cal:Action.TargetWithoutContext="{Binding Source={x:Reference MetroWindow}, Path=DataContext}"
+                                        cal:Message.Attach="CloseAllTabsOnTheRight($dataContext)"
+                                        Header="Close all tabs on the Right" />
                                 </ContextMenu>
                             </Setter.Value>
                         </Setter>
@@ -138,12 +179,15 @@
                 </metro:MetroTabControl.Resources>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <ContentControl Focusable="False" cal:View.Model="{Binding}" />
+                        <ContentControl cal:View.Model="{Binding}" Focusable="False" />
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </metro:MetroTabControl>
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
-                           Text="Add at least one tab.">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="20"
+                Text="Add at least one tab.">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Setter Property="Visibility" Value="Collapsed" />

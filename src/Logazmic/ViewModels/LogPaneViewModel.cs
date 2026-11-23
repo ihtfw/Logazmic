@@ -29,6 +29,7 @@ namespace Logazmic.ViewModels
         private CollectionViewSource _collectionViewSource;
 
         private readonly IDisposable _searchTextChangedSubscriber;
+        private readonly IDisposable _utcTimeChangedSubscriber;
         private readonly FilterLogic _filterLogic;
         public LogPaneViewModel([NotNull] ReceiverBase receiver)
         {
@@ -37,7 +38,9 @@ namespace Logazmic.ViewModels
             LogMessages.CollectionChanged += LogMessagesOnCollectionChanged;
 
             ProfileFiltersViewModel = new ProfileFiltersViewModel(filtersProfile, LogPaneServices);
+            ProfileFiltersViewModel.TimeFilter.SetUtcTime(LogazmicSettings.Instance.UtcTime);
             _filterLogic = new FilterLogic(filtersProfile);
+            _utcTimeChangedSubscriber = LogazmicSettings.Instance.SubscribeToPropertyChanged(settings => settings.UtcTime, HandleUtcTimeChanged);
             ProfilesFiltersViewModel = new ProfilesFiltersViewModel(filtersProfile, LogPaneServices);
             _searchTextChangedSubscriber = ProfileFiltersViewModel.SubscribeToPropertyChanged(vm => vm.SearchText, OnSearchTextChanged);
 
@@ -46,6 +49,15 @@ namespace Logazmic.ViewModels
             LogPaneServices.EventAggregator.Subscribe(this);
         }
 
+
+        private void HandleUtcTimeChanged()
+        {
+            Execute.OnUIThread(() =>
+            {
+                ProfileFiltersViewModel.TimeFilter.SetUtcTime(LogazmicSettings.Instance.UtcTime);
+                Update();
+            });
+        }
 
         private void OnSearchTextChanged()
         {
@@ -171,6 +183,7 @@ namespace Logazmic.ViewModels
         public void Clear()
         {
             LogMessages.Clear();
+            ProfileFiltersViewModel.TimeFilter.ClearAvailableRange();
             Update();
         }
         
@@ -267,10 +280,26 @@ namespace Logazmic.ViewModels
 
         #region OnNewMessages
 
+        private void UpdateTimeRange(IEnumerable<LogMessage> messages)
+        {
+            DateTime? start = null;
+            DateTime? end = null;
+            foreach (var message in messages)
+            {
+                var time = message.TimeStamp;
+                if (!start.HasValue || time < start.Value)
+                    start = time;
+                if (!end.HasValue || time > end.Value)
+                    end = time;
+            }
+            if (start.HasValue)
+                Execute.OnUIThread(() => ProfileFiltersViewModel.TimeFilter.IncludeRange(start.Value, end.Value));
+        }
         private void OnNewMessages(object sender, IReadOnlyCollection<LogMessage> logMsgs)
         {
             lock (LogMessages)
             {
+                UpdateTimeRange(logMsgs);
                 LogMessages.AddRange(logMsgs);
                 foreach (var logMessage in logMsgs)
                 {
@@ -286,6 +315,7 @@ namespace Logazmic.ViewModels
         {
             lock (LogMessages)
             {
+                UpdateTimeRange(new[] { logMsg });
                 LogMessages.Add(logMsg);
                 ProfileFiltersViewModel.SourceFilterRootViewModel.Find(logMsg.LoggerNames);
                 
@@ -310,6 +340,7 @@ namespace Logazmic.ViewModels
             LogPaneServices.EventAggregator.Unsubscribe(this);
 
             _searchTextChangedSubscriber?.Dispose();
+            _utcTimeChangedSubscriber?.Dispose();
 
             if (Receiver != null)
             {

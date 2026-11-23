@@ -23,6 +23,7 @@ namespace Logazmic.ViewModels.Filters
             MinLogLevel = LogLevels.First();
 
             SourceFilterRootViewModel = new SourceFilterViewModel(filtersProfile.SourceFilterRoot, logPaneServices);
+            TimeFilter = new TimeFilterViewModel(logPaneServices, filtersProfile);
         }
 
 
@@ -55,6 +56,8 @@ namespace Logazmic.ViewModels.Filters
                 }
             }
         }
+
+        public TimeFilterViewModel TimeFilter { get; }
 
         public BindableCollection<MessageFilterViewModel> MessageFilters { get; } = new BindableCollection<MessageFilterViewModel>();
 
@@ -93,6 +96,7 @@ namespace Logazmic.ViewModels.Filters
         public void UpdateFilters()
         {
             SearchText = null;
+            TimeFilter.UpdateFilters();
 
             MessageFilters.Clear();
             MessageFilters.AddRange(FiltersProfile.MessageFilters.Select(mf => new MessageFilterViewModel(_logPaneServices, mf)));
