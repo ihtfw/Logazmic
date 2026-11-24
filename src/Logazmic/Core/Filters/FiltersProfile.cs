@@ -41,6 +41,10 @@ namespace Logazmic.Core.Filters
 
         public string FilterText { get; set; }
 
+        // Bounds use the same time representation as LogMessage.TimeStamp, not UI time.
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+
         public SourceFilter SourceFilterRoot
         {
             get => _sourceFilterRoot ?? (_sourceFilterRoot = new SourceFilter{ Name = "Root" });
@@ -60,6 +64,8 @@ namespace Logazmic.Core.Filters
             Name = other.Name;
             MinLogLevel = other.MinLogLevel;
             FilterText = other.FilterText;
+            StartTime = other.StartTime;
+            EndTime = other.EndTime;
 
             MessageFilters.Clear();
 
