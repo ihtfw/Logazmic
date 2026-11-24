@@ -125,7 +125,7 @@
                 VerticalAlignment="Center"
                 cal:View.Model="{Binding Path=ActiveItem.ProfilesFiltersViewModel}" />
 
-            <profilefilters:DateTimeFilterView Margin="5,0" cal:Bind.Model="{Binding ActiveItem.ProfileFiltersViewModel.TimeFilter}" />
+            <profilefilters:DateTimeFilterView Margin="5,0" DataContext="{Binding ActiveItem.ProfileFiltersViewModel.TimeFilter}" />
         </StackPanel>
         <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding Source={x:Static settings:LogazmicSettings.Instance}, Path=ShowStatusBar, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StatusBarItem DockPanel.Dock="Right">
